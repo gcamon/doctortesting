@@ -21,10 +21,7 @@ var loginRoute = function(model) {
         // find a user whose email is the same as the forms email
         // we are checking to see if the user trying to login already exists
         model.user.findOne({ email :  email }, function(err, user) {
-            console.log(email)
-            console.log(password)
             
-
             // if there are any errors, return the error before anything else
             if (err) {
                 return done(err);
@@ -45,80 +42,40 @@ var loginRoute = function(model) {
     }));
 
 router.post('/user/login', passport.authenticate('login', {
-  successRedirect : '/dashboard', // redirect to the secure profile section
+  successRedirect : '/login', // redirect to the secure profile section
   failureRedirect : '/failed', // redirect back to the signup page if there is an error
   failureFlash : true // allow flash messages
 }));
 
-router.get('/dashboard',function(req,res){
-  if(req.user){
-    switch(req.user.type){
-      case "Doctor":
-        res.render("profile",{"person":req.user});
-      break;
-      case "Patient":
-        res.render("patient",{"userInfo": req.user});
-      break;
-      default:
-      break
-    }
-  } else {
-    res.redirect("/")
-  }
-});
-
 router.get('/login',function(req,res){
-        if(req.user){ 
-         model.user.findOne({user_id: req.user.user_id},{presence:1,set_presence:1}).exec(function(err,data){
-          data.presence = true;
-          data.set_presence.general = true;
-          data.save(function(err,info){
-            console.log("presence is true;")
-          })
-         })           
-         res.json({
-                isLoggedIn: true,
-                typeOfUser: req.user.type,
-                firstname: req.user.firstname,
-                lastname:req.user.lastname,
-                phone: req.user.phone,
-                email: req.user.email,
-                title: req.user.title,
-                user_id: req.user.user_id,
-                balance: req.user.ewallet.available_amount,
-                profile_pic_url: req.user.profile_pic_url
-            });
-        } else {
-        res.sendFile(path.join(__dirname + "/404.html"));
-        }  
-
-        /*switch(req.user.type) {
-      case "Patient":
-        res.render("patient",{"userInfo": req.user});  
-      break;
-      case "Doctor":
-        res.render("profile",{"person":req.user});   
-      break;
-      case "Pharmacy":
-        res.render("pharmacy",{"userInfo":req.user}); 
-      break;
-      case "Laboratory":
-        res.render("laboratory",{"userInfo":req.user}); 
-      break;
-      case "Radiology":
-        res.render("radiology",{"userInfo":req.user}); 
-      break;
-      default:
-        res.render("medical",{"userInfo":req.user}); 
-      break;
-    }*/
+    if(req.user){ 
+     model.user.findOne({user_id: req.user.user_id},{presence:1,set_presence:1}).exec(function(err,data){
+      data.presence = true;
+      data.set_presence.general = true;
+      data.save(function(err,info){
+        console.log("presence is true");
+      });
+     });           
+     res.json({
+        isLoggedIn: true,
+        typeOfUser: req.user.type,
+        firstname: req.user.firstname,
+        lastname:req.user.lastname,
+        phone: req.user.phone,
+        email: req.user.email,
+        title: req.user.title,
+        user_id: req.user.user_id,
+        balance: req.user.ewallet.available_amount,
+        profile_pic_url: req.user.profile_pic_url
+        });
+    } else {
+    res.sendFile(path.join(__dirname + "/404.html"));
+    }  
 });
 
 router.get('/failed',function(req,res){        
     res.send(false);
 })
-
-
 
 
 }

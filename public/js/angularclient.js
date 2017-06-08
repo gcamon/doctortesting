@@ -3,22 +3,22 @@ var app = angular.module('myApp',["ngRoute","ngAnimate","angularModalService","a
   'ui.bootstrap','angular-clipboard',"ngResource","btford.socket-io"]);
 
 app.config(function($routeProvider){
-	$routeProvider
+  $routeProvider
 
-	.when("/",{
-		templateUrl: '/assets/pages/result-page.html',
-		controller: 'resultController'
-	})
+  .when("/",{
+    templateUrl: '/assets/pages/result-page.html',
+    controller: 'resultController'
+  })
 
   .when("/list",{
-		templateUrl: '/assets/pages/list-doctors.html',
-		controller: 'listController'
-	})
+    templateUrl: '/assets/pages/list-doctors.html',
+    controller: 'listController'
+  })
 
   .when("/list/:num",{
-		templateUrl: '/assets/pages/list-doctors.html',
-		controller: 'listController'
-	})
+    templateUrl: '/assets/pages/list-doctors.html',
+    controller: 'listController'
+  })
 
   .when("/patient-dashboard",{
     templateUrl: '/assets/pages/in-patient-dashboard-welcome.html',
@@ -642,19 +642,19 @@ app.service('templateService',[function(){
 }]);
 
 app.service("multiData",["$http","$window","templateService",function($http,$window,templateService){
-	this.sendPic = function(url,data){
+  this.sendPic = function(url,data){
     
-		var fd = new FormData();
-		for(var key in data){
-			fd.append(key,data[key]);
-		};
+    var fd = new FormData();
+    for(var key in data){
+      fd.append(key,data[key]);
+    };
 
     console.log(fd)
     
-		$http.put(url,fd,{
-			transformRequest: angular.identity,
-			headers: {"Content-Type":undefined}
-		})
+    $http.put(url,fd,{
+      transformRequest: angular.identity,
+      headers: {"Content-Type":undefined}
+    })
     .success(function(response){
       templateService.changedProfilePic = response;
       templateService.isUpdated = true;
@@ -662,7 +662,7 @@ app.service("multiData",["$http","$window","templateService",function($http,$win
       console.log(response)
       alert("Updated successfuly!")
     });
-	}
+  }
 }]);
 
 /***** All factorries *************/
@@ -1109,7 +1109,7 @@ app.controller('loginController',["$scope","$http","$location","$window","ModalS
   $scope.error = "";
   
   
-	$scope.send = function(){        
+  $scope.send = function(){        
         $http({
           method  : 'POST',
           url     : '/user/login',
@@ -1152,7 +1152,7 @@ app.controller('loginController',["$scope","$http","$location","$window","ModalS
           
         });
     //multiData.sendData(uploadUrl,$scope.logInfo);
-	}
+  }
 
   //this updates the current availability of user in real time.
   function createAwareness(data) {
@@ -1271,7 +1271,7 @@ app.controller('signupController',["$scope","$http","$location","$window","templ
       }
     }
   }); 
-	$scope.submit = function(type){
+  $scope.submit = function(type){
         $scope.user.typeOfUser = type || $scope.user.typeOfUser;
         if($scope.user.city && $scope.user.city !== "") {
           var capitalize = $scope.user.city.charAt(0).toUpperCase() + $scope.user.city.slice(1);
@@ -1413,7 +1413,7 @@ app.controller('pictureController',["$scope","$http","$location","multiData",fun
     $scope.user.type = typeOfFile;
     var uploadUrl = "/user/update";     
      multiData.sendPic(uploadUrl,$scope.user);    
-	  } 
+    } 
 }]);
 
 app.controller('formController',["$scope","$http","$location","multiData","$window",function($scope,$http,$location,multiData,$window) {  
@@ -1493,8 +1493,8 @@ app.controller('formController',["$scope","$http","$location","multiData","$wind
         if (data) {
           $window.location.href = '/doctor/update';                           
         } 
-      });		                                 
-	}
+      });                                    
+  }
 
 }]);
 
@@ -1527,7 +1527,7 @@ app.controller('searchController',["$scope","$http","$location","$window","multi
           localManager.setValue("userInfo",data);
           $window.location.href = "/user/find-specialist";
         }
-      });		                                 
+      });                                    
     }    
 }]);
 
@@ -1619,7 +1619,7 @@ app.controller('resultController',["$scope","$http","$location","$resource","loc
         
       });
       $location.path("/list");
-   }		                                 
+   }                                     
   }
   $scope.user.creteria = "specialty";
   $scope.$watch("user.creteria",function(newVal,oldVal){
