@@ -12,22 +12,6 @@ var emitter = new EventEmmiter();
 //var randomUserName = require("./randos");
 
 var basicRoute = function (model,sms,io) {
-  
-
-  router.get("/chat1",function(req,res){
-    //getSocketInstance(req)  
-    res.render("chat1",{userInfo:{}});
-  });
-
-  router.get("/chat2",function(req,res){
-    //getSocketInstance(req)  
-    res.render("chat2",{userInfo:{}});
-  });
-
-  router.get("/chat3",function(req,res){
-    //getSocketInstance(req)  
-    res.render("chat3",{userInfo:{}});
-  });
 
   router.get("/",function (req,res) {
     if(req.user){
@@ -118,28 +102,6 @@ var basicRoute = function (model,sms,io) {
   })//do for fitness center and physiotherapy
 
 
-
-  /*router.get("/medical-center/view",function(req,res){
-      if(req.user){
-         res.render("pharmacy",{"userInfo": req.user});
-        switch(req.user.type){
-          case "Pharmacy":
-           res.render("pharmacy",{"userInfo": req.user});
-           break;
-          case "Laboratory":
-            res.render("laboratory",{"userInfo": req.user});
-            break;
-          case "Radiology":
-            res.render("radiology",{"userInfo": req.user});
-            break;
-          default:
-          res.redirect("/home");
-          break;
-       }
-      } else {
-        res.redirect('/');
-      }
-  })*/
   router.get("/doctor/update",function(req,res){
     if(req.user){            
       res.render("profile-update",{"person":req.user});
@@ -191,7 +153,7 @@ var basicRoute = function (model,sms,io) {
           if(err) throw err;
           console.log(info) 
           var pic = "/download/profile_pic/"  + req.files[0].filename;      
-          res.send({profile_pic_url: pic});   //repalce with "success" as fallback               
+          res.send({profile_pic_url: pic});               
           });
       } else {
           res.send({error: "Picture does not meet specifications"});
