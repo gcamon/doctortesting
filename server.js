@@ -17,16 +17,11 @@ var express = require('express'),
     }), 
     placement = require("./placement"),
     mySocket = require("./socket"),
-    port = process.env.PORT || 8080;
-
-    
-
+    port = process.env.PORT || 1986;
 
 http.listen(port,function(){
-    console.log('listening on *:8080')
+    console.log('listening on *:8080');
 });
-
-
 
 config.configuration(app,model);
 route(model,sms,io); 
