@@ -783,8 +783,8 @@
                     <li role="presentation"><a href="#tg-signup-formarea" aria-controls="tg-signup-formarea" role="tab" data-toggle="tab">sign up</a></li>
                 </ul>
                 <div class="tab-content tg-haslayout">
-                    <div role="tabpanel" class="tab-pane tg-haslayout active" id="tg-signin-formarea">
-                        <form class="tg-form-modal tg-form-signin" method="POST" action="/user/login" > <!--action='/user/login' method="POST" enctype="application/x-www-form-urlencoded"-->
+                    <div role="tabpanel" class="tab-pane tg-haslayout active" id="tg-signin-formarea" ng-controller="loginController">
+                        <form class="tg-form-modal tg-form-signin"> <!--action='/user/login' method="POST" enctype="application/x-www-form-urlencoded"-->
                         <span style="color:red" ng-cloak>{{error}}</span>
                             <fieldset>
                                 <div class="form-group">
@@ -803,7 +803,7 @@
                                         <i class="fa fa-question-circle"></i>
                                     </a>
                                 </div>
-                                <button class="tg-btn tg-btn-lg">LOGIN now</button>
+                                <button class="tg-btn tg-btn-lg" ng-click="send()">LOGIN now</button>
                             </fieldset>
                         </form>
                     </div>

@@ -1103,55 +1103,47 @@ app.controller("pharmacyDrugNotHaveBycenterController",["$scope","$http",functio
 }]);
 
 
-app.controller('loginController',["$scope","$http","$location","$window","ModalService","templateService","localManager",
-  "$rootScope","mySocket",function($scope,$http,$location,$window,ModalService,templateService,localManager,$rootScope,mySocket) {
+app.controller('loginController',["$scope","$http","$location","$window","$resource","ModalService","templateService","localManager",
+  "$rootScope","mySocket",function($scope,$http,$location,$window,$resource,ModalService,templateService,localManager,$rootScope,mySocket) {
   $scope.login = {};
-  $scope.error = "";
-  
+  $scope.error = "";  
   
   $scope.send = function(){        
-        $http({
-          method  : 'POST',
-          url     : '/user/login',
-          data    : $scope.login, //forms user object
-          headers : {'Content-Type': 'application/json'} 
-         })
-        .success(function(data) {
-          console.log(data) 
-          localManager.setValue("resolveUser",data);
-          //$rootScope.balance = data.balance;             
-          if (data.isLoggedIn) {
-             //user joins a room in socket.io and intantiayes his own socket
-            switch(data.typeOfUser) {
-              case "Patient":
-                createAwareness(data)
-                $window.location.href = '/patient/dashboard';  
-              break;
-              case "Doctor":
-                createAwareness(data)
-               $window.location.href = '/doctor/dashboard';   
-              break;
-              case "Pharmacy":
-                $window.location.href = "/medical-center/pharmacy"; 
-              break;
-              case "Laboratory":
-                $window.location.href = "/medical-center/laboratory"; 
-              break;
-              case "Radiology":
-                $window.location.href = "/medical-center/radiology"; 
-              break;
-              default:
-                $window.location.href = "/medical-center/view"; 
-              break; 
+    var login = $resource('/user/login',null,{logPerson:{method:"POST"}});
+    login.logPerson($scope.login,function(data){
+    console.log(data) 
+    localManager.setValue("resolveUser",data);
+    //$rootScope.balance = data.balance;             
+    if (data.isLoggedIn) {
+       //user joins a room in socket.io and intantiayes his own socket
+        switch(data.typeOfUser) {
+          case "Patient":
+            createAwareness(data)
+            $window.location.href = '/patient/dashboard';  
+          break;
+          case "Doctor":
+            createAwareness(data)
+           $window.location.href = '/doctor/dashboard';   
+          break;
+          case "Pharmacy":
+            $window.location.href = "/medical-center/pharmacy"; 
+          break;
+          case "Laboratory":
+            $window.location.href = "/medical-center/laboratory"; 
+          break;
+          case "Radiology":
+            $window.location.href = "/medical-center/radiology"; 
+          break;
+          default:
+            $window.location.href = "/medical-center/view"; 
+          break; 
 
-            }
-            
-          } else {       
-            $scope.error = "Email or Password incorrect!";            
-          }
-          
-        });
-    //multiData.sendData(uploadUrl,$scope.logInfo);
+        }
+        
+      } else {       
+        $scope.error = "Email or Password incorrect!";            
+      }
+    });
   }
 
   //this updates the current availability of user in real time.
