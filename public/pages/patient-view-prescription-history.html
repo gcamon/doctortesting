@@ -1,0 +1,81 @@
+
+<div style="border:1p solid rgba(0,0,0,0.4); padding: 30px;" class="clearfix">	
+    <div class="col-sm-12 col-md-3 col-lg-3 pull-right" style="padding-right: 0px;">
+        <div class="tg-widget tg-widget-doctor">
+            <figure class="tg-docprofile-img" style="width: 100px; height:100px; margin-top: 80px">
+                <figcaption>
+                <span>online</span>                                                    
+                </figcaption>
+                <span class="tg-featuredicon"><em class="fa fa-bolt"></em></span>
+                <img alt="image description" ng-src="{{presInfo.Doctor_profile_pic_url}}" style="width: 100px; height:100px">                                  
+            </figure>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-9 col-lg-9">      
+               	
+		    <h6 style="">Prescription by:  <span style="font-weight: 100; color:black"><em>Dr. {{presInfo.doctor_firstname}} {{presInfo.doctor_lastname}}</em></span></h6>
+		    <h6 style="border-bottom: 1px solid rgba(0,0,0,0.3);  text-align:center"></h6>
+		    <h6>Specialty: <span style="font-weight: 200; color:black">{{presInfo.doctor_specialty}}</span></h6>
+		    <h6>Sub-Specialty: <span style="font-weight: 200; color:black">{{presInfo.doctor_sub_specialty}}</span></h6>
+		    <h6>Phone: <span style="font-weight: 200; color:black">{{presInfo.doctor_phone}}</span></h6>
+		    <h6>Address: <span style="font-weight: 200; color:black;font-size: 12px">{{presInfo.doctor_work_place}}</span> | <span style="font-style:italic; color:black;font-size:12px">{{presInfo.doctor_address}}</span></h6>
+		    <h6>City: <span style="font-weight: 200; color:black">{{presInfo.doctor_city}}</span></h6>        
+		    <h6>Experience: <span style="color:black">{{presInfo.doctor_experience + " years"}}</span></h6>        
+		    <p style="font-size: 18px; font-weight: 100; margin-top: 20px">PRESCRIPTION DETAILS:</p>		    	
+		    	<div class="row">
+		    		<div class="col-sm-12 col-md-4 col-lg-4"> 
+		    			<p><strong>Date</strong> : <span>{{presInfo.date| date: "medium"}}</span></p>
+		    		</div>
+		    		<div class="col-sm-12 col-md-8 col-lg-8"> 
+		    			<p><strong>Diagnosis</strong> : <span>{{presInfo.provisional_diagnosis}}</span></p/>
+		    		</div>		    		
+		    	</div>
+		    	<div class="row">
+		    		<div class="col-sm-12 col-md-6 col-lg-6">
+		    			<p><strong>Lab result</strong> : <span>{{presInfo.lab_analysis}}</span></p/>
+		    		</div>
+		    		<div class="col-sm-12 col-md-6 col-lg-6">
+		    			<p><strong>Scan</strong> : <span>{{presInfo.scan_analysis}}</span></p>
+		    		</div>
+		    	</div>		    	
+		    	<div class="row">
+		    		<div class="col-sm-12 col-md-12 col-lg-12">
+		    			<table>
+		    				<tr>
+		    					<thead>
+		    						<th>S/N</th>
+		    						<th>Drug Name</th>
+		    						<th>Dosage</th>
+		    						<th>Frequency</th>
+		    						<th>Duration</th>		    						
+		    					</thead>        					
+		    				</tr>
+		    				<tr>
+		    					<tbody ng-repeat="prescription in presInfo.prescription_body">		    						
+		    						<td>{{prescription.sn}}</td>
+		    						<td>{{prescription.drug_name}}</td>
+		    						<td>{{prescription.dosage}}</td>
+		    						<td>{{prescription.frequency}}</td>
+		    						<td>{{prescription.duration}}</td>		    							    						
+		    					</tbody>
+		    				</tr>
+		    			</table>
+		    			<div class="pull-right">
+		    				<i class="fa fa-download" aria-hidden="true" style="color:green;font-size: 18px;margin-right:20px;cursor:pointer" title="Download this prescription" ng-click="downloadPrescription(presInfo)"></i>
+		    				<i class="fa fa-arrow-right" aria-hidden="true" style="color:green;font-size:18px;margin-right:20px;cursor:pointer" title="Forward this prescription to a Phamarcy" ng-click="forwardPrescription(presInfo)"></i>				    	
+						</div>		    			
+    					<div>
+    						<p style="font-size: 18px; font-weight: 100; margin-top: 20px">Track Record:</p>
+    						<ol>
+    							<li ng-repeat = "go in trackedPrescription">
+    								<p>Sent to | {{go.center_name}} date | {{go.date | date : "mediumDate"}} Time | {{go.date | date : "mediumTime"}}</p>
+    								<address>Address | {{go.address}}, {{go.city}},{{go.country}}</address>
+    								<p>Ref NO | {{go.ref_id}}</p>
+    							</li>
+    						</ol>
+    						<p style="text-align: center; color: red" ng-if="trackedPrescription.length < 1">This prescription has not been sent to any Pharmacy</p>
+    					</div>		    				
+		    		</div>
+		    	</div>
+        </div>
+    </div>

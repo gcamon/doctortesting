@@ -1,0 +1,15 @@
+
+<a href="#/drug" style="font-size: 22px; font-weight: 100; color: #000"><i class="fa fa-arrow-left"> &nbsp;Back</i></a>
+<div style="margin-top: 30px">
+	<h4>Enter criteria below</h4>
+	<form>
+		<input type="text" placeholder="city" ng-model="center.city">
+		<input name="states" id="states" type="text" placeholder="Enter test name" ng-model="test.name" uib-typeahead="test.name for test in tests | filter:$viewValue | limitTo:50" class="form-control">
+		<input type="button" value="Find" ng-click="labTest(test.name)" class="btn btn-lg">
+	</form>
+	<div ng-repeat = "center in listOfCenter" style="cursor:pointer" ng-click="choseCenter(center.user_id)">
+		<p>{{center.name}} {{center.type}}</p>
+		<span>{{center.address}}</span> <span>{{center.city}}</span> <span>{{center.country}}</span>
+	</div>
+</div>
+

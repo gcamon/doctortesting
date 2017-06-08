@@ -1,0 +1,63 @@
+<div class="col-sm-12 col-md-12 col-lg-12">
+	<div class="row">
+		<div class="col-sm-12 col-md-3 col-lg-3 pull-right">
+			<img ng-src="{{refData.pharmacy.patient_profile_pic_url}}">
+		</div>
+		<div class="col-sm-12 col-md-9 col-lg-9">
+			<h5 style="text-align: center">{{refData.pharmacy.patient_firstname}} {{refData.pharmacy.patient_lastname}} <span style="display:block;font-size: 12px; color:#000">Patient</span><address style="display:block;font-size: 12px; color:#000">{{refData.pharmacy.patient_address}}, {{refData.pharmacy.patient_city}}, {{refData.pharmacy.patient_country}}</address></h5>
+			<h6 style="border-bottom: 1px solid rgba(0,0,0,0.4); width: 180px">Referrence Details</h6>
+			<ul class="ref-details">
+				<li><strong>Referred By </strong>| {{refData.referral_title}} {{refData.referral_firstname}} {{refData.referral_lastname}} {{refData.referral_name}}</li>
+				<li><strong>Date </strong>| {{refData.date | date: "mediumDate"}}</li>
+				<li><strong>Time </strong>| {{refData.date | date: "mediumTime"}}</li>
+				<li><strong>Ref.NO </strong>| {{refData.ref_id}}</li>
+			</ul>
+			<h6 style="border-bottom: 1px solid rgba(0,0,0,0.4); width: 180px">Prescription Details</h6>
+			<p><strong>Tips:</strong> While attending to this patient, please tick the drug you have already given to the patient.
+				Unticked drug is regarded as not available in your center<span style="display:block"> which can be forwarded to another center.</span></p>					
+			<table style="width:100%">				
+				<tr>
+					<thead>
+						<th><strong>S/N</strong></th>
+						<th><strong>Drug name</strong></th>
+						<th><strong>Dosage</strong></th>
+						<th><strong>Frequency</strong></th>
+						<th><strong>Duration</strong></th>
+						<th>Tick</th>
+					</thead>
+				</tr>
+				<tr>
+					<tbody ng-repeat="prescription in refData.pharmacy.prescription_body">												
+						<td>{{prescription.sn}}</td>
+						<td ng-class="{strike: prescription.picked}">{{prescription.drug_name}}</td>						
+						<td ng-class="{strike: prescription.picked}">{{prescription.dosage}}</td>
+						<td ng-class="{strike: prescription.picked}">{{prescription.frequency}}</td>
+						<td ng-class="{strike: prescription.picked}">{{prescription.duration}}</td>
+						<td><input type="checkbox" ng-model= "prescription.picked" style="width:22px;height:22px;color:rgba(0,200,0,0.8)"></td>
+					</tbody>
+				</tr>						
+			</table>			
+			<div style="margin-top: 20px; margin-bottom: 30px">
+				<button ng-click="done()">Done</button>
+				<button ng-click="toAnotherPharmacy()">Forward unticked drug to a pharmacy</button>
+				<button ng-click="toList(refData.pharmacy.patient_firstname,refData.pharmacy.patient_lastname,refData.pharmacy.patient_profile_pic_url,refData.ref_id,refData.date)">Attend later</button>				
+			</div>
+			<div class="prescription-info">
+				<p style="font-size: 18px; font-weight:100">This prescription was writen by:</p>
+				<div class="row">
+					<div class="col-sm-2 col-md-3 col-lg-3">			
+						<img ng-src="{{refData.pharmacy.Doctor_profile_pic_url}}" style="height:100px; width:100px">
+					</div>
+					<div class="col-sm-10 col-md-9 col-lg-9">
+						<article>					
+							<h6> Dr. {{refData.pharmacy.doctor_firstname}} {{refData.pharmacy.doctor_lastname}}<span style="display:block;color:rgba(0,0,0,0.4)">{{refData.pharmacy.doctor_specialty}}<span></h6>
+							<p>{{refData.pharmacy.doctor_phone}}</p>
+							<address><strong>{{refData.pharmacy.doctor_work_place}}</strong>| {{refData.pharmacy.doctor_address}}, {{refData.pharmacy.doctor_city}}, {{refData.pharmacy.doctor_country}}</address>
+							<a ng-href="{{refData.pharmacy.doctor_profile_url}}" style="color:rgba(0,255,0,0.6);cursor:pointer">View Dr. {{refData.pharmacy.doctor_firstname}} profile.</a>
+						</article>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

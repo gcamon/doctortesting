@@ -1,0 +1,36 @@
+<h2 style="text-align:center">Fund transfer</h2>
+<form style="width:80%;padding:10px;margin: 0 auto" ng-if="isTransfer===true">
+
+	<div style="text-align:center">
+		<form style="display:inline-block">
+			<label style="float:left;padding:20px">Use: </label>
+			<select ng-model="pay.mode" style="float:left;width: 200px;padding: 5px;border:none;border-bottom: 2px solid grey">
+				<option value="phone">Beneficiary's phone number</option>
+				<option value="userId">Beneficiary's ID</option>
+			</select>
+		</form>
+		<p style="text-align: right;font-size: 20px;width:300px;margin: 20px 0 0 20px">Amount | <strong>{{str}}</strong></p>
+		<div style="">
+			<input type="number" ng-model="pay.amount" placeholder="Enter amount" style="border:none;border-bottom: 2px solid grey;margin-top:30px">
+		</div>
+		<p style="color:red">{{errorMsg}}</p>
+	</div>
+	<div style="margin: 20px auto; width: 78%" ng-if="isPhone === true">		
+		<input type="number" ng-model="pay.phone" placeholder="Beneficiary's phone number" style="border:none;border-bottom: 2px solid grey">
+	</div>
+	<div style="margin: 20px auto; width: 78%;" ng-if="isUserId === true">		
+		<input type="text" ng-model="pay.userId" placeholder="Beneficiary's ID" style="border:none;border-bottom: 2px solid grey">
+	</div>
+	<div style="text-align:center" ng-if="isTransfer===true">		
+		<input type="button" value="Send" ng-click="confirm()" class="btn btn-primary">
+	</div>
+</form>
+<div style="width:80%;padding:10px;margin: 0 auto" ng-if="isOTP === true">
+	<p style="text-align: right; text-decoration:underline;color:blue;cursor:pointer" ng-click="confirm(resend)">Resend OTP</p>
+	<div style="margin-bottom: 10px">
+		<input type="text" placeholder="Enter the six digits OTP" ng-model="pay.otp">
+	</div>
+	<p><small>Otp will auto submit when the six digits are completed</small></p>
+	<p>If you have dificulty sending OTP please <a href="#">contact us</a></p>
+</div>
+

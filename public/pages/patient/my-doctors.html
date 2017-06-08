@@ -1,0 +1,9 @@
+<div class="col-sm-12 col-md-12 col-lg-12">
+	<h3>Choose a doctor</h3>
+	<span>Filter:</span><input type="text" ng-model="doc.firstname" placeholder="filter list by surname or specialty">
+	<div ng-repeat="person in doctors | filter: doc.firstname || doc.specialty" ng-click="selectedDoctor(person)" style="cursor:pointer;padding: 15px">
+		<img ng-src="{{person.doctor_profile_pic_url}}" style="width: 100px;height:100px">&nbsp;&nbsp;&nbsp;
+		<span style="font-size: 22px">Dr. {{person.doctor_firstname}} {{person.doctor_lastname}}<span>
+		<span>({{person.doctor_specialty}})</span>
+	</div>
+</div>

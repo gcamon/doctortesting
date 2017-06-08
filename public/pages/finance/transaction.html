@@ -1,0 +1,39 @@
+<div>
+	<form style="display:inline-block">
+		<div style="float:left;padding: 20px">
+			<label for="from">From</label>
+			<input type="date"  ng-model="period.from">
+		</div>
+		<div style="float:left;padding: 20px">
+			<label for="to">To</label>
+			<input type="date"  ng-model="period.to">
+		</div>
+		<div style="float:left">
+			<div>&nbsp;</div>			
+			<button ng-click="transactHistory()" class="btn btn-primary" style="margin-top: 40px">Submit</button>
+		</div>
+	</form>
+	<table>
+		<caption><strong>{{period.from | date: "mediumDate"}}&nbsp; - &nbsp;{{period.to | date: "mediumDate"}}<strong></caption>
+		<thead style="background-color:greeen;color:green;font-size: 14px">
+			<tr style="font-size: 13px">
+				<th>Date/time</th>
+				<th>Action</th>
+				<th>Amount</th>
+				<th>Source</th>
+				<th>Beneficiary</th>
+				<th>Activity</th>
+			</tr>
+		</thead>
+		<tbody ng-repeat="transact in transacts" >
+			<tr style="font-size: 13px">
+				<td >{{transact.date | date: "mediumDate"}}<span> &nbsp;&nbsp;{{transact.date | date: "mediumTime"}}</span></td>
+				<td>{{transact.activity}}</td>
+				<td>{{transact.body.amount}}</td>
+				<td>{{transact.source}}</td>
+				<td>{{transact.body.beneficiary}}</td>
+				<td>{{transact.message}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

@@ -1,0 +1,13 @@
+<a ng-href="{{pageUrl}}" style="font-size: 22px; font-weight: 100; color: #000"><i class="fa fa-arrow-left"> &nbsp;Back</i></a>
+<div>
+	<p style="font-size: 18px;text-align:center;padding: 20px 10px">How may we help you?</p>	
+	<form style="width: 90%;margin: 0 auto">		
+		<div>
+			<label>Briefly describe what you need *<small>(e.g I am looking for a center for dialysis.Please I need your help.)</small></label>
+			<textarea placeholder="Write..." ng-model="user.description" style="height: 200px"></textarea>
+		</div>
+		<div ng-if="user.helpType" style="margin-top: 20px">		
+			<input type="button" value="submit" class="btn btn-primary" style="background-color: #7dbb00" ng-click="sendHelp()">
+		</div>
+	</form>
+</div>

@@ -1,0 +1,11 @@
+<div>
+	<a href="#/radio/test-service/update">Back</a>
+	<h5>Test(s) not available in your center</h5>
+	<p>Please tick if a test service is currently available in your center</p>
+</div>
+<div class="all-test-check">
+	<ol>
+		<li ng-repeat="test in notService"><input type="checkbox" ng-model="test.val"> {{test.name}}</li>
+	</ol>
+	<button ng-click="saveTests()" ng-if="isToSave">Save</button>
+</div>

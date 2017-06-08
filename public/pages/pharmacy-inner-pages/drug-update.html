@@ -1,0 +1,20 @@
+
+<div style="text-align: right">
+	<a href="#/pharmacy/off-service" style="color:#000">Drugs not in store</a>
+</div>
+<div class="all-test-check">
+	<h4>Please unmark any drug you don't have in stock below<h4>
+
+	<h6 style="text-align: center;cursor:pointer">
+		<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="/#collapseSix" aria-expanded="false" aria-controls="collapseSix" style="color:rgba(0,180,0,0.6); font-size: 18px;">List of all drugs</a></h6>
+	<div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
+		<div ng-repeat="drug in allDrugs">
+			<input type="checkbox" ng-model="drug.val"><span>{{drug.name}}</span>
+		</div>
+	</div>
+
+	
+	<div style="text-align:center">
+		<button ng-click="saveSelection()">SAVE</button>
+	</div>
+</div>

@@ -1,0 +1,88 @@
+<div class="col-sm-12 col-md-12 col-lg-12">
+	<div class="row">
+		<div class="col-sm-12 col-md-2 col-lg-2 pull-right">
+			<img ng-src="{{refInfo.radiology.patient_profile_pic_url}}" width= "82" height="82">
+		</div>
+		<div class="col-sm-12 col-md-10 col-lg-10">
+			<h2 style="text-align: center; padding: 10px; border-bottom: 1px solid green">{{refInfo.radiology.patient_titl}} {{refInfo.radiology.patient_firstname}} {{refInfo.radiology.patient_lastname}} <span style="display:block">{{refInfo.radiology.patient_address}}</span></h2>
+			<p><Strong>Age | </strong>{{refInfo.radiology.patient_age}} &nbsp; <strong>Gender |</strong> {{refInfo.radiology.patient_gender}}</p>
+		</div>		
+	</div>
+	<div ng-if="refInfo.radiology.test_to_run.length > 0">
+		<div class="row">
+			<div class="col-sm-12 col-md-12 col-lg-12" ng-if="hasSent">
+				<h4>Lab details</h4>
+				<small><strong>Please unmark <em>(if any )</em> test NOT ran by your center before entering result.</strong></small>
+				<h6>Tests to run</h6>
+			
+			<ul>
+				<li ng-repeat = "test in refInfo.radiology.test_to_run" style="list-style-type:none"><input type="checkbox" ng-model="test.select">{{test.name}}</li>
+			</ul>
+			<p><button ng-click="toList(refInfo.radiology.patient_firstname,refInfo.radiology.patient_lastname,refInfo.radiology.patient_profile_pic_url,refInfo.ref_id,refInfo.date)">Add to the pending list</button></p>
+			</div>
+
+		</div>
+		<div class="row">
+			<div class="col-sm-12 col-md-12 col-lg-12">			
+				<p style="text-align:center; text-decoration: underline" ng-if="hasPreviewed"><button ng-click="result(refInfo)">Enter test result</button></p>
+				<p style="text-align:right; text-decoration: underline" ng-if="isRefresh"><button ng-click="refresh()">Refresh</button></p>
+				<div ng-if="isResult">
+					<h4>Uploads files associated with these test result(s)</h4>
+					<form enctype="multipart/form-data">
+						<input type="file" name="file" id="file" file-model = "radio.scanImage" multiple="multiple">
+						<button ng-click="upload()">Upload image</button>	
+						<p style="text-align: center; color: red">{{incomplete}}</p>
+					</form>
+					<form>
+						<div ng-repeat="report in refInfo.radiology.test_to_run">
+							<label>{{report.name}} Test Report:</label>
+							<textarea placeholder="Write..."  ng-model="report.data" required= "required"></textarea>						
+						</div>
+						<label>Conclusion</label>
+						<textarea placeholder="Write..." required ng-model="lab.conclusion"></textarea>									
+						<input type="button" value="Ok" ng-click="previewTestResult(refInfo)" class="btn btn-primary">		
+					</form>
+					
+					
+							
+				</div>
+				<div ng-if="isPreview">
+					<div>
+						<h5 style="text-align:center; text-decoration: underline">Preview of the result of above test ran based on your entry</h5>
+						<ul>
+							<li style="list-style:none;padding: 10px" ng-repeat="picked in preTest"><strong>{{picked.name}}: </strong> {{picked.data}}</li>
+							<li style="list-style:none;padding: 10px"><strong>Conclusion: </strong> {{lab.conclusion}}</li>
+						</ul>
+					</div>
+					<button ng-click="edit()"> Edit test report </button>	
+					<input type="button" value="Send report" ng-click="sendTestResult(refInfo)" class="btn btn-primary">					
+					<p>{{message}}</p>	
+				</div>
+			</div>
+		</div>
+		<div class = "row" ng-if="isToForward">
+			<div class="col-sm-12 col-md-12 col-lg-12">
+				<div style="width:80%;margin: 30px auto">
+					<ul>
+						<li ng-repeat="test in unRanTest">{{test.name}}</li>
+					</ul>
+					<p><button ng-click="getLab()">Find a radiology center</button> &nbsp;&nbsp;&nbsp; <button ng-click="noThanks()">No, Thanks</button></p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div ng-if="refInfo.radiology.test_to_run.length === 0">
+		<h6>Please fill the test to run  below</h6>
+		<div ng-repeat="i in testList">				
+			<input name="states" id="states" type="text" placeholder="Enter test name" ng-model="test.name" uib-typeahead="test.name for test in tests | filter:$viewValue | limitTo:15" class="form-control" style="width: 95%">
+			{{getTest(test.name)}} 
+			<i class="fa fa-times" style="cursor: pointer;font-weight: 100; font-size: 16px;color:grey" ng-click="remove(i.sn)" ng-if="i.sn !== 'a'"></i>				
+		</div>
+		<div style="text-align:right;padding: 20px">
+			<i class="fa fa-plus btn" style="cursor: pointer" ng-click="add(test.name)">&nbsp;Add</i> 
+		</div>
+		<div style="text-align: center">
+			<input type="button" value="Ok" class="btn btn-primary" ng-click="testToRunFilled()">
+		</div>
+	</div>
+</div>
