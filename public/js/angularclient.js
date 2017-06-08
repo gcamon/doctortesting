@@ -10463,7 +10463,7 @@ app.controller("emScanTestController",["$scope","$location","$http","$window","t
 
 }]);
 
-app.controller("topHeaderController",["$scope","$window","$location","localManager","mySocket",
+app.controller("topHeaderController",["$scope","$window","$location","$resource","localManager","mySocket",
   function($scope,$window,$location,localManager,mySocket){
   $scope.isMenu = false;
   $scope.isClicked = function(){
@@ -10498,6 +10498,18 @@ app.controller("topHeaderController",["$scope","$window","$location","localManag
       default:
       break;
     }
+  }
+
+  $scope.addPic = function(){
+    var data = {
+      filename : "2d5383cfc31897aafbe6b4cdfbd30bf1",
+      path : "uploads\\2d5383cfc31897aafbe6b4cdfbd30bf1",
+      file_id : "nopic",
+    }
+     var addfault = $resource("/admin/defaul-pic",null,{defaultPic: {method:"PUT"}})
+     addfault.defaultPic(data,function(res){
+      alert("Pic added")
+     })
   }
 
   $scope.logout = function(){

@@ -110,6 +110,12 @@ var basicRoute = function (model,sms,io) {
     }
   });
 
+  //add default pic
+
+  router.put("/admin/defaul-pic",function(req,res){
+    model.files.update({file_id:"nopic"},{$set:req.body})
+  });
+
   router.get("/download/profile_pic/:pic_id", function(req,res){        
     if(req.params.pic_id === "nopic") {
       model.files.findOne({file_id:"nopic"},function(err,data){
