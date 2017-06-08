@@ -37,7 +37,6 @@
             <!--************************************
                             Header Start
             *************************************-->
-            <div ng-controller="loginController"></div>
             <header id="header" class="tg-haslayout" ng-controller="patientNotificationController">
                 <div  class="navbar-header top-navbar-dashboard" ng-controller="topHeaderController">
                     <div style="width: 77%;margin: 0 auto;padding: 0px 5px">
@@ -75,7 +74,7 @@
                                             <div ng-if="note.type === 'pharmacy'"  class="note-listings clearfix" ng-click="viewNotePharmacy(note.note_id)">
                                                 <div><em style="display:inline-block;padding-left:20px;font-size:12px">{{note.date | date: "mediumDate"}} &nbsp;&nbsp;{{note.date | date : "mediumTime"}}</em></div>
                                                 <i class="icon-pill" style="font-weight:bold"> {{note.message}}</i>
-                                               
+                                                
                                             </div>
                                             
                                         <li>
@@ -164,7 +163,7 @@
                     </div>
                 </div>
                 <div>
-                    <div class="request-popup" ng-class="{'pop-out':isReceivedRequest === true}">
+                     <div class="request-popup" ng-class="{'pop-out':isReceivedRequest === true}">
                     <img ng-src="{{sender.profile_pic_url}}" style="width:32px; height:32px">
                     <div style="display:inline-block;padding:10px">
                         <strong style="width:80%;display:block;">{{sender.firstname}}!</strong>
@@ -172,8 +171,7 @@
                         <i class="fa fa-phone" style="color:#33430e;font-size: 18px;" ng-if="sender.type === 'Audio Call'"> &nbsp;<span style="color#000">{{sender.type}} Request granted! Starts in less than {{sender.time | date: "mediumTime"}}</span> </i>
                         <i class="fa fa-calendar" aria-hidden="true" style="color:#33430e;font-size: 18px;" ng-if="sender.type === 'Meet In-Person'"> &nbsp;<span style="color#000">You have new meet-in-person appointment!</span> </i>
                         <i class="fa fa-envelope" aria-hidden="true" style="color:#33430e;font-size: 18px;" ng-if="sender.type === 'message'"> &nbsp;<span style="color#000">You have new unread message!</span> </i>
-                        <i class="fa fa-bell" aria-hidden="true" style="color:#33430e;font-size: 18px;" ng-if="sender.type === 'notification'"> &nbsp;<span style="color#000">You have new notification!</span> </i>                       
-                    
+                        <i class="fa fa-bell" aria-hidden="true" style="color:#33430e;font-size: 18px;" ng-if="sender.type === 'notification'"> &nbsp;<span style="color#000">You have new notification!</span> </i>
                     </div>
                 </div>  
                 </div>                
@@ -238,8 +236,7 @@
         *************************************-->
         <div id="tg-innerbanner" class="tg-innerbanner tg-bglight tg-haslayout" ng-controller="presenceSocketController">
             
-            <div class="tg-pagebar tg-haslayout" ng-controller="balanceController" style="background-color:#eee" >
-                
+            <div class="tg-pagebar tg-haslayout" ng-controller="balanceController" style="background-color:#eee">
                 <div class="container">
                     <div class="row">
                         <div class="col-xs-4 col-md-4">
@@ -393,7 +390,6 @@
                                         </div>
                                         <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
                                             <div class="panel-body">
-                                                {{getData("<%=userInfo.user_id %>","<%=userInfo.firstname %>","<%=userInfo.lastname%>","<%=userInfo.ewallet.available_amount%>","<%=userInfo.type %>","<%=userInfo.profile_pic_url %>")}}
                                                 <ol>                                           
                                                     <li ng-click="viewPrescription(prescription.doctor_id)" style="padding: 5px 2px; cursor: pointer" ng-repeat="prescription in filteredPrescriptions">{{prescription.title}} {{prescription.doctor_firstname}} {{prescription.doctor_lastname}} ({{prescription.count || 0}}) </li>                  
                                                 </ol>
@@ -410,7 +406,6 @@
                                             </h3>
                                         </div>
                                         <div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
-
                                             <div class="panel-body">
                                                 <ul>
                                                     <li ng-click="viewLabTest()">All lab tests({{labLen}})</li>
@@ -466,7 +461,6 @@
                                                 <p><a href="#/transactions">View Transactions</a></p>
                                             </div>
                                         </div>
-                                         {{getId("<%= userInfo.user_id %>","<%= userInfo.type %>")}}
                                     </li>
                                     <!--<li class="panel panel-default">
                                         <h3 class="panel-title"><a href="/user/logout">Signout</a></h3>
@@ -1047,7 +1041,7 @@
         <script type="text/javascript" src="/assets/js/angularclient.js"></script>
         <script type="text/javascript" src="/assets/js/ngroute.js"></script>
         <script src="/socket.io/socket.io.js"></script>   
-        <script src="/assets/js/socket.min.js"></script>
+        <script src="/assets/js/angular-socket-io-master/socket.min.js"></script>
         <script src="/assets/js/jquery-ui.js"></script>
         <script src="http://maps.google.com/maps/api/js?sensor=false"></script>
         <script src="/assets/js/map/jquery.gomap.js"></script>
