@@ -327,14 +327,6 @@ var basicRoute = function (model,sms,io) {
         }
     })
 
-    router.get('/login',function(req,res){
-        res.render("success",{"message":""})
-    });
-
-    router.get("/signup",function(req,res){
-      res.render("sign-up");
-    })
-
     //navigates to list views accordingly
     router.get("/topview/:name", function (req,res) {
         switch (req.params.name) {

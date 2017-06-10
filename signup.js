@@ -100,6 +100,11 @@ var signupRoute = function(model,sms) {
 	  })(req, res, next);
 	});
 
+	//user request sign up page
+	router.get("/signup",function(req,res){
+      res.render("sign-up");
+    })
+
 	router.post("/referral/:id/signup",function(req,res){
 		passport.authenticate('signup', function(err, user, info) {
 	    if (err) {
