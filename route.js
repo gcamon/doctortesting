@@ -113,10 +113,11 @@ var basicRoute = function (model,sms,io) {
   //add default pic
   router.put("/admin/defaul-pic",function(req,res){
     console.log(req.body)
-    model.files.update({file_id:"nopic"},{$set:req.body},function(err,info){
+    var pic = new model.files(req.body);
+    pic.save(function(err,info){
       console.log(info);
       res.send({status:"updated"})
-    });
+    })
   });
 
   router.get("/download/profile_pic/:pic_id", function(req,res){        
