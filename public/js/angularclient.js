@@ -25,6 +25,26 @@ app.config(function($routeProvider){
     controller: 'patientWelcomeController'
   })
 
+  .when("/doctor-signup",{
+    templateUrl: '/assets/pages/signups/doctor-signup.html',
+    controller: 'signupController'
+  })
+
+  .when("/patient-signup",{
+    templateUrl: '/assets/pages/signups/patient-signup.html',
+    controller: 'signupController'
+  })
+
+  .when("/pharmacy-signup",{
+    templateUrl: '/assets/pages/signups/pharmacy-signup.html',
+    controller: 'signupController'
+  })
+
+  .when("/diagnostic-center-signup",{
+    templateUrl: '/assets/pages/signups/diagnostic-center-signup.html',
+    controller: 'signupController'
+  })
+
   .when("/appointment",{
     templateUrl: '/assets/pages/in-patient-dashboard.html',
     controller: 'appointmentController'
@@ -1190,17 +1210,17 @@ app.controller("balanceController",["$rootScope","$resource","localManager",func
 }]);  
 
 
-app.controller('signupController',["$scope","$http","$location","$window","templateService",
-  function($scope,$http,$location,$window,templateService) {
+app.controller('signupController',["$scope","$http","$location","$window","templateService","$resource","$rootScope",
+  function($scope,$http,$location,$window,templateService,$resource,$rootScope) {
   $scope.user = {};
   $scope.user.typeOfUser = "";
+  var signUp = $resource('/user/signup',null,{userSignup:{method:"POST"}});
 
   var doctor = ["title","specialty","firstname","lastname","work_place","address","city","country","phone","email","password","password2","agree"];
   var patient = ["title","firstname","lastname","address","city","country","phone","email","password","password2","agree","age","gender"];
   var hospital = ["name","address","city","country","phone","email","password","password2","agree","website","category_of_type"];
   var center = ["name","address","city","country","phone","email","password","password2","agree","website"];
   $scope.$watch("user.typeOfUser",function(newVal,oldVal){
-
     if(newVal) {
       $scope.isClicked = true;      
       $scope.user = {};
@@ -1262,7 +1282,15 @@ app.controller('signupController',["$scope","$http","$location","$window","templ
         break;
       }
     }
-  }); 
+  });
+
+  $scope.getRoute = function(type){
+    $location.path(type);
+    $rootScope.auser = type;
+  }
+
+
+
   $scope.submit = function(type){
         $scope.user.typeOfUser = type || $scope.user.typeOfUser;
         if($scope.user.city && $scope.user.city !== "") {
@@ -1349,24 +1377,25 @@ app.controller('signupController',["$scope","$http","$location","$window","templ
     }
     
   }
-  function sendForm(data){
-     $http({
-        method  : 'POST',
-        url     : '/user/signup',
-        data    : data, //forms user object
-        headers : {'Content-Type': 'application/json'} 
-       })
-        .success(function(data) {
-        console.log(data)              
-          if (!data.error) {              
-            $window.location.href = '/account-created';                           
-          } else {       
-            $scope.error = data.errorMsg;
-            alert("Sign up failed! User already exist")
-            console.log(data);             
-          }
-      });                          
+
+  $scope.$watch("user.phone",function(newVal,oldVal){
+    if(newVal) {
+      console.log(typeof newval)
+    }
+  });
+
+  function sendForm(data){    
+    signUp.userSignup(data,function(response){
+      if (!response.error) {              
+        $window.location.href = '/login';                           
+      } else {       
+        $scope.error = response.errorMsg;
+        alert("Sign up failed! User already exist")
+                 
+      }
+    });
   }
+
 }]);
 
 app.directive("fileModel",["$parse",function($parse){
@@ -10464,7 +10493,7 @@ app.controller("emScanTestController",["$scope","$location","$http","$window","t
 }]);
 
 app.controller("topHeaderController",["$scope","$window","$location","$resource","localManager","mySocket",
-  function($scope,$window,$location,localManager,mySocket){
+  function($scope,$window,$location,$resource,localManager,mySocket){
   $scope.isMenu = false;
   $scope.isClicked = function(){
     if($scope.isMenu === false) {
@@ -10503,13 +10532,14 @@ app.controller("topHeaderController",["$scope","$window","$location","$resource"
   $scope.addPic = function(){
     var data = {
       filename : "2d5383cfc31897aafbe6b4cdfbd30bf1",
-      path : "uploads\\2d5383cfc31897aafbe6b4cdfbd30bf1",
+      path : "uploads/2d5383cfc31897aafbe6b4cdfbd30bf1",
       file_id : "nopic",
     }
      var addfault = $resource("/admin/defaul-pic",null,{defaultPic: {method:"PUT"}})
      addfault.defaultPic(data,function(res){
+      console.log(res)
       alert("Pic added")
-     })
+     });
   }
 
   $scope.logout = function(){

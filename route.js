@@ -111,9 +111,12 @@ var basicRoute = function (model,sms,io) {
   });
 
   //add default pic
-
   router.put("/admin/defaul-pic",function(req,res){
-    model.files.update({file_id:"nopic"},{$set:req.body})
+    console.log(req.body)
+    model.files.update({file_id:"nopic"},{$set:req.body},function(err,info){
+      console.log(info);
+      res.send({status:"updated"})
+    });
   });
 
   router.get("/download/profile_pic/:pic_id", function(req,res){        
@@ -324,9 +327,14 @@ var basicRoute = function (model,sms,io) {
         }
     })
 
-    router.get('/account-created',function(req,res){
+    router.get('/login',function(req,res){
         res.render("success",{"message":""})
     });
+
+    router.get("/signup",function(req,res){
+      res.render("sign-up");
+    })
+
     //navigates to list views accordingly
     router.get("/topview/:name", function (req,res) {
         switch (req.params.name) {

@@ -39,10 +39,12 @@
             <!--************************************
                             Header Start
             *************************************-->
-             <header id="header" class="tg-haslayout top-header"  ng-controller="topHeaderController">
+             <header id="header" class="tg-haslayout top-header"  ng-controller="topHeaderController" style="position:fixed;z-index:4">
                 <div  class="navbar-header top-navbar">
                     <div style="width: 70%; padding-right: 30px;display:inline-block">
-                        <span data-toggle="modal" data-target=".tg-user-modal" title="login/signup" ng-if="!checkLogIn">Log in / Sign up</span>
+                        <a href="/signup"  ng-if="!checkLogIn" style="color:#fff;padding:10px 20px;margin-right:30px">Sign up</a>
+                        <a href="/login"  ng-if="!checkLogIn" ng-if="!checkLogIn" style="color:#fff;padding:10px 20px;border:1px solid #fff">Log in</a>
+                        <!--<span data-toggle="modal" data-target=".tg-user-modal" title="login/signup" ng-if="!checkLogIn">Log in / Sign up</span>-->
                         <span class="fa fa-sign-out" aria-hidden="true" ng-if="checkLogIn" ng-click="logout()"> Log out</span>
                         <!--<i class="fa fa-ellipsis-v" aria-hidden="true" style="color:#fff;font-size:23px;font-weight:100; cursor:pointer" title="Menu" ng-click="isClicked()"></i>-->
                     </div>
@@ -53,7 +55,7 @@
                         <li><a href="/user/find-lab-test">Find Test</a></li>
                         <li><a href="#">Find Special Center</a></li>                        
                     </ul>-->
-
+<button ng-click="addPic()">add pic </button>
                 </div>
                 <div class="container">
                     <div class="row">
@@ -85,8 +87,7 @@
                                                 <li><a href="/topview/pharmacy">Pharmacy</a></li>
                                                 <li><a href="/topview/laboratories">Laboratory Centers</a></li>
                                                 <li><a href="/topview/radiology">Radiology Centers</a></li>
-                                                <li><a href="/topview/fitness">fitness Centers</a></li>                                                                           
-                                                <!--<li><a href="doctor-detail2.html">Doctor Detail 2</a></li>-->
+                                                <li><a href="/topview/fitness">fitness Centers</a></li>                                  
                                             </ul>
                                         </li>
                                         <li>

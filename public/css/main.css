@@ -293,6 +293,41 @@ form fieldset{
 	box-shadow: 1px 5px 8px rgba(0,0,0,0.6)
 }
 
+/* sign up btn */
+
+.signup {
+	display: inline-block;
+	list-style: none;
+	width: 80%;
+	margin: 0 auto;
+}
+
+.signup li {
+	float: left;
+	width: 25%;
+	padding: 10px;
+}
+
+.signup button {
+	width: 100%;
+	color: #000;
+	font-size: 16px;
+	background-color: #eee!important;
+}
+
+.signup-Clicked {
+	background-color: red;
+	border-radius: 5px;
+}
+
+.signup-form-style input, .signup-form-style select{
+	display: inline-block!important;
+	width: 60%;
+	margin-bottom: 20px;
+	border:none;
+	border-bottom: 1px solid #000
+}
+
 /*my diagnostic center indicator style **/
 
 .indica {

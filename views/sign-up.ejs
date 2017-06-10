@@ -38,10 +38,10 @@
 		<header id="header" class="tg-haslayout top-header"  ng-controller="topHeaderController">
                 <div  class="navbar-header top-navbar">
                     <div style="width: 70%; padding-right: 30px;display:inline-block">
-                    	<a href="/signup" style="font-size: 18px; color: #fff;padding:0 20px;border:1px solid #fff;margin-right:40px">Sign up</a>
+                    	<a href="/login" style="font-size: 18px; color: #fff;padding:0 20px;border:1px solid #fff;margin-right:40px">LOG IN</a>
                         <!--<span data-toggle="modal" data-target=".tg-user-modal" title="login/signup" ng-if="!checkLogIn">Log in / Sign up</span>
                         <span class="fa fa-sign-out" aria-hidden="true" ng-if="checkLogIn" ng-click="logout()"> Log out</span>-->
-                        <i class="fa fa-ellipsis-v" aria-hidden="true" style="color:#fff;font-size:23px;font-weight:100; cursor:pointer" title="Menu" ng-click="isClicked()"></i>
+                        
                     </div>
                     <!--<ul ng-if="drop === true" class="drp-list">
                         <li><a href="/user/find-specialist">Find A Doctor</a></li>
@@ -102,6 +102,7 @@
                         </div>
                     </div>
                 </div>-->
+               
             </header>
 		<!--************************************
 				Header End
@@ -116,24 +117,29 @@
 		<!--************************************
 				Main Start
 		*************************************-->
-		<main id="main" class="tg-main-section tg-haslayout" ng-controller = "loginController">
+		<main id="main" class="tg-main-section tg-haslayout" ng-controller = "signupController">
 			<div class="container">
 				<div class="row">
 					<div class="tg-404 tg-haslayout">
 						<div class="col-md-12 col-sm-12">
-						 	<h2>LOG IN</h2>				
-                            <div style="width: 400px; height: 400px; margin:0 auto;padding-top:100px">
-                            <span  style="color: red;display:block;text-align: center; font-size:16px;padding:10px 10px" ng-cloak>{{error}}</span>	
-							<form>
-								<input type="text" placeholder="Email" ng-model = "login.email" style="border: 1px solid rgba(0,255,0,0.8)">
-								<input type="password" placeholder="Password" ng-model = "login.password" style="border: 1px solid rgba(0,255,0,0.8);margin: 10px 0px">
-								<p style="text-align: center">
-								<button class="btn btn-login" ng-click="send()" style="color: #fff;">LOGIN</button>
+							<div>
+								<h2>SIGN UP</h2>
+								<p>Applinic is an online platform where users like patients and doctors interact for treatment. 
+								   But treatment may not be complete without the services of other users like diagnostic and pharmaceutical centers. 
 								</p>
-							</form>
-							<a href="#/forgot-password" style="font-size: 14px; color: green; text-decoration:underline">Forgot password?</a>
-							
+								<p><strong>Please what kind of user do you want to be?</strong></p>
+								<ul class="signup">
+									<li><button ng-click="getRoute('/doctor-signup')" ng-class="{'signup-Clicked':auser === '/doctor-signup'}">Doctor</button></li>
+									<li><button ng-click="getRoute('/patient-signup')" ng-class="{'signup-Clicked':auser === '/patient-signup'}">Patient</button></li>
+									<li><button ng-click="getRoute('/diagnostic-center-signup')" ng-class="{'signup-Clicked':auser === '/diagnostic-center-signup'}">Diagnostic center</button></li>
+									<li><button ng-click="getRoute('/pharmacy-signup')" ng-class="{'signup-Clicked':auser === '/pharmacy-signup'}">Pharmaceutical center</button></li>
+								</ul>
+								<p><span style="color:red" ng-cloak>{{error}}</span></p>					
 							</div>
+						 	<div class="view-animate-container row" >  
+	                            <div class="view-animate" ng-view >
+	                            </div>
+                        	</div>	
 						</div>						
 				</div>
 			</div>
