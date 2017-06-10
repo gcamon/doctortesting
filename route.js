@@ -112,7 +112,6 @@ var basicRoute = function (model,sms,io) {
 
   //add default pic
   router.put("/admin/defaul-pic",function(req,res){
-    console.log(req.body)
     var pic = new model.files(req.body);
     pic.save(function(err,info){
       console.log(info);
@@ -728,27 +727,34 @@ var basicRoute = function (model,sms,io) {
         }
     });
 
-router.put("/admin/patient-mail",function(req,res){
+    router.put("/admin/patient-mail",function(req,res){
 
-});
+    });
 
-router.put("/doctor/decline-mail",function(req,res){
+    router.put("/doctor/decline-mail",function(req,res){
 
-})
+    })
 
-router.put("/doctor/redirect-mail",function(req,res){
-  
-})
+    router.put("/doctor/redirect-mail",function(req,res){
+      
+    })
     
 
     //this router gets all the patient medical records and prescriptions and send it to the front end as soon as the patient logs in. 
     //the data is sent as json and the controller that receives it on the front end is "patientPanelController" .
     router.get("/patient-panel/get-medical-record",function(req,res){
+      console.log("-=+++++++++++++++++++++++++")
+      console.log(req.user.type)
       if(req.user) {
         model.user.findOne({user_id: req.user.user_id},{medical_records: 1,medications:1},function(err,data){
-          res.json({medical_records: data.medical_records,prescriptions: data.medications})
+          if(err) throw err;
+          if(data) {
+            res.json({medical_records: data.medical_records,prescriptions: data.medications})
           //Note from model, medications holds all prescriptions while medical_records holds all laboratory and radiology tests
           // though there is prescription property on medical_record obj but not used yet.
+          } else {
+            res.send({});
+          }
         })
       } else {
         res.end("Unauthorized access!!")
@@ -761,7 +767,11 @@ router.put("/doctor/redirect-mail",function(req,res){
     router.get("/pharmacy/get-referral",function(req,res){
       if(req.user){
         model.user.findOne({user_id:req.user.user_id},{referral:1},function(err,referral){
-          res.send(referral);
+          if(referral) {
+            res.send(referral);
+          } else {
+            res.send([]);
+          }
         });        
       } else {
         res.end("Unauthorized access!! Please log in")
@@ -2820,7 +2830,11 @@ router.put("/doctor/redirect-mail",function(req,res){
       if(req.user){
         model.user.findOne({user_id: req.user.user_id},{patient_notification:1},function(err,data){
           if(err) throw err;
-          res.send(data.patient_notification);
+          if(data){
+            res.send(data.patient_notification);
+          } else {
+            res.send([]);
+          }
         });
       } else {
         res.end("Unauthorized access!!!");
@@ -2830,7 +2844,11 @@ router.put("/doctor/redirect-mail",function(req,res){
     router.get("/patient/get-message",function(req,res){
       if(req.user){
         model.user.findOne({user_id: req.user.user_id},{patient_mail: 1},function(err,data){
-          res.send(data.patient_mail);
+          if(data){
+            res.send(data.patient_mail);
+          } else {
+            res.send([]);
+          }
         });
       } else {
         res.end("Unauthorized access");
@@ -2841,7 +2859,11 @@ router.put("/doctor/redirect-mail",function(req,res){
       if(req.user) {
         model.user.findOne({user_id:req.user.user_id},{diagnostic_center_notification:1},function(err,data){
           if(err) throw err;
-          res.send(data.diagnostic_center_notification);
+          if(data){
+            res.send(data.diagnostic_center_notification);
+          } else {
+            res.send([]);
+          }
         })
       } else {
         res.end("Unauthorized access");

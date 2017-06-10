@@ -69,7 +69,7 @@ router.get('/success',function(req,res){
       profile_pic_url: req.user.profile_pic_url
       });
   } else {
-  res.sendFile(path.join(__dirname + "/404.html"));
+    res.render("success",{"message":""});
   }  
 });
 
