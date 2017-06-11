@@ -73,11 +73,6 @@ router.get('/success',function(req,res){
   }  
 });
 
-//user requesting login page.
-router.get('/login',function(req,res){
-  res.render("success",{"message":""})
-});
-
 router.get('/failed',function(req,res){        
     res.send(false);
 })

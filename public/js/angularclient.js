@@ -10494,7 +10494,9 @@ app.controller("emScanTestController",["$scope","$location","$http","$window","t
 
 app.controller("topHeaderController",["$scope","$window","$location","$resource","localManager","mySocket",
   function($scope,$window,$location,$resource,localManager,mySocket){
+
   $scope.isMenu = false;
+
   $scope.isClicked = function(){
     if($scope.isMenu === false) {
       $scope.drop = true;
@@ -10507,6 +10509,7 @@ app.controller("topHeaderController",["$scope","$window","$location","$resource"
   }
   console.log(localManager.getValue("resolveUser"))
   $scope.checkLogIn = localManager.getValue("resolveUser")
+
   if($scope.checkLogIn){
     switch($scope.checkLogIn.typeOfUser) {
       case "Doctor":        
@@ -10543,6 +10546,7 @@ app.controller("topHeaderController",["$scope","$window","$location","$resource"
   }
 
   $scope.logout = function(){
+    alert($scope.checkLogIn)
     mySocket.emit("set presence",{status:"offline",userId:$scope.checkLogIn.user_id},function(response){
       if(response.status === false){
         if($scope.checkLogIn.typeOfUser === "Doctor"){

@@ -51,27 +51,29 @@ var basicRoute = function (model,sms,io) {
       //getSocketInstance(req)     
       res.render("profile",{"person":req.user});
     } else {
-      res.redirect("/");
+      res.redirect("/login");
     }
   });
 
   router.get("/patient/dashboard",function(req,res){        
-        if(req.user){
-          //getSocketInstance(req)
-          res.render("patient",{"userInfo": req.user});
-        } else {
-          res.redirect('/');
-        }
+    if(req.user){
+      console.log("check out reqquest ==============")
+      console.log(req.user)
+      //getSocketInstance(req)
+      res.render("patient",{"userInfo": req.user});
+    } else {
+      res.redirect('/login');
+    }
 
   });
 
-   router.get("/medical-center/view",function(req,res){
-      if(req.user){
-        //getSocketInstance(req)
-         res.render("medical",{"userInfo": req.user});        
-      } else {
-        res.redirect('/');
-      }
+  router.get("/medical-center/view",function(req,res){
+    if(req.user){
+      //getSocketInstance(req)
+       res.render("medical",{"userInfo": req.user});        
+    } else {
+      res.redirect('/login');
+    }
   });
 
   router.get("/medical-center/pharmacy",function(req,res){
@@ -79,7 +81,7 @@ var basicRoute = function (model,sms,io) {
         //getSocketInstance(req)
          res.render("pharmacy",{"userInfo": req.user});        
       } else {
-        res.redirect('/');
+        res.redirect('/login');
       }
   });
 
@@ -88,7 +90,7 @@ var basicRoute = function (model,sms,io) {
         //getSocketInstance(req)
          res.render("radiology",{"userInfo": req.user});        
       } else {
-        res.redirect('/');
+        res.redirect('/login');
       }
   })
 
@@ -97,7 +99,7 @@ var basicRoute = function (model,sms,io) {
         //getSocketInstance(req)
          res.render("laboratory",{"userInfo": req.user});        
       } else {
-        res.redirect('/');
+        res.redirect('/login');
       }
   })//do for fitness center and physiotherapy
 
@@ -106,9 +108,20 @@ var basicRoute = function (model,sms,io) {
     if(req.user){            
       res.render("profile-update",{"person":req.user});
     } else {
-      res.redirect("/");
+      res.redirect("/login");
     }
   });
+
+  //user requesting login page.
+  router.get('/login',function(req,res){
+    res.render("success",{"message":""})
+  });
+
+  //user request sign up page
+  router.get("/signup",function(req,res){
+    res.render("sign-up");
+  })
+
 
   //add default pic
   router.put("/admin/defaul-pic",function(req,res){
@@ -1988,7 +2001,6 @@ var basicRoute = function (model,sms,io) {
     //doctor updates changes doctor made when consulting the patient. based on the patient presenting complain and others
     router.put("/doctor/session-update/save-changes",function(req,res){
       if(req.user){
-
         //save changes in the treatment session to the database
         model.user.findOne({"doctor_patient_session.session_id": req.body.session_id},{doctor_patient_session:1}).exec(function(err,data){
           if(err) throw err;
@@ -2478,6 +2490,7 @@ var basicRoute = function (model,sms,io) {
 
 
             record.medical_records.laboratory_test.unshift(recordObj);
+
             record.save(function(err,info){
               if(err) {
                 throw err;
