@@ -38,43 +38,43 @@ var signupRoute = function(model,sms) {
             firstname: req.body.firstname,
             lastname: req.body.lastname,
             username: req.body.username,
-						address: req.body.address,
-						gender: req.body.gender,
-						title: req.body.title,
-						age: req.body.age,
-						profile_pic: {
-							filename:""
-						},
-						specialty: req.body.specialty,
-						profile_url: "/ranking/views/" + uid,
-						profile_pic_url: "/download/profile_pic/nopic",
-						work_place: req.body.work_place,
-						country: req.body.country,
-						name: req.body.name,
-						verified: false,
-						ref_link: referrral_link					
-						});
+			address: req.body.address,
+			gender: req.body.gender,
+			title: req.body.title,
+			age: req.body.age,
+			profile_pic: {
+				filename:""
+			},
+			specialty: req.body.specialty,
+			profile_url: "/ranking/views/" + uid,
+			profile_pic_url: "/download/profile_pic/nopic",
+			work_place: req.body.work_place,
+			country: req.body.country,
+			name: req.body.name,
+			verified: false,
+			ref_link: referrral_link					
+			});
 
-						if(req.body.typeOfUser === "Doctor"){
-							User.name = "Dr " + req.body.firstname + " " + req.body.lastname.slice(0,1).toUpperCase();
-						}
+			if(req.body.typeOfUser === "Doctor"){
+				User.name = "Dr " + req.body.firstname + " " + req.body.lastname.slice(0,1).toUpperCase();
+			}
 
-						User.ewallet = {
-							available_amount: 0,
-							firstname: req.body.firstname,
-	            lastname: req.body.lastname,
-						}
+			User.ewallet = {
+				available_amount: 0,
+				firstname: req.body.firstname,
+    			lastname: req.body.lastname,
+			}
 
 
-						User.save(function(err){
-							console.log("user saved");
-							if(err) throw err;					
-							return done(null,User);
-						})
-					} else {
-						return done(null, false, req.flash('signupMessage', 'Please you have to agree to our terms and conditions'))
-					}
+					User.save(function(err){
+						console.log("user saved");
+						if(err) throw err;					
+						return done(null,User);
+					})
+				} else {
+					return done(null, false, req.flash('signupMessage', 'Please you have to agree to our terms and conditions'))
 				}
+			}
 			})
 
 			function genId(userId) {
@@ -100,10 +100,6 @@ var signupRoute = function(model,sms) {
 	  })(req, res, next);
 	});
 
-	//user request sign up page
-	router.get("/signup",function(req,res){
-      res.render("sign-up");
-    })
 
 	router.post("/referral/:id/signup",function(req,res){
 		passport.authenticate('signup', function(err, user, info) {

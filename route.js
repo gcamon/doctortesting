@@ -36,14 +36,14 @@ var basicRoute = function (model,sms,io) {
          break;
 
          //do for fitness center and physiotherapy
-     }
+      }
     } else {
      res.render('index',{"message":""});
     }
   });
 
   router.get("/home",function (req,res) {    
-     res.render('index',{"message":""});
+    res.render('index',{"message":""});
   });
 
   router.get("/doctor/dashboard",function(req,res){    
@@ -754,8 +754,6 @@ var basicRoute = function (model,sms,io) {
     //this router gets all the patient medical records and prescriptions and send it to the front end as soon as the patient logs in. 
     //the data is sent as json and the controller that receives it on the front end is "patientPanelController" .
     router.get("/patient-panel/get-medical-record",function(req,res){
-      console.log("-=+++++++++++++++++++++++++")
-      console.log(req.user)
       if(req.user) {
         model.user.findOne({user_id: req.user.user_id},{medical_records: 1,medications:1},function(err,data){
           if(err) throw err;          
@@ -763,7 +761,7 @@ var basicRoute = function (model,sms,io) {
         //Note from model, medications holds all prescriptions while medical_records holds all laboratory and radiology tests
         // though there is prescription property on medical_record obj but not used yet.         
         })
-        
+
       } else {
         res.end("Unauthorized access!!")
       }

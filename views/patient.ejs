@@ -81,7 +81,7 @@
                                     </ul>
                             </div>
                             <div class="msg-box">
-                                <i class="fa fa-envelope" aria-hidden="true" style="font-size:20px;color:#fff;position:relative;top:4px;cursor:pointer" ng-click="showMsg()">
+                                <i class="fa fa-envelope" aria-hidden="true" style="font-size:20px;color:#fff;position:relative;top:4px;cursor:pointer">
                                 <span style="display:inline-block;background-color:#996b88;border-radius:14px;padding:7px;left: 14px; top:-14px;position:absolute;color:#fff;font-size:12px;border:none" ng-if=" msgLen > 0 " ng-cloak> {{msgLen}}</span></i>
 
                                 <ul class="all-notify app-drp">
@@ -124,7 +124,7 @@
                                 </ul>
                             </div>
                             <div class="msg-box">
-                                <i class="fa fa-video-camera" aria-hidden="true" style="font-size:20px;color:#fff;position:relative;top:4px;cursor:pointer" ng-click = "showVideo()"><span style="display:inline-block;background-color:#996b88;border-radius:14px;padding:7px;left: 14px; top:-14px;position:absolute;color:#fff;font-size:12px;border:none" ng-if="videoLen > 0 " ng-cloak>{{videoLen}}</span></i>
+                                <i class="fa fa-video-camera" aria-hidden="true" style="font-size:20px;color:#fff;position:relative;top:4px;cursor:pointer"><span style="display:inline-block;background-color:#996b88;border-radius:14px;padding:7px;left: 14px; top:-14px;position:absolute;color:#fff;font-size:12px;border:none" ng-if="videoLen > 0 " ng-cloak>{{videoLen}}</span></i>
                                 <ul class="all-notify app-drp">
                                     <li> <h6 style="text-align: center">Video Call Notification</h6> </li>
                                     <li ng-repeat = "call in holdVideoCallResponse" class="msg-drp-list" ng-click= "viewVideoAppointment(call.message_id)">

@@ -3915,8 +3915,6 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
       case "pharmacy":
         $location.path("/prescription-notification/" + id);
       break;
-      case "":
-      break;
       default:
       break
     }
@@ -3987,7 +3985,7 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
       headers : {'Content-Type': 'application/json'} 
       })
       .success(function(data){
-         console.log(data)  
+        console.log(data)  
         var len = data.length;
         if(len > 0){
           $rootScope.msgLen = templateService.holdMsgLen(len);   
