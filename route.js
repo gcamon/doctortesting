@@ -57,8 +57,6 @@ var basicRoute = function (model,sms,io) {
 
   router.get("/patient/dashboard",function(req,res){        
     if(req.user){
-      console.log("check out reqquest ==============")
-      console.log(req.user)
       //getSocketInstance(req)
       res.render("patient",{"userInfo": req.user});
     } else {
@@ -757,18 +755,15 @@ var basicRoute = function (model,sms,io) {
     //the data is sent as json and the controller that receives it on the front end is "patientPanelController" .
     router.get("/patient-panel/get-medical-record",function(req,res){
       console.log("-=+++++++++++++++++++++++++")
-      console.log(req.user.type)
+      console.log(req.user)
       if(req.user) {
         model.user.findOne({user_id: req.user.user_id},{medical_records: 1,medications:1},function(err,data){
-          if(err) throw err;
-          if(data) {
-            res.json({medical_records: data.medical_records,prescriptions: data.medications})
-          //Note from model, medications holds all prescriptions while medical_records holds all laboratory and radiology tests
-          // though there is prescription property on medical_record obj but not used yet.
-          } else {
-            res.send({});
-          }
+          if(err) throw err;          
+          res.json({medical_records: data.medical_records,prescriptions: data.medications})
+        //Note from model, medications holds all prescriptions while medical_records holds all laboratory and radiology tests
+        // though there is prescription property on medical_record obj but not used yet.         
         })
+        
       } else {
         res.end("Unauthorized access!!")
       }
@@ -1244,7 +1239,6 @@ var basicRoute = function (model,sms,io) {
     //user getting the available on the dashboard balance route.
     router.get('/user/:userId/get-balance',function(req,res){
       if(req.user){
-        console.log(req.params)
         model.user.findOne({user_id: req.params.userId},{ewallet:1},function(err,wallet){
           if(err) throw err;
           res.send({balance: wallet.ewallet.available_amount})
