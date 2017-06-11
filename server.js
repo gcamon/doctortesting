@@ -23,11 +23,11 @@ http.listen(port,function(){
     console.log('listening on *:8080');
 });
 
-config.configuration(app,model);
-route(model,sms,io); 
+config.configuration(app,model)
 mySocket(model,io)
 signupRoute(model,sms);
 loginRoute(model);
+route(model,sms,io); 
 payments(model,sms,io);
 placement(model,sms);
 

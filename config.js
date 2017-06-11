@@ -37,7 +37,7 @@ var configuration = function (app,model) {
 	
 	
 	passport.serializeUser(function(user, done) {    
-      done(null, user._id);
+    done(null, user._id);
 	});
 
 	passport.deserializeUser(function(id, done) {
@@ -50,5 +50,6 @@ var configuration = function (app,model) {
 
 module.exports = {
   configuration: configuration,
-  router: router	
+  router: router,
+  passport: passport	
 }

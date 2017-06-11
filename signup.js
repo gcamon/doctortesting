@@ -62,7 +62,7 @@ var signupRoute = function(model,sms) {
 			User.ewallet = {
 				available_amount: 0,
 				firstname: req.body.firstname,
-    			lastname: req.body.lastname,
+    		lastname: req.body.lastname,
 			}
 
 
