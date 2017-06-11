@@ -657,7 +657,7 @@ var basicRoute = function (model,sms,io) {
 
     //this route gets all the notifications for the doctor that just logged in
     router.get("/doctor/notifications",function(req,res){
-         if(req.user){
+        if(req.user){
          model.user.findOne({user_id:req.user.user_id},{doctor_notification:1,_id:0},function(err,data){                
             res.send(data);
          })
@@ -760,10 +760,9 @@ var basicRoute = function (model,sms,io) {
           res.json({medical_records: data.medical_records,prescriptions: data.medications})
         //Note from model, medications holds all prescriptions while medical_records holds all laboratory and radiology tests
         // though there is prescription property on medical_record obj but not used yet.         
-        })
-
+        });
       } else {
-        res.end("Unauthorized access!!")
+        res.end("Unauthorized access!!");
       }
     });
 

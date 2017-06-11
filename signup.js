@@ -19,17 +19,17 @@ var signupRoute = function(model,sms) {
 	function(req,email,password,done){
 		process.nextTick(function(){	
 			model.user.findOne({email:email},function(err,user){
-				if(err) return done(err);
-				if(user){
-					return done(null, false, req.flash('signupMessage', 'That email has already been use please find another one'));	
-				} else {
-					if(req.body.agree === true) {			
-						
-						var uid = genId(req.body.email);
-						var referrral_link = "/referral/" + uid + "/signup";											
-						var User = new model.user({
-						email: email,
-						user_id: uid,
+			if(err) return done(err);
+			if(user){
+				return done(null, false, req.flash('signupMessage', 'That email has already been use please find another one'));	
+			} else {
+				if(req.body.agree === true) {
+					
+					var uid = genId(req.body.email);
+					var referrral_link = "/referral/" + uid + "/signup";											
+					var User = new model.user({
+					email: email,
+					user_id: uid,
             password: salt.createHash(password),
             phone: req.body.phone,
             admin: false,
