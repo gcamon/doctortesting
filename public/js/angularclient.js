@@ -10555,10 +10555,10 @@ app.controller("topHeaderController",["$scope","$window","$location","$resource"
           mySocket.emit("patient disconnect",$scope.checkLogIn);
         }
       }
-      destroyStorage();
+      $window.location.href = "/user/logout";
     });
-
-    $window.location.href = "/user/logout";
+   
+    destroyStorage();
   }
 
   function destroyStorage() {
