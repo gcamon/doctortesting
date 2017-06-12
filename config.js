@@ -24,7 +24,7 @@ var configuration = function (app,model) {
 	app.use(bodyParser.urlencoded({ extended: false }));
 	app.use(bodyParser.json());
 	app.use(multer({dest: './uploads'}).any());	
-	app.use('/',router);	
+	
 	app.use(session({
 	  secret: 'keyboard cat',
 	  resave: true,	  
@@ -34,6 +34,7 @@ var configuration = function (app,model) {
 	
 	app.use(passport.initialize());
 	app.use(passport.session());
+	app.use('/',router);	
 	//app.use(flash());		
 	
 	
