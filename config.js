@@ -8,7 +8,7 @@ var router = express.Router();
 var session = require('express-session');
 var passport = require('passport');
 var flash = require('connect-flash');
-var cookieParser = require("cookie-parser");
+//var cookieParser = require("cookie-parser");
 
 
 var configuration = function (app,model) {
@@ -18,12 +18,13 @@ var configuration = function (app,model) {
 	app.set('views', __dirname + '/views');
 	
 	//middleware
-	app.use(cookieParser());
+	//app.use(cookieParser());
+	//app.set('trust proxy', 1) // trust first proxy be set on https
 	app.use(session({
 	  secret: 'keyboard cat',
 	  resave: true,	  
-	  saveUninitialized: true,
-	  cookie: { maxAge: 36000000 }
+	  saveUninitialized: false,
+	  cookie: { maxAge: 36000000, secure: true } //secure: true will be set on the cookie when i this site is on https
 	}));
 	
 	app.use(passport.initialize());
@@ -37,7 +38,7 @@ var configuration = function (app,model) {
 	
 	
 	passport.serializeUser(function(user, done) {    
-    done(null, user._id);
+    	done(null, user._id);
 	});
 
 	passport.deserializeUser(function(id, done) {

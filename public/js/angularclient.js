@@ -10506,7 +10506,7 @@ app.controller("topHeaderController",["$scope","$window","$location","$resource"
     
   }
   console.log(localManager.getValue("resolveUser"))
-  $scope.checkLogIn = localManager.getValue("resolveUser")
+  $scope.checkLogIn = localManager.getValue("resolveUser");
 
   if($scope.checkLogIn){
     switch($scope.checkLogIn.typeOfUser) {
