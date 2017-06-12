@@ -23,6 +23,7 @@ var configuration = function (app,model) {
 	  secret: 'keyboard cat',
 	  resave: true,	  
 	  saveUninitialized: false,
+	  cookie: { maxAge: 36000000 } //secure: true will be set on the cookie when i this site is on https
 	}));
 	
 	app.use(passport.initialize());
@@ -38,8 +39,11 @@ var configuration = function (app,model) {
 	passport.serializeUser(function(user, done) {    
     	done(null, user._id);
 	});
-
+	var count = 0
 	passport.deserializeUser(function(id, done) {
+		count++
+		console.log(count)
+		console.log(id)
 		model.user.findById(id, function(err, user) {
 			done(err, user);
 		});
