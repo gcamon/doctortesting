@@ -16,12 +16,12 @@ var configuration = function (app,model) {
 	
 	app.set('view engine', 'ejs');
 	app.set('views', __dirname + '/views');
-	
+	app.use('/assets',express.static(__dirname + '/public'));
 	//middleware
 	//app.use(cookieParser());
 	//app.set('trust proxy', 1) // trust first proxy be set on https
 	app.use(session({
-	  secret: 'keyboard cat',
+	  secret: 'anything',
 	  resave: true,	  
 	  saveUninitialized: false,
 	  cookie: { maxAge: 36000000 } //secure: true will be set on the cookie when i this site is on https
@@ -34,7 +34,7 @@ var configuration = function (app,model) {
 	app.use(bodyParser.json());
 	app.use(multer({dest: './uploads'}).any());	
 	app.use('/',router);	
-	app.use('/assets',express.static(__dirname + '/public'));
+	
 	
 	
 	passport.serializeUser(function(user, done) {    
