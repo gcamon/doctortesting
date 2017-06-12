@@ -24,12 +24,12 @@ http.listen(port,function(){
 });
 
 config.configuration(app,model)
-mySocket(model,io)
 signupRoute(model,sms);
 loginRoute(model);
 route(model,sms,io); 
 payments(model,sms,io);
 placement(model,sms);
+mySocket(model,io)
 
 
 
