@@ -8,7 +8,7 @@ var router = express.Router();
 var session = require('express-session');
 var passport = require('passport');
 var flash = require('connect-flash');
-//var cookieParser = require("cookie-parser");
+cookieParser = require("cookie-parser");
 
 
 var configuration = function (app,model) {
@@ -18,13 +18,11 @@ var configuration = function (app,model) {
 	app.set('views', __dirname + '/views');
 	app.use('/assets',express.static(__dirname + '/public'));
 	//middleware
-	//app.use(cookieParser());
-	//app.set('trust proxy', 1) // trust first proxy be set on https
+	app.use(cookieParser());
 	app.use(session({
 	  secret: 'keyboard cat',
 	  resave: true,	  
 	  saveUninitialized: false,
-	  cookie: { maxAge: 36000000 } //secure: true will be set on the cookie when i this site is on https
 	}));
 	
 	app.use(passport.initialize());
