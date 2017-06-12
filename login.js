@@ -64,7 +64,7 @@ router.get('/authenticated',function(req,res){
       user_id: req.user.user_id,
       balance: req.user.ewallet.available_amount,
       profile_pic_url: req.user.profile_pic_url
-      });
+    });
   } else {
     res.redirect("/login");
   }  

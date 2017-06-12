@@ -20,13 +20,7 @@ var configuration = function (app,model) {
 	//middleware
 	//app.use(cookieParser());
 	//app.set('trust proxy', 1) // trust first proxy be set on https
-	app.use(session({
-	  secret: 'anything',
-	  resave: true,	  
-	  saveUninitialized: false,
-	  cookie: { maxAge: 36000000 } //secure: true will be set on the cookie when i this site is on https
-	}));
-	
+	app.use(session({ secret: 'anything' }));
 	app.use(passport.initialize());
 	app.use(passport.session());
 	app.use(flash());		
