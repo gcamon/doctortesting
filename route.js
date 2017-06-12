@@ -1246,7 +1246,6 @@ var basicRoute = function (model,sms,io) {
     });
 
     router.delete("/doctor/delete-prescriptionReq-test",function(req,res){
-      console.log(req.body)
       if(req.user){
         model.user.findOne({user_id: req.user.user_id},{doctor_prescriptionRequest:1}).exec(function(err,data){
           if(err) throw err;

@@ -10544,7 +10544,7 @@ app.controller("topHeaderController",["$scope","$window","$location","$resource"
   }
 
   $scope.logout = function(){
-    alert($scope.checkLogIn)
+    alert($scope.checkLogIn.isLoggedIn)
     mySocket.emit("set presence",{status:"offline",userId:$scope.checkLogIn.user_id},function(response){
       if(response.status === false){
         if($scope.checkLogIn.typeOfUser === "Doctor"){
