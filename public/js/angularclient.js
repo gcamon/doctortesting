@@ -1138,11 +1138,11 @@ app.controller('loginController',["$scope","$http","$location","$window","$resou
        //user joins a room in socket.io and intantiayes his own socket
         switch(data.typeOfUser) {
           case "Patient":
-            //createAwareness(data)
+            createAwareness(data)
             $window.location.href = '/patient/dashboard';  
           break;
           case "Doctor":
-            //createAwareness(data)
+            createAwareness(data)
            $window.location.href = '/doctor/dashboard';   
           break;
           case "Pharmacy":
