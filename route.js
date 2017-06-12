@@ -758,8 +758,8 @@ var basicRoute = function (model,sms,io) {
     router.get("/patient-panel/get-medical-record",function(req,res){
       console.log("pppppppppppppppppppppppppppppppppppppppp")
       console.log(req.session)
-      if(req.user) {
-        model.user.findOne({user_id: req.user.user_id},{medical_records: 1,medications:1},function(err,data){
+      if(req.session.user) {
+        model.user.findOne({user_id: req.session.user.user_id},{medical_records: 1,medications:1},function(err,data){
           if(err) throw err;          
           res.json({medical_records: data.medical_records,prescriptions: data.medications})
         //Note from model, medications holds all prescriptions while medical_records holds all laboratory and radiology tests
@@ -1239,7 +1239,7 @@ var basicRoute = function (model,sms,io) {
   
     //user getting the available on the dashboard balance route.
     router.get('/user/:userId/get-balance',function(req,res){
-      if(req.user){
+      if(req.session.user.user_id){
         model.user.findOne({user_id: req.params.userId},{ewallet:1},function(err,wallet){
           if(err) throw err;
           res.send({balance: wallet.ewallet.available_amount})

@@ -33,6 +33,7 @@ var loginRoute = function(model) {
           }
           
           // all is well, return successful user
+          req.session.user = user;
           return done(null, user);
       });
 
