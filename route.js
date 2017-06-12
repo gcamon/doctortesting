@@ -297,18 +297,20 @@ var basicRoute = function (model,sms,io) {
       res.redirect("/");
     }
   });
-    router.get("/doctor/schedule",function(req,res){
-        if(req.user){
-        res.render("profile",{"person":req.user});
-        } else {
-        res.sendFile(path.join(__dirname + "/404.html"));
-        }
-    });
-    router.get("/assets", function (req,res) {
-        res.send('css');
-        res.send('js');
-        res.send('images');
-    });
+
+  router.get("/doctor/schedule",function(req,res){
+      if(req.user){
+      res.render("profile",{"person":req.user});
+      } else {
+      res.sendFile(path.join(__dirname + "/404.html"));
+      }
+  });
+
+  router.get("/assets", function (req,res) {
+      res.send('css');
+      res.send('js');
+      res.send('images');
+  });
     // fetch data for patient profile update inner page
     router.get("/profile/getDetails",function(req,res){
         if(req.user) {
@@ -754,6 +756,8 @@ var basicRoute = function (model,sms,io) {
     //this router gets all the patient medical records and prescriptions and send it to the front end as soon as the patient logs in. 
     //the data is sent as json and the controller that receives it on the front end is "patientPanelController" .
     router.get("/patient-panel/get-medical-record",function(req,res){
+      console.log("pppppppppppppppppppppppppppppppppppppppp")
+      console.log(req.session)
       if(req.user) {
         model.user.findOne({user_id: req.user.user_id},{medical_records: 1,medications:1},function(err,data){
           if(err) throw err;          
