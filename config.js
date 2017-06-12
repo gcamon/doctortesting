@@ -8,7 +8,7 @@ var router = express.Router();
 var session = require('express-session');
 var passport = require('passport');
 var flash = require('connect-flash');
-cookieParser = require("cookie-parser");
+var cookieParser = require("cookie-parser");
 
 
 var configuration = function (app,model) {
