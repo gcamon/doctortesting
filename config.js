@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var router = express.Router();
 var session = require('express-session');
 var passport = require('passport');
-var flash = require('connect-flash');
+//var flash = require('connect-flash');
 //var cookieParser = require("cookie-parser");
 
 
@@ -23,7 +23,7 @@ var configuration = function (app,model) {
 	app.use(session({ secret: 'anything' }));
 	app.use(passport.initialize());
 	app.use(passport.session());
-	app.use(flash());		
+	//app.use(flash());		
 	app.use(bodyParser.urlencoded({ extended: false }));
 	app.use(bodyParser.json());
 	app.use(multer({dest: './uploads'}).any());	
