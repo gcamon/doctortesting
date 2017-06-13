@@ -28,11 +28,11 @@ var configuration = function (app,model) {
 	
 	app.use(passport.initialize());
 	app.use(passport.session());
-	//app.use(flash());		
+	app.use(flash());		
 	app.use(bodyParser.urlencoded({ extended: false }));
 	app.use(bodyParser.json());
 	app.use(multer({dest: './uploads'}).any());	
-	app.use('/',router);	
+		
 	
 	
 	
@@ -49,6 +49,8 @@ var configuration = function (app,model) {
 			done(err, user);
 		});
 	});
+
+	app.use('/',router);
 
 }
 
