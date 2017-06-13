@@ -757,7 +757,7 @@ var basicRoute = function (model,sms,io) {
     //the data is sent as json and the controller that receives it on the front end is "patientPanelController" .
     router.get("/patient-panel/get-medical-record",function(req,res){
       console.log("pppppppppppppppppppppppppppppppppppppppp");
-      console.log(req.isAuthenticated());
+      console.log(req.session);
       if(req.user) {
         model.user.findOne({user_id: req.user.user_id},{medical_records: 1,medications:1},function(err,data){
           if(err) throw err;          
@@ -1239,6 +1239,8 @@ var basicRoute = function (model,sms,io) {
   
     //user getting the available on the dashboard balance route.
     router.get('/user/:userId/get-balance',function(req,res){
+      console.log("pppppppppppppppppppppppppppppppppppppppp");
+      console.log(req.session);
       if(req.user){
         model.user.findOne({user_id: req.params.userId},{ewallet:1},function(err,wallet){
           if(err) throw err;

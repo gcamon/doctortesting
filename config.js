@@ -37,7 +37,7 @@ var configuration = function (app,model) {
 	
 	
 	passport.serializeUser(function(user, done) {    
-    done(null, user.user_id);
+    done(null, user._id);
 	});
 
 	var count = 0;
