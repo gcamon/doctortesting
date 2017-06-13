@@ -306,28 +306,28 @@ var basicRoute = function (model,sms,io) {
       }
   });
 
- /* router.get("/assets", function (req,res) {
+  router.get("/assets", function (req,res) {
       res.send('css');
       res.send('js');
       res.send('images');
-  }); */
-    // fetch data for patient profile update inner page
-    router.get("/profile/getDetails",function(req,res){
-        if(req.user) {
-            res.send({
-                profile_pic_url: req.user.profile_pic_url,
-                firstname: req.user.firstname,
-                lastname: req.user.lastname,
-                age: req.user.age,
-                gender: req.user.gender,
-                address: req.user.address,
-                state: req.user.state,
-                city: req.user.city,
-                marital_status: req.user.marital_status,
-            })
-        } else {
-            res.end("error: Not authorized")
-        }
+  });
+  // fetch data for patient profile update inner page
+  router.get("/profile/getDetails",function(req,res){
+      if(req.user) {
+          res.send({
+              profile_pic_url: req.user.profile_pic_url,
+              firstname: req.user.firstname,
+              lastname: req.user.lastname,
+              age: req.user.age,
+              gender: req.user.gender,
+              address: req.user.address,
+              state: req.user.state,
+              city: req.user.city,
+              marital_status: req.user.marital_status,
+          })
+      } else {
+          res.end("error: Not authorized")
+      }
     });
     // put updated data to the database.
     router.put("/patient-profile/update", function(req,res){
