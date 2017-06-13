@@ -39,9 +39,9 @@ var configuration = function (app,model) {
 	passport.serializeUser(function(user, done) {    
     done(null, user._id);
 	});
+	
 	var count = 0;
-	passport.deserializeUser(function(id, done) {
-		
+	passport.deserializeUser(function(id, done) {		
 		model.user.findById(id, function(err, user) {
 			count++;
 			console.log(count)

@@ -757,7 +757,7 @@ var basicRoute = function (model,sms,io) {
     //the data is sent as json and the controller that receives it on the front end is "patientPanelController" .
     router.get("/patient-panel/get-medical-record",function(req,res){
       console.log("pppppppppppppppppppppppppppppppppppppppp");
-      console.log(req.user);
+      console.log(req.isAuthenticated());
       if(req.user) {
         model.user.findOne({user_id: req.user.user_id},{medical_records: 1,medications:1},function(err,data){
           if(err) throw err;          
