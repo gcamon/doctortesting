@@ -34,6 +34,7 @@
                 <input type="text" class="form-control placeholder-color" id="nationality" ng-model="user.country" required>
             </div>
             <div class="form-group">
+                <p style="color:red;text-align:center">{{showErr}}</p>
             	<label>Phone number * : </label> 
                 <input type="number" class="form-control placeholder-color" placeholder="Phone Number (080****)" id="phone" ng-model="user.phone" required>
             </div>

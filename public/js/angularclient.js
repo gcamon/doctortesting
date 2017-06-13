@@ -1377,21 +1377,28 @@ app.controller('signupController',["$scope","$http","$location","$window","templ
     }
     
   }
-
+  var toStr;
   $scope.$watch("user.phone",function(newVal,oldVal){
-    if(newVal) {
-      console.log(typeof newval)
+    str = newVal.toString();
+    if(str.length >= 10) { // note this could be modified to accomodate foreign numbers
+      signUp.get($scope.user,function(res){
+        if(res.error === true){
+          $scope.showErr = res.errorMsg;
+        } else {
+          $scope.showErr = "";
+        }
+
+        $scope.numErr = res.error;
+      });
     }
   });
 
   function sendForm(data){    
     signUp.userSignup(data,function(response){
-      if (!response.error) {              
+      if (!response.error &&  $scope.numErr === false) {              
         $window.location.href = '/login';                           
       } else {       
-        $scope.error = response.errorMsg;
-        alert("Sign up failed! User already exist")
-                 
+        $scope.error = response.errorMsg;       
       }
     });
   }
@@ -3826,7 +3833,25 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
     
   }
 
-  $http({
+  
+  var getRecords = function(){
+    var records = $resource("/patient-panel/get-medical-record");
+    records.query(function(data){
+      if(data){
+        templateService.holdAllPrescriptionForTemplate = data;      
+        templateService.holdAllLabTest = data.medical_records.laboratory_test;
+        templateService.holdAllRadioTest = data.medical_records.radiology_test;
+        localManager.setValue("holdLabData",data.medical_records.laboratory_test);
+        localManager.setValue("holdScanData",data.medical_records.radiology_test);     
+        
+        // this fns checks the list to see if any test is pending for both laboratory and radiology
+        checkIsLabPending(data.medical_records.laboratory_test);
+        checkIsRadioPending(data.medical_records.radiology_test);
+      }  
+    });
+  }
+
+ /* $http({
     method  : 'GET',
     url     : "/patient-panel/get-medical-record",
     headers : {'Content-Type': 'application/json'} 
@@ -3844,7 +3869,7 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
       checkIsRadioPending(data.medical_records.radiology_test);
     }  
 
-  });
+  });*/
 
   var checkIsLabPending = function (list) {
     var pendingLab = [];      
@@ -3939,7 +3964,13 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
   $scope.isView = false;
 
   function getNotification() {
-    $http({
+    var note = $resource("/patient/notifications");
+    note.query(function(data){
+      $scope.allNote = data;
+      console.log(data)
+      $rootScope.noteLen = data.length; 
+    })
+    /*$http({
       method  : 'GET',
       url     : "/patient/notifications",
       headers : {'Content-Type': 'application/json'} 
@@ -3948,7 +3979,7 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
       $scope.allNote = data;
       console.log(data)
       $rootScope.noteLen = data.length;            
-    });
+    });*/
   }
              
     
@@ -3978,8 +4009,19 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
 
 
   function getMessages() {
+
+    var note = $resource("/patient/get-message");
+    note.query(function(data){
+      console.log(data)  
+      var len = data.length;
+      if(len > 0){
+        $rootScope.msgLen = templateService.holdMsgLen(len);   
+        $scope.allMsg = data;
+        templateService.holdMsg = data;
+      }  
+    })
     //mesage views
-    $http({
+    /*$http({
       method  : 'GET',
       url     : "/patient/get-message",
       headers : {'Content-Type': 'application/json'} 
@@ -3993,7 +4035,7 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
           templateService.holdMsg = data;
         }  
            
-    });
+    });*/
   }
 
  
@@ -4022,7 +4064,17 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
 
   //appointment views
   function getAppointment (){
-    $http({
+    var note = $resource("/patient/get-message");
+    note.query(function(data){
+      var len = data.length;
+      if(len > 0) {
+        $rootScope.appLen = templateService.holdAppLen(len);             
+        //templateService.holdAppointmentData = data; 
+        $scope.allApp = data;
+      }   
+    })
+    
+    /*$http({
       method  : 'GET',
       url     : "/patient/appointment/view",
       headers : {'Content-Type': 'application/json'} 
@@ -4034,7 +4086,7 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
         //templateService.holdAppointmentData = data; 
         $scope.allApp = data;
       }   
-    });
+    });*/
   }
   
 
@@ -4134,6 +4186,9 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
     var found = $scope.holdVideoCallResponse[elemPos];
   }
 
+
+  //loads up patient medical records
+  getRecords();
 
   //loads up patient bell notificatio list
   getNotification();

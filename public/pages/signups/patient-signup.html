@@ -70,8 +70,9 @@
                 <input type="text" class="form-control placeholder-color" id="firstname" ng-model="user.city" required>
             </div>
             <div class="form-group">
+                <p style="color:red;text-align:center">{{showErr}}</p>
             	<label>Phone number * : </label>  
-                <input type="number" class="form-control placeholder-color" vplaceholder="(080*****)" id="phone" ng-model="user.phone">
+                <input type="number" class="form-control placeholder-color" placeholder="(080*****)" id="phone" ng-model="user.phone">
             </div>
             <div class="form-group">
             	<label>Country * : </label>  

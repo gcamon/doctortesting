@@ -100,6 +100,20 @@ var signupRoute = function(model,sms) {
 	  })(req, res, next);
 	});
 
+	//check to see if a user with a phone number already exist
+	router.get('/user/signup',function(req,res){
+		console.log(req.query);
+		model.user.findOne({phone:req.query.phone},function(err,userPhone){
+			if(err) throw err;
+			console.log(userPhone);
+			if(!userPhone){
+				res.send({error: false,errorMsg: ""})
+			} else {
+				res.send({error: true,errorMsg: "User with this phone number already exist!"})
+			}
+		});
+	});
+
 
 	router.post("/referral/:id/signup",function(req,res){
 		passport.authenticate('signup', function(err, user, info) {
