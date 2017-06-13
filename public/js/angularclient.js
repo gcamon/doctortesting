@@ -3811,13 +3811,23 @@ app.controller('patientWelcomeController',["$scope",function($scope){
 
 
 
-
+app.factory("medicaRecordFactory",function(){
+  var record = {};
+  return {
+    set: function(data){
+      record.val = data;
+    },
+    get: function(){
+      return record.val;
+    }
+  }
+})
 
 // this controller gets  the patient medical records from the backend and seperates laboratory tsest from radiology test 
 //to store then templateService. Note patient prescription  is not amonge the data filtered so far.
 app.controller("patientNotificationController",["$scope","$location","$http","$window","$rootScope","$resource",
-  "templateService","localManager","deleteFactory","mySocket","$timeout",
-  function($scope,$location,$http, $window,$rootScope,$resource,templateService,localManager,deleteFactory,mySocket,$timeout){
+  "templateService","localManager","deleteFactory","mySocket","$timeout","medicaRecordFactory",
+  function($scope,$location,$http, $window,$rootScope,$resource,templateService,localManager,deleteFactory,mySocket,$timeout,medicaRecordFactory){
   
   var filter = {};
   $scope.getPatientId = function(id,firstname,lastname){
@@ -3832,12 +3842,14 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
     templateService.holdPatientIdForCommunication = comObj;
     
   }
-
   
   var getRecords = function(){
     var records = $resource("/patient-panel/get-medical-record");
-    records.query(function(data){
+    records.get(function(data){
+      console.log("peaccccccccccccccccc");
+      console.log(data)
       if(data){
+        medicaRecordFactory.set(data);
         templateService.holdAllPrescriptionForTemplate = data;      
         templateService.holdAllLabTest = data.medical_records.laboratory_test;
         templateService.holdAllRadioTest = data.medical_records.radiology_test;
@@ -3851,7 +3863,7 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
     });
   }
 
- /* $http({
+ /*$http({
     method  : 'GET',
     url     : "/patient-panel/get-medical-record",
     headers : {'Content-Type': 'application/json'} 
@@ -3867,7 +3879,7 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
       // this fns checks the list to see if any test is pending for both laboratory and radiology
       checkIsLabPending(data.medical_records.laboratory_test);
       checkIsRadioPending(data.medical_records.radiology_test);
-    }  
+    } 
 
   });*/
 
@@ -4005,9 +4017,6 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
   }
 
  
-
-
-
   function getMessages() {
 
     var note = $resource("/patient/get-message");
@@ -5022,59 +5031,55 @@ app.controller("patientTreatmentController",["$scope","$http","ModalService","re
 
 
 //recieves the patients medical record and presvription from the back end.
-app.controller("patientPanelController",["$scope","$location","$http","localManager","templateService","templateUrlFactory","mySocket",
-  function($scope,$location,$http,localManager,templateService,templateUrlFactory,mySocket){
+app.controller("patientPanelController",["$scope","$location","$http","$rootScope","localManager",
+  "templateService","templateUrlFactory","mySocket","$resource",
+  function($scope,$location,$http,$rootScope,localManager,templateService,templateUrlFactory,mySocket,$resource){
   templateUrlFactory.setUrl();
-  var medical = {};  
-  
-  $http({
-    method  : 'GET',
-    url     : "/patient-panel/get-medical-record",
-    headers : {'Content-Type': 'application/json'} 
-    })
-  .success(function(data) {
-    if(data){
-      console.log(data)
-      var filter = {};
-      var total = {};
-      var filteredPrescriptions = [];
-      medical.records = data.medical_records;
-      medical.prescriptions = data.prescriptions;        
-      //templateService.holdAllPrescriptionForOtherCtrl = data.prescriptions;
-      localManager.setValue("patientPrescriptions",data.prescriptions);
-      templateService.holdPrescriptions = medical.prescriptions; 
-      for(var j = 0; j < medical.prescriptions.length; j++){        
-        if(!filter.hasOwnProperty(medical.prescriptions[j].doctor_id)){                        
-          total[medical.prescriptions[j].doctor_id] = [];          
-          total[medical.prescriptions[j].doctor_id].push(medical.prescriptions[j]);          
-          filter[medical.prescriptions[j].doctor_id] = 1;             
-        } else {
-          total[medical.prescriptions[j].doctor_id].push(medical.prescriptions[j])
-        }
-      };
-      
-      for(var i in total) {
-        var finalFilter = {};
-        if(total.hasOwnProperty(i)) {          
-          total[i].forEach(function(prescription){
-            if(!finalFilter.hasOwnProperty(prescription.doctor_id)){ 
-              prescription.count = total[i].length
-              filteredPrescriptions.push(prescription);
-              finalFilter[prescription.doctor_id] = 1;
-            }
-          })
-          
-        }
-      }
-      $scope.filteredPrescriptions = filteredPrescriptions;
-      //localManager.setValue("holdPrescriptionData",medical.prescriptions);
-      checkIsLabPending(data.medical_records.laboratory_test);
-      checkIsRadioPending(data.medical_records.radiology_test);
-      $scope.labLen = data.medical_records.laboratory_test.length;
-      $scope.radioLen = data.medical_records.radiology_test.length;
-    }
+  var medical = {};
 
-  });
+  var records = $resource("/patient-panel/get-medical-record");
+  records.get(function(data){
+    var filter = {};
+    var total = {};
+    var filteredPrescriptions = [];
+    medical.records = data.medical_records;
+    medical.prescriptions = data.prescriptions;        
+    //templateService.holdAllPrescriptionForOtherCtrl = data.prescriptions;
+    localManager.setValue("patientPrescriptions",data.prescriptions);
+    templateService.holdPrescriptions = medical.prescriptions; 
+    for(var j = 0; j < medical.prescriptions.length; j++){        
+      if(!filter.hasOwnProperty(medical.prescriptions[j].doctor_id)){                        
+        total[medical.prescriptions[j].doctor_id] = [];          
+        total[medical.prescriptions[j].doctor_id].push(medical.prescriptions[j]);          
+        filter[medical.prescriptions[j].doctor_id] = 1;             
+      } else {
+        total[medical.prescriptions[j].doctor_id].push(medical.prescriptions[j])
+      }
+    };
+    
+    for(var i in total) {
+      var finalFilter = {};
+      if(total.hasOwnProperty(i)) {          
+        total[i].forEach(function(prescription){
+          if(!finalFilter.hasOwnProperty(prescription.doctor_id)){ 
+            prescription.count = total[i].length
+            filteredPrescriptions.push(prescription);
+            finalFilter[prescription.doctor_id] = 1;
+          }
+        })
+        
+      }
+    }
+    $scope.filteredPrescriptions = filteredPrescriptions;
+    //localManager.setValue("holdPrescriptionData",medical.prescriptions);
+    checkIsLabPending(data.medical_records.laboratory_test);
+    checkIsRadioPending(data.medical_records.radiology_test);
+    $scope.labLen = data.medical_records.laboratory_test.length;
+    $scope.radioLen = data.medical_records.radiology_test.length; 
+  }); 
+ 
+  
+  
   
 
   $scope.dashboardhome = function () {
