@@ -57,15 +57,8 @@ var basicRoute = function (model,sms,io) {
 
   router.get("/patient/dashboard",function(req,res){        
     if(req.user){
-
-      req.session.save(function (err) {
-        if (err) {
-            // ... panic!
-        }
-        res.render("patient",{"userInfo": req.user});
-      });
       //getSocketInstance(req)
-      
+      res.render("patient",{"userInfo": req.user});
     } else {
       res.redirect('/login');
     }
@@ -764,9 +757,9 @@ var basicRoute = function (model,sms,io) {
     //the data is sent as json and the controller that receives it on the front end is "patientPanelController" .
     router.get("/patient-panel/get-medical-record",function(req,res){
       console.log("pppppppppppppppppppppppppppppppppppppppp");
-      console.log(req.session);
+      console.log(req.user);
       if(req.user) {
-        model.user.findOne({user_id: req.session.user.user_id},{medical_records: 1,medications:1},function(err,data){
+        model.user.findOne({user_id: req.user.user_id},{medical_records: 1,medications:1},function(err,data){
           if(err) throw err;          
           res.json({medical_records: data.medical_records,prescriptions: data.medications})
           //Note from model, medications holds all prescriptions while medical_records holds all laboratory and radiology tests
