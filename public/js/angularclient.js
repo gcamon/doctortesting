@@ -10571,10 +10571,10 @@ app.controller("topHeaderController",["$scope","$window","$location","$resource"
   if($scope.checkLogIn){
     switch($scope.checkLogIn.typeOfUser) {
       case "Doctor":        
-        $scope.back = "/doctor/dashboard";       
+        $scope.back = "/dashboard/doctor";       
       break;
       case "Patient":
-        $scope.back = "/patient/dashboard";
+        $scope.back = "/dashboard/patient";
       break;
       case "Pharmacy":
         $scope.back = "/medical-center/pharmacy";
