@@ -1203,7 +1203,6 @@ app.controller("balanceController",["$rootScope","$resource","localManager",func
     var user = localManager.getValue("resolveUser");
     var amount = $resource('/user/:userId/get-balance',{userId: user.user_id},{headers:{connection:"keep-alive",referer: "http://applinictest.cleverapps.io"}});
     var wallet = amount.get(null,function(data){
-      console.log(data)
       var format = "N" + data.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       $rootScope.balance = format;
     })
