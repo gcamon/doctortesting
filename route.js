@@ -55,7 +55,8 @@ var basicRoute = function (model,sms,io) {
     }
   });
 
-  router.get("/patient/dashboard",function(req,res){        
+  router.get("/patient/dashboard",function(req,res){ 
+    console.log(req.headers)       
     if(req.user){
       //getSocketInstance(req)
       res.render("patient",{"userInfo": req.user});
@@ -756,7 +757,9 @@ var basicRoute = function (model,sms,io) {
     //this router gets all the patient medical records and prescriptions and send it to the front end as soon as the patient logs in. 
     //the data is sent as json and the controller that receives it on the front end is "patientPanelController" .
     router.get("/patient-panel/get-medical-record",function(req,res){
+
       console.log("pppppppppppppppppppppppppppppppppppppppp");
+      console.log(req.headers)
       console.log(req.session);
       if(req.user) {
         model.user.findOne({user_id: req.user.user_id},{medical_records: 1,medications:1},function(err,data){
