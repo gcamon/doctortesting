@@ -31,7 +31,13 @@ var configuration = function (app,model) {
 	app.use(flash());		
 	app.use(bodyParser.urlencoded({ extended: false }));
 	app.use(bodyParser.json());
-	app.use(multer({dest: './uploads'}).any());	
+	app.use(multer({dest: './uploads'}).any());
+
+	app.use(function(req, res, next) {
+	  res.header("Access-Control-Allow-Origin", "*");
+	  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	  next();
+	});	
 		
 	
 	
@@ -42,12 +48,7 @@ var configuration = function (app,model) {
 
 	passport.deserializeUser(function(id, done) {			
 		model.user.findById(id, function(err, user) {
-			if(err) {
-				console.log(err);
-				done(err,null)
-			} else {
-				done(err, user);
-			}
+			done(err, user);
 		});
 	});
 
