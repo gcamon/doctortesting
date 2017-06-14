@@ -56,6 +56,7 @@ var basicRoute = function (model,sms,io) {
   });
 
   router.get("/patient/dashboard",function(req,res){ 
+    console.log("-------------------------")
     console.log(req.headers)       
     if(req.user){
       //getSocketInstance(req)
