@@ -44,7 +44,7 @@ router.post('/user/login', passport.authenticate('user-login', {
   failureFlash : true // allow flash messages
 }));
 
-router.get('/dashboard',function(req,res){
+router.get('/dashboard',function(req,res,next){
   if(req.user){ 
    model.user.findOne({user_id: req.user.user_id},{presence:1,set_presence:1}).exec(function(err,data){
     data.presence = true;
@@ -68,7 +68,21 @@ router.get('/dashboard',function(req,res){
   } else {
     res.redirect("/login");
   }  
+
+  next()
 });
+
+router.get("/dashboard/patient",function(req,res){ 
+
+    if(req.user){
+      //getSocketInstance(req)
+      res.render("patient",{"userInfo": req.user});
+    } else {
+      res.redirect('/login');
+    }
+
+  });
+
 
 router.get('/failed',function(req,res){        
     res.send(false);

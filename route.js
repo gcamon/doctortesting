@@ -46,7 +46,7 @@ var basicRoute = function (model,sms,io) {
     res.render('index',{"message":""});
   });
 
-  router.get("/doctor/dashboard",function(req,res){    
+  router.get("/dashboard/doctor",function(req,res){    
     if(req.user){
       //getSocketInstance(req)     
       res.render("profile",{"person":req.user});

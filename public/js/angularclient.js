@@ -1142,7 +1142,7 @@ app.controller('loginController',["$scope","$http","$location","$window","$resou
           break;
           case "Doctor":
             createAwareness(data)
-           $window.location.href = '/doctor/dashboard';   
+           $window.location.href = "/dashboard/doctor";   
           break;
           case "Pharmacy":
             $window.location.href = "/medical-center/pharmacy"; 
