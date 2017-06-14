@@ -55,8 +55,8 @@ var basicRoute = function (model,sms,io) {
     }
   });
 
-  router.get("/patient/dashboard",function(req,res){ 
-   
+  router.get("/dashboard/patient",function(req,res){ 
+
     if(req.user){
       //getSocketInstance(req)
       res.render("patient",{"userInfo": req.user});
@@ -1240,7 +1240,7 @@ var basicRoute = function (model,sms,io) {
     });
   
     //user getting the available on the dashboard balance route.
-    router.get('/user/:userId/get-balance',function(req,res){
+    router.get('/dashboard/:userId/get-balance',function(req,res){
       console.log("pppppppppppppppppppppppppppppppppppppppp");
       console.log(req.headers)
       if(req.user){
