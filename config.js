@@ -40,11 +40,8 @@ var configuration = function (app,model) {
     done(null, user._id);
 	});
 
-	var count = 0;
 	passport.deserializeUser(function(id, done) {	
-		count++;
-		console.log(id)
-		console.log(count)	
+		
 		model.user.findById(id, function(err, user) {
 			done(err, user);
 		});
