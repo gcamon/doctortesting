@@ -40,8 +40,7 @@ var configuration = function (app,model) {
     done(null, user._id);
 	});
 
-	passport.deserializeUser(function(id, done) {	
-		
+	passport.deserializeUser(function(id, done) {			
 		model.user.findById(id, function(err, user) {
 			done(err, user);
 		});
