@@ -1201,7 +1201,7 @@ app.controller('loginController',["$scope","$http","$location","$window","$resou
 //display the current balance always
 app.controller("balanceController",["$rootScope","$resource","localManager",function($rootScope,$resource,localManager){  
     var user = localManager.getValue("resolveUser");
-    var amount = $resource('/user/:userId/get-balance',{userId: user.user_id});
+    var amount = $resource('/patient/dashboard/user/:userId/get-balance',{userId: user.user_id});
     var wallet = amount.get(null,function(data){
       console.log(data)
       var format = "N" + data.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -3846,7 +3846,7 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
   }
   
   var getRecords = function(){
-    var records = $resource("/patient-panel/get-medical-record");
+    var records = $resource("/patient/dashboard/patient-panel/get-medical-record");
     records.get(function(data){
       console.log("peaccccccccccccccccc");
       console.log(data)

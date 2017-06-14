@@ -756,7 +756,7 @@ var basicRoute = function (model,sms,io) {
 
     //this router gets all the patient medical records and prescriptions and send it to the front end as soon as the patient logs in. 
     //the data is sent as json and the controller that receives it on the front end is "patientPanelController" .
-    router.get("/patient-panel/get-medical-record",function(req,res){
+    router.get("/patient/dashboard/patient-panel/get-medical-record",function(req,res){
 
       console.log("pppppppppppppppppppppppppppppppppppppppp");
       console.log(req.headers)
@@ -1241,7 +1241,7 @@ var basicRoute = function (model,sms,io) {
     });
   
     //user getting the available on the dashboard balance route.
-    router.get('/user/:userId/get-balance',function(req,res){
+    router.get('/patient/dashboard/user/:userId/get-balance',function(req,res){
       console.log("pppppppppppppppppppppppppppppppppppppppp");
       console.log(req.user);
       if(req.user){
