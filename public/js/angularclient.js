@@ -1201,7 +1201,7 @@ app.controller('loginController',["$scope","$http","$location","$window","$resou
 //display the current balance always
 app.controller("balanceController",["$rootScope","$resource","localManager",function($rootScope,$resource,localManager){  
     var user = localManager.getValue("resolveUser");
-    var amount = $resource('/user/:userId/get-balance',{userId: user.user_id},{headers:{connection:"keep-alive",referer: "http://applinictest.cleverapps.io"}});
+    var amount = $resource('/user/:userId/get-balance',{userId: user.user_id});
     var wallet = amount.get(null,function(data){
       var format = "N" + data.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       $rootScope.balance = format;
