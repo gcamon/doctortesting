@@ -14,8 +14,7 @@ var cookieParser = require("cookie-parser");
 var configuration = function (app,model) {
 	//config
 	
-	app.set('view engine', 'ejs');
-	app.set('views', __dirname + '/views');
+	
 	app.use('/assets',express.static(__dirname + '/public'));
 	//middleware
 	app.use(cookieParser());
@@ -38,10 +37,22 @@ var configuration = function (app,model) {
 	  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	  next();
 	});	
+
+
 		
 	
-	
-	
+	passport.serializeUser(function(user, done) {    
+    done(null, user._id);
+	});
+
+	passport.deserializeUser(function(id, done) {			
+		model.user.findById(id, function(err, user) {
+			done(err, user);
+		});
+	});
+
+	app.set('view engine', 'ejs');
+	app.set('views', __dirname + '/views');
 
 	app.use('/',router);
 
