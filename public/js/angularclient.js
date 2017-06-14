@@ -1126,7 +1126,13 @@ app.controller("pharmacyDrugNotHaveBycenterController",["$scope","$http",functio
 app.controller('loginController',["$scope","$http","$location","$window","$resource","ModalService","templateService","localManager",
   "$rootScope","mySocket",function($scope,$http,$location,$window,$resource,ModalService,templateService,localManager,$rootScope,mySocket) {
   $scope.login = {};
-  $scope.error = "";  
+  $scope.error = "";
+
+  var getAuth = $resource("/authenticated")
+  getAuth.get(function(data){
+    localManager.setValue("resolveUser",data);
+    createAwareness(data)
+  }) 
   
   $scope.send = function(){        
     var login = $resource('/user/login',null,{logPerson:{method:"POST"}});

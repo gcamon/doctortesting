@@ -39,10 +39,19 @@ var loginRoute = function(model) {
     }));
 
 router.post('/user/login', passport.authenticate('user-login', {
-  successRedirect : '/authenticated', // redirect to the secure profile section
+  successRedirect : '/dashboard', // redirect to the secure profile section
   failureRedirect : '/failed', // redirect back to the signup page if there is an error
   failureFlash : true // allow flash messages
 }));
+
+router.get("/dashboard",function(req,res){
+  if(req.user){
+    //getSocketInstance(req)
+    res.render("patient",{"userInfo": req.user});
+  } else {
+    res.redirect('/login');
+  }
+});
 
 router.get('/authenticated',function(req,res){
   if(req.user){ 
