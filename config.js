@@ -42,7 +42,12 @@ var configuration = function (app,model) {
 
 	passport.deserializeUser(function(id, done) {			
 		model.user.findById(id, function(err, user) {
-			done(err, user);
+			if(err) {
+				console.log(err);
+				done(err,null)
+			} else {
+				done(err, user);
+			}
 		});
 	});
 

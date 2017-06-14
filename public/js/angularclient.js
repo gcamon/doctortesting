@@ -32,7 +32,6 @@ app.config(function($routeProvider){
 
   .when("/patient-signup",{
     templateUrl: '/assets/pages/signups/patient-signup.html',
-    controller: 'signupController'
   })
 
   .when("/pharmacy-signup",{
@@ -425,7 +424,7 @@ app.config(function($routeProvider){
 
 .when("/find-specialist",{
   templateUrl: "/assets/pages/utilities/find-specialist.html",
-  controller: "resultController"
+  controller: 'resultController'
  })
 
 .when("/view-response/:complaintId",{
@@ -1139,11 +1138,11 @@ app.controller('loginController',["$scope","$http","$location","$window","$resou
         switch(data.typeOfUser) {
           case "Patient":
             createAwareness(data)
-            $window.location.href = 'patient/dashboard';   
+            $window.location.href = '/patient/dashboard';   
           break;
           case "Doctor":
             createAwareness(data)
-           $window.location.href = 'doctor/dashboard';   
+           $window.location.href = '/doctor/dashboard';   
           break;
           case "Pharmacy":
             $window.location.href = "/medical-center/pharmacy"; 
