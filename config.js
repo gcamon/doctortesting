@@ -42,15 +42,6 @@ var configuration = function (app,model) {
 	
 	
 	
-	passport.serializeUser(function(user, done) {    
-    done(null, user._id);
-	});
-
-	passport.deserializeUser(function(id, done) {			
-		model.user.findById(id, function(err, user) {
-			done(err, user);
-		});
-	});
 
 	app.use('/',router);
 

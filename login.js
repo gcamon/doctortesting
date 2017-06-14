@@ -6,7 +6,19 @@ var salt = require('./salt');
 var router = config.router;
 var passport = config.passport;
 
-var loginRoute = function(model) {    
+var loginRoute = function(model) {
+  
+  passport.serializeUser(function(user, done) {    
+    done(null, user._id);
+  });
+
+  passport.deserializeUser(function(id, done) {     
+    model.user.findById(id, function(err, user) {
+      console.log(user.user_id)
+      done(err, user);
+    });
+  });
+
    passport.use('user-login', new LocalStrategy({
         // by default, local strategy uses username and password, we will override with email
         usernameField : 'email',
