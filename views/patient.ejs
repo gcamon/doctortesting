@@ -37,8 +37,8 @@
             <!--************************************
                             Header Start
             *************************************-->
-            <header id="header" class="tg-haslayout" ng-controller="patientNotificationController">
-                <div  class="navbar-header top-navbar-dashboard" ng-controller="topHeaderController">
+            <header id="header" class="tg-haslayout">
+                <div  class="navbar-header top-navbar-dashboard">
                     <div style="width: 77%;margin: 0 auto;padding: 0px 5px">
                         <div style="" class="menu-drp">                        
                             <i class="fa fa-bars" aria-hidden="true" style="color:#fff;font-size:23px;font-weight:100; cursor:pointer" title="Menu" ng-click="isClicked()"></i>
@@ -52,7 +52,7 @@
                         </div>
                        
                        
-                        <div style="width:65%; text-align:right;display:inline-block" ng-controller = "createRoomController">
+                        <div style="width:65%; text-align:right;display:inline-block" ng-controller = "loginController">
                             <div class="msg-box">
                                  <i class="fa fa-bell noti-bell" style="font-size:20px"><span style="display:inline-block;background-color:#996b88;border-radius:14px;padding:7px;left: 14px; top:-14px;position:absolute;color:#fff;font-size:12px;border:none" ng-if="noteLen > 0 " ng-cloak>{{noteLen}}</span></i>
 
@@ -80,7 +80,7 @@
                                         <li>
                                     </ul>
                             </div>
-                            <div class="msg-box" ng-controller='loginController'>
+                            <div class="msg-box">
                                 <i class="fa fa-envelope" aria-hidden="true" style="font-size:20px;color:#fff;position:relative;top:4px;cursor:pointer">
                                 <span style="display:inline-block;background-color:#996b88;border-radius:14px;padding:7px;left: 14px; top:-14px;position:absolute;color:#fff;font-size:12px;border:none" ng-if=" msgLen > 0 " ng-cloak> {{msgLen}}</span></i>
 
@@ -234,7 +234,7 @@
         <!--************************************
                 Home Slider Start
         *************************************-->
-        <div id="tg-innerbanner" class="tg-innerbanner tg-bglight tg-haslayout" ng-controller="presenceSocketController">
+        <div id="tg-innerbanner" class="tg-innerbanner tg-bglight tg-haslayout" >
             
             <div class="tg-pagebar tg-haslayout" ng-controller="balanceController" style="background-color:#eee">
                 <div class="container">
@@ -283,7 +283,7 @@
                         </div>
                     </div>
                     
-                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12" ng-controller="patientPanelController" style="padding:0;">
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12"  style="padding:0;">
                         <aside id="tg-sidebar" style="padding-left: 15px;background-color:#397432">
 
                              <div class="tg-widget tg-tab-widget" ng-controller="checkingOutDoctorController">
@@ -663,13 +663,13 @@
             </ul>
             <div class="tab-content tg-haslayout">
                 <div role="tabpanel" class="tab-pane tg-haslayout active" id="tg-signin-formarea">
-                    <form class="tg-form-modal tg-form-signin">
+                    <form class="tg-form-modal tg-form-signin" action='/user/login' method="POST">
                         <fieldset>
                             <div class="form-group">
-                                <input type="email" class="form-control" placeholder="Email Address">
+                                <input type="email" class="form-control" placeholder="Email Address" name="email">
                             </div>
                             <div class="form-group">
-                                <input type="password" class="form-control" placeholder="Password">
+                                <input type="password" class="form-control" placeholder="Password" name="password">
                             </div>
                             <div class="form-group tg-checkbox">
                                 <label>
