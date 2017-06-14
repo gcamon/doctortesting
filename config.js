@@ -19,10 +19,7 @@ var configuration = function (app,model) {
 	//middleware
 	app.use(cookieParser('keyboard cat'));
 	app.use(session({
-	  secret: 'keyboard cat',
-	  resave: true,	  
-	  saveUninitialized: false,
-	  cookie: { maxAge: 36000000 } //secure: true will be set on the cookie when i this site is on https
+	  secret: 'keyboard cat'
 	}));
 	
 	app.use(passport.initialize());
