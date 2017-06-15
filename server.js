@@ -13,11 +13,13 @@ var express = require('express'),
     Nexmo = require("nexmo"),    
     sms = new Nexmo({
     	apiKey: process.env.NEXMO_API_KEY || "1c9ae030",
- 		  apiSecret: process.env.NEXMO_API_SECRET || "ddb306aa9194c137"
+ 		 apiSecret: process.env.NEXMO_API_SECRET || "ddb306aa9194c137"
     }), 
     placement = require("./placement"),
     mySocket = require("./socket"),
     port = process.env.PORT || 1986;
+
+    
 
 http.listen(port,function(){
     console.log('listening on *:8080');

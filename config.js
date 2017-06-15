@@ -9,17 +9,31 @@ var session = require('express-session');
 var passport = require('passport');
 var flash = require('connect-flash');
 var cookieParser = require("cookie-parser");
+var MongoDBStore = require('connect-mongodb-session')(session);
+ 
 
 
 var configuration = function (app,model) {
 	//config
-	
+	var storeDB = process.env.MONGODB_ADDON_URI || "mongodb://127.0.0.1:27017/medicalmull";
+  var store = new MongoDBStore(
+    {
+      uri: storeDB,
+      collection: 'mySessions'
+  });
+
+ store.on('error', function(error) {
+  assert.ifError(error);
+  assert.ok(false);
+	});
+
 	
 	app.use('/assets',express.static(__dirname + '/public'));
 	//middleware
 	app.use(cookieParser('keyboard cat'));
 	app.use(session({
 	  secret: 'keyboard cat',
+	  store: store,
 	  resave: true,	  
 	  saveUninitialized: true,
 	  cookie: { maxAge: 36000000 } //secure: true will be set on the cookie when i this site is on https
