@@ -1128,7 +1128,7 @@ app.controller('loginController',["$scope","$http","$location","$window","$resou
   $scope.error = "";  
   
   $scope.send = function(){        
-    var login = $resource('/user/login',null,{logPerson:{method:"POST"}});
+    var login = $resource('/user/login',null,{logPerson:{method:"POST",headers:{withCredentials: true}}});
     login.logPerson($scope.login,function(data){
     console.log(data) 
     localManager.setValue("resolveUser",data);
@@ -1137,11 +1137,11 @@ app.controller('loginController',["$scope","$http","$location","$window","$resou
        //user joins a room in socket.io and intantiayes his own socket
         switch(data.typeOfUser) {
           case "Patient":
-            //createAwareness(data)
+            createAwareness(data)
             $window.location.href = '/dashboard/patient';   
           break;
           case "Doctor":
-            //createAwareness(data)
+            createAwareness(data)
            $window.location.href = "/dashboard/doctor";   
           break;
           case "Pharmacy":
@@ -4992,17 +4992,7 @@ app.controller("patientPanelController",["$scope","$location","$http","$rootScop
   templateUrlFactory.setUrl();
   var medical = {};
 
-  $http({
-      method  : 'GET',
-      url     : "/patient-panel/get-medical-record",
-      headers : {'Content-Type': undefined} 
-      })
-    .success(function(data) {
-      console.log("[[[[[[[[[[[[[[[[[[[[")
-      alert(data)
-  });
-
-  /*var records = $resource("/patient-panel/get-medical-record");
+  var records = $resource("/patient-panel/get-medical-record");
   records.get(function(data){
     var filter = {};
     var total = {};
@@ -5041,7 +5031,7 @@ app.controller("patientPanelController",["$scope","$location","$http","$rootScop
     checkIsRadioPending(data.medical_records.radiology_test);
     $scope.labLen = data.medical_records.laboratory_test.length;
     $scope.radioLen = data.medical_records.radiology_test.length; 
-  }); */
+  }); 
  
   
   

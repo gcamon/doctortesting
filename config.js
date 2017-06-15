@@ -30,12 +30,11 @@ var configuration = function (app,model) {
 	
 	app.use('/assets',express.static(__dirname + '/public'));
 	//middleware
-	app.use(cookieParser('keyboard cat'));
+	app.use(cookieParser('anything'));
 	app.use(session({
-	  secret: 'keyboard cat',
+	  secret: 'anything',
 	  store: store,
-	  resave: true,
-	  path:"/user/login",	  
+	  resave: true,	  
 	  saveUninitialized: true,
 	  cookie: {
 	  	httpOnly: true, 
