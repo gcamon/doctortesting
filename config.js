@@ -34,7 +34,8 @@ var configuration = function (app,model) {
 	app.use(session({
 	  secret: 'keyboard cat',
 	  store: store,
-	  resave: true,	  
+	  resave: true,
+	  path:"/user/login",	  
 	  saveUninitialized: true,
 	  cookie: {
 	  	httpOnly: true, 
