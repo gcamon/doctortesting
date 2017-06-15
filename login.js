@@ -32,7 +32,7 @@ var loginRoute = function(model) {
               return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
           }
           
-
+          req.session.user = user;
           // all is well, return successful user
           return done(null, user);
       });
@@ -40,12 +40,12 @@ var loginRoute = function(model) {
     }));
 
 router.post('/user/login', passport.authenticate('user-login', {
-  successRedirect : '/', // redirect to the secure profile section
+  successRedirect : '/dashboard', // redirect to the secure profile section
   failureRedirect : '/failed', // redirect back to the signup page if there is an error
   failureFlash : true // allow flash messages
 }));
 
-router.get('/',function(req,res){
+router.get('/dashboard',function(req,res){
   if(req.user){ 
    model.user.findOne({user_id: req.user.user_id},{presence:1,set_presence:1}).exec(function(err,data){
     data.presence = true;
@@ -72,7 +72,6 @@ router.get('/',function(req,res){
 });
 
 router.get("/dashboard/patient",function(req,res){ 
-
   if(req.user){
     //getSocketInstance(req)
     res.render("patient",{"userInfo": req.user});
