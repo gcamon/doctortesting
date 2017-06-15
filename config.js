@@ -63,9 +63,16 @@ var configuration = function (app,model) {
 		     next();
 		 }
 });
-
+ var count = 0;
 	app.use(function(req,res,next){
+
 		console.log(req.headers.cookie || undefined);
+		if(req.headers.cookie){
+			req.session.save(function(){
+				count++;
+				console.log("session save "  + count )
+			})
+		}
 		next();
 	})
 	
