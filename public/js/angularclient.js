@@ -1131,14 +1131,14 @@ app.controller('loginController',["$scope","$http","$location","$window","$resou
     var login = $resource('/user/login',null,{logPerson:{method:"POST",headers:{withCredentials: true}}});
     login.logPerson($scope.login,function(data){
     console.log(data) 
-    localManager.setValue("resolveUser",data);
-    //$rootScope.balance = data.balance;             
+    //localManager.setValue("resolveUser",data);
+    $rootScope.balance = data.balance;             
     if (data.isLoggedIn) {
        //user joins a room in socket.io and intantiayes his own socket
         switch(data.typeOfUser) {
           case "Patient":
             createAwareness(data)
-            $window.location.replace = '/dashboard/patient';   
+            $window.location.href = "/medical-center/pharmacy";    
           break;
           case "Doctor":
             createAwareness(data)
