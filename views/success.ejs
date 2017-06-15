@@ -117,7 +117,7 @@
 		<!--************************************
 				Main Start
 		*************************************-->
-		<main id="main" class="tg-main-section tg-haslayout" ng-controller = "loginController">
+		<main id="main" class="tg-main-section tg-haslayout" >
 			<div class="container">
 				<div class="row">
 					<div class="tg-404 tg-haslayout">
@@ -125,11 +125,11 @@
 						 	<h2>LOG IN</h2>				
                             <div style="width: 400px; height: 400px; margin:0 auto;padding-top:100px">
                             <span  style="color: red;display:block;text-align: center; font-size:16px;padding:10px 10px" ng-cloak>{{error}}</span>	
-							<form>
-								<input type="text" placeholder="Email" ng-model = "login.email" style="border: 1px solid rgba(0,255,0,0.8)">
-								<input type="password" placeholder="Password" ng-model = "login.password" style="border: 1px solid rgba(0,255,0,0.8);margin: 10px 0px">
+							<form method="POST" action="/user/login">
+								<input type="text" placeholder="Email" name="email" style="border: 1px solid rgba(0,255,0,0.8)">
+								<input type="password" placeholder="Password" name="password" style="border: 1px solid rgba(0,255,0,0.8);margin: 10px 0px">
 								<p style="text-align: center">
-								<button class="btn btn-login" ng-click="send()" style="color: #fff;">LOGIN</button>
+								<button class="btn btn-login"  style="color: #fff;">LOGIN</button>
 								</p>
 							</form>
 							<a href="#/forgot-password" style="font-size: 14px; color: green; text-decoration:underline">Forgot password?</a>

@@ -52,29 +52,8 @@ var configuration = function (app,model) {
 	app.use(bodyParser.json());
 	app.use(multer({dest: './uploads'}).any());
 
-	app.use(function(req, res, next) {
-		res.header('Access-Control-Allow-Credentials', true);
-		res.header('Access-Control-Allow-Origin', req.headers.host);
-		res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-		res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
-		if ('OPTIONS' == req.method) {
-		     res.send(200);
-		 } else {
-		     next();
-		 }
-});
- var count = 0;
-	app.use(function(req,res,next){
-
-		console.log(req.headers.cookie || undefined);
-		if(req.headers.cookie){
-			req.session.save(function(){
-				count++;
-				console.log("session save "  + count )
-			})
-		}
-		next();
-	})
+	
+ 
 	
 	passport.serializeUser(function(user, done) {    
     done(null, user._id);
