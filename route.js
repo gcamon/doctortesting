@@ -1241,9 +1241,8 @@ var basicRoute = function (model,sms,io) {
   
     //user getting the available on the dashboard balance route.
     router.get('/dashboard/:userId/get-balance',function(req,res){
-      console.log("ppppppppppppppppppppppppppppppppppppppppnnnnmmmmmmhhhfrrrr6y77777");
-      console.log(req.session.user.firstname)
-      console.log(req.headers)
+      console.log("ppppppppppppppppppppppppppppppppppppppppnnnnmmmmmmhhhfrrrr6y");
+      console.log(req.session)
       if(req.user){
         model.user.findOne({user_id: req.params.userId},{ewallet:1},function(err,wallet){
           if(err) throw err;
