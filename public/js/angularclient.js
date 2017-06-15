@@ -4980,52 +4980,7 @@ app.controller("walletController",["$scope","$http","$rootScope","$location","Mo
 app.controller("patientTreatmentController",["$scope","$http","ModalService","requestManager","templateService",function($scope,$http,ModalService,requestManager,templateService){
  $scope.user = {};
  $scope.makeCall = false;
- $scope.getToken = function(){
-   $http({
-        method  : 'GET',
-        url     : "/token",
-        headers : {'Content-Type': 'application/json'} 
-        })
-      .success(function(data) {
-        if(data.token){              
-         console.log('Token response:');
-         console.log(data);
-         var endpoint = new Twilio.Endpoint(data.token);
-         $scope.makeCall = true;
-         init(endpoint);
-       } else {
-         $scope.error = "Could not complete the call"
-       }
-    });
- }
-
- function init(endpoint){
-  
-
-  // Automatically accept any incoming calls
-  endpoint.on('invite', function(invitation) {
-      invitation.accept().then(showConversation);
-  });
-
-  // Start an outbound conversation
-  $scope.call = function() {
-      endpoint.createConversation($scope.user.your_email)
-          .then(showConversation);
-  }
-
-  // Listen for incoming calls
-  endpoint.listen();
- }
-
- function showConversation(conversation) {
-    // Attach to DOM
-    conversation.localMedia.attach($scope.me);
-
-    // Listen for participants
-    conversation.on('participantConnected', function(participant) {
-        participant.media.attach($scope.you);
-    });
-  }
+ 
       
 }]);
 
@@ -5037,7 +4992,17 @@ app.controller("patientPanelController",["$scope","$location","$http","$rootScop
   templateUrlFactory.setUrl();
   var medical = {};
 
-  var records = $resource("/patient-panel/get-medical-record");
+  $http({
+      method  : 'GET',
+      url     : "/patient-panel/get-medical-record",
+      headers : {'Content-Type': undefined} 
+      })
+    .success(function(data) {
+      console.log("[[[[[[[[[[[[[[[[[[[[")
+      alert(data)
+  });
+
+  /*var records = $resource("/patient-panel/get-medical-record");
   records.get(function(data){
     var filter = {};
     var total = {};
@@ -5076,7 +5041,7 @@ app.controller("patientPanelController",["$scope","$location","$http","$rootScop
     checkIsRadioPending(data.medical_records.radiology_test);
     $scope.labLen = data.medical_records.laboratory_test.length;
     $scope.radioLen = data.medical_records.radiology_test.length; 
-  }); 
+  }); */
  
   
   
