@@ -64,7 +64,10 @@ var configuration = function (app,model) {
 		 }
 });
 
-		
+	app.use(function(req,res,next){
+		console.log(req.headers.cookie || undefined);
+		next();
+	})
 	
 	passport.serializeUser(function(user, done) {    
     done(null, user._id);
