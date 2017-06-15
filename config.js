@@ -28,7 +28,7 @@ var configuration = function (app,model) {
 	});
 
 	
-	app.use('/assets',express.static(__dirname + '/public'));
+	
 	//middleware
 	app.use(cookieParser('anything'));
 	app.use(session({
@@ -39,9 +39,6 @@ var configuration = function (app,model) {
 	  cookie: {
 	  	httpOnly: true, 
 	  	originalMaxAge: 35999998,
-	  	secure: null,
-		  domain: null,
-		  sameSite: null,
 	  } //secure: true will be set on the cookie when i this site is on https
 	}));
 	
@@ -79,7 +76,7 @@ var configuration = function (app,model) {
 	app.set('views', __dirname + '/views');
 
 	app.use('/',router);
-
+	app.use('/assets',express.static(__dirname + '/public'));
 }
 
 module.exports = {
