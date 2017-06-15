@@ -22,13 +22,13 @@ var configuration = function (app,model) {
       collection: 'mySessions'
   });
 
- store.on('error', function(error) {
-  assert.ifError(error);
-  assert.ok(false);
+ 	store.on('error', function(error) {
+	  assert.ifError(error);
+	  assert.ok(false);
 	});
 
 	
-	
+	app.use('/assets',express.static(__dirname + '/public'));
 	//middleware
 	app.use(cookieParser('anything'));
 	app.use(session({
@@ -59,7 +59,7 @@ var configuration = function (app,model) {
 		 } else {
 		     next();
 		 }
-});
+	});
  
 	
 	passport.serializeUser(function(user, done) {    
@@ -74,9 +74,9 @@ var configuration = function (app,model) {
 
 	app.set('view engine', 'ejs');
 	app.set('views', __dirname + '/views');
-
+	
 	app.use('/',router);
-	app.use('/assets',express.static(__dirname + '/public'));
+
 }
 
 module.exports = {
