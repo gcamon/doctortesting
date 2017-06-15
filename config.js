@@ -36,8 +36,13 @@ var configuration = function (app,model) {
 	  store: store,
 	  resave: true,	  
 	  saveUninitialized: true,
-	  path: "/*",
-	  cookie: { maxAge: 36000000 } //secure: true will be set on the cookie when i this site is on https
+	  cookie: {
+	  	httpOnly: true, 
+	  	originalMaxAge: 35999998,
+	  	secure: null,
+		  domain: null,
+		  sameSite: null,
+	  } //secure: true will be set on the cookie when i this site is on https
 	}));
 	
 	app.use(passport.initialize());
