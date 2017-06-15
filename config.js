@@ -36,6 +36,7 @@ var configuration = function (app,model) {
 	  store: store,
 	  resave: true,	  
 	  saveUninitialized: true,
+	  path: "/*",
 	  cookie: { maxAge: 36000000 } //secure: true will be set on the cookie when i this site is on https
 	}));
 	
