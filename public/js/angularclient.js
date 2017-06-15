@@ -1138,7 +1138,7 @@ app.controller('loginController',["$scope","$http","$location","$window","$resou
         switch(data.typeOfUser) {
           case "Patient":
             createAwareness(data)
-            $window.location.href = "/medical-center/pharmacy";    
+            $window.location.href = '/dashboard/patient';   
           break;
           case "Doctor":
             createAwareness(data)
