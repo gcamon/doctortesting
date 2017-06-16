@@ -7,6 +7,8 @@ var bodyParser = require('body-parser');
 var router = express.Router();
 var session = require('express-session');
 var passport = require('passport');
+var flash = require('connect-flash');
+var cookieParser = require("cookie-parser");
 var MongoDBStore = require('connect-mongodb-session')(session);
  
 
@@ -27,23 +29,33 @@ var configuration = function (app,model) {
 
 	app.use('/assets',express.static(__dirname + '/public'));
 	//middleware
-	
 	app.use(session({
-	  secret: 'anything',
+	  secret: 'key cat',
 	  store: store,
 	  resave: true,	  
 	  saveUninitialized: true,
 	  cookie: {
 	  	httpOnly: true, 
+	  	maxAge: 35999998000,
 	  } //secure: true will be set on the cookie when i this site is on https
 	}));
 	
 	app.use(passport.initialize());
-	app.use(passport.session());		
+	app.use(passport.session());
+	app.use(flash());		
 	app.use(bodyParser.urlencoded({ extended: false }));
 	app.use(bodyParser.json());
 	app.use(multer({dest: './uploads'}).any());
 
+	app.use(function(req,res,next){
+		if(req.session.user === undefined) {
+			res.send("req stopped @ " + req.headers.referer)
+		} else {
+			next();
+		}
+	})
+
+	
 	
 	passport.serializeUser(function(user, done) {    
     done(null, user._id);
