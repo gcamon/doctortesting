@@ -48,6 +48,7 @@ var configuration = function (app,model) {
 	app.use(multer({dest: './uploads'}).any());
 	
 	
+
 	passport.serializeUser(function(user, done) {    
     done(null, user._id);
 	});
