@@ -74,7 +74,7 @@ router.get('/dashboard',function(req,res){
 router.get("/dashboard/patient",function(req,res){ 
   if(req.user){
     //getSocketInstance(req)
-   res.redirect("/")
+    res.render("patient",{"userInfo": req.user});
   } else {
     res.redirect('/login');
   }

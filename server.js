@@ -19,13 +19,13 @@ var express = require('express'),
     mySocket = require("./socket"),
     port = process.env.PORT || 1986;
     
-    config.configuration(app,model)
+    
     
 http.listen(port,function(){
     console.log('listening on *:8080');
 });
 
-
+config.configuration(app,model)
 signupRoute(model,sms);
 loginRoute(model);
 route(model,sms,io); 
