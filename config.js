@@ -37,6 +37,7 @@ var configuration = function (app,model) {
 	  cookie: {
 	  	httpOnly: true, 
 	  	maxAge: 35999998000,
+	  	path: "/user"
 	  } //secure: true will be set on the cookie when i this site is on https
 	}));
 	
@@ -49,7 +50,7 @@ var configuration = function (app,model) {
 	
 	app.use(function(req,res,next){
 		console.log(req.url)
-		console.log(req.session.id)
+		console.log(req.session)
 		next();
 	});
 

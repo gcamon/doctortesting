@@ -73,7 +73,7 @@ router.get('/dashboard',function(req,res){
   }  
 });
 
-router.get("/dashboard/patient",function(req,res){ 
+router.get("/user/patient",function(req,res){ 
   if(req.user){
     //getSocketInstance(req)
     res.render("patient",{"userInfo": req.user});
