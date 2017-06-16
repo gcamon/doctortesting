@@ -55,16 +55,7 @@ var basicRoute = function (model,sms,io) {
     }
   });
 
-  router.get("/dashboard/patient",function(req,res){ 
-
-    if(req.user){
-      //getSocketInstance(req)
-      res.render("patient",{"userInfo": req.user});
-    } else {
-      res.redirect('/login');
-    }
-
-  });
+  
 
   router.get("/medical-center/view",function(req,res){
     if(req.user){

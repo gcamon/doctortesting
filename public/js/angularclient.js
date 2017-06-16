@@ -1156,7 +1156,6 @@ app.controller('loginController',["$scope","$http","$location","$window","$resou
           default:
             $window.location.href = "/medical-center/view"; 
           break; 
-
         }
         
       } else {       
