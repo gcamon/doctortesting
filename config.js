@@ -27,7 +27,6 @@ var configuration = function (app,model) {
 	  assert.ok(false);
 	});
 
-	
 	app.use('/assets',express.static(__dirname + '/public'));
 	//middleware
 	app.use(cookieParser('anything'));
@@ -51,7 +50,7 @@ var configuration = function (app,model) {
 
 	
 
-
+	
 	
 	passport.serializeUser(function(user, done) {    
     done(null, user._id);

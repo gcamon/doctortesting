@@ -1128,7 +1128,7 @@ app.controller('loginController',["$scope","$http","$location","$window","$resou
   $scope.error = "";  
   
   $scope.send = function(){        
-    var login = $resource('/user/login',null,{logPerson:{method:"POST",headers:{withCredentials: true}}});
+    var login = $resource('/user/login',null,{logPerson:{method:"POST"}});
     login.logPerson($scope.login,function(data){
     console.log(data) 
     localManager.setValue("resolveUser",data);
@@ -1200,7 +1200,7 @@ app.controller('loginController',["$scope","$http","$location","$window","$resou
 //display the current balance always
 app.controller("balanceController",["$rootScope","$resource","localManager",function($rootScope,$resource,localManager){  
     var user = localManager.getValue("resolveUser");
-    var amount = $resource('/dashboard/:userId/get-balance',{userId: user.user_id});
+    var amount = $resource('/dashboard/:userId/get-balance',{userId: user.user_id},{headers:{withCredentials: true,referal:"/dashboard/patient"}});
     var wallet = amount.get(null,function(data){
       var format = "N" + data.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       $rootScope.balance = format;
