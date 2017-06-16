@@ -1240,7 +1240,7 @@ var basicRoute = function (model,sms,io) {
     });
   
     //user getting the available on the dashboard balance route.
-    router.get('/dashboard/patient/:userId/get-balance',function(req,res){
+    router.get('/dashboard/:userId/get-balance',function(req,res){
       console.log("ppppppppppppppppppppppppppppppppppppppppnnnnmmmmmmhhhfrrrr6y");
       console.log()
       if(req.user){

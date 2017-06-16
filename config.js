@@ -60,6 +60,11 @@ var configuration = function (app,model) {
 		     next();
 		 }
 	});
+
+	app.use(function(req,res,next){
+		console.log(req.user);
+		next()
+	})
  
 	
 	passport.serializeUser(function(user, done) {    
@@ -74,7 +79,7 @@ var configuration = function (app,model) {
 
 	app.set('view engine', 'ejs');
 	app.set('views', __dirname + '/views');
-	
+
 	app.use('/',router);
 
 }
