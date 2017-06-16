@@ -47,8 +47,9 @@ var configuration = function (app,model) {
 	app.use(bodyParser.json());
 	app.use(multer({dest: './uploads'}).any());
 	
-	app.use(function(re,res,next){
-		res.header('Access-Control-Allow-Credentials', 'true');
+	app.use(function(req,res,next){
+		console.log(req.url)
+		console.log(req.session.id)
 		next();
 	});
 
