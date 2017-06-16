@@ -27,14 +27,14 @@ var configuration = function (app,model) {
 
 	app.use('/assets',express.static(__dirname + '/public'));
 	//middleware
+	
 	app.use(session({
-	  secret: 'key cat',
+	  secret: 'anything',
 	  store: store,
 	  resave: true,	  
 	  saveUninitialized: true,
 	  cookie: {
 	  	httpOnly: true, 
-	  	maxAge: 35999998000,
 	  } //secure: true will be set on the cookie when i this site is on https
 	}));
 	
@@ -44,7 +44,7 @@ var configuration = function (app,model) {
 	app.use(bodyParser.json());
 	app.use(multer({dest: './uploads'}).any());
 
-
+	
 	passport.serializeUser(function(user, done) {    
     done(null, user._id);
 	});
