@@ -46,15 +46,6 @@ var configuration = function (app,model) {
 	app.use(bodyParser.urlencoded({ extended: false }));
 	app.use(bodyParser.json());
 	app.use(multer({dest: './uploads'}).any());
-
-	app.use(function(req,res,next){
-		if(req.session.user === undefined) {
-			res.send("req stopped @ " + req.headers.referer)
-		} else {
-			next();
-		}
-	})
-
 	
 	
 	passport.serializeUser(function(user, done) {    
