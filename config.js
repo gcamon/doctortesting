@@ -47,7 +47,11 @@ var configuration = function (app,model) {
 	app.use(bodyParser.json());
 	app.use(multer({dest: './uploads'}).any());
 	
-	
+	app.use(function(re,res,next){
+		res.header('Access-Control-Allow-Credentials', 'true');
+		next();
+	});
+
 
 	passport.serializeUser(function(user, done) {    
     done(null, user._id);
