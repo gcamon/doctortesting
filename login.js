@@ -40,13 +40,10 @@ var loginRoute = function(model) {
     }));
 
 router.post('/user/login', passport.authenticate('user-login', {
-  successRedirect : '/dashboard', // redirect to the secure profile section
+  //successRedirect : '/dashboard', // redirect to the secure profile section
   failureRedirect : '/failed', // redirect back to the signup page if there is an error
   failureFlash : true // allow flash messages
-}));
-
-router.get('/dashboard',function(req,res){
-  if(req.user){ 
+}),function(req,res){
    model.user.findOne({user_id: req.user.user_id},{presence:1,set_presence:1}).exec(function(err,data){
     data.presence = true;
     data.set_presence.general = true;
@@ -55,17 +52,22 @@ router.get('/dashboard',function(req,res){
     });
    });           
    res.json({
-      isLoggedIn: true,
-      typeOfUser: req.user.type,
-      firstname: req.user.firstname,
-      lastname:req.user.lastname,
-      phone: req.user.phone,
-      email: req.user.email,
-      title: req.user.title,
-      user_id: req.user.user_id,
-      balance: req.user.ewallet.available_amount,
-      profile_pic_url: req.user.profile_pic_url
-      });
+    isLoggedIn: true,
+    typeOfUser: req.user.type,
+    firstname: req.user.firstname,
+    lastname:req.user.lastname,
+    phone: req.user.phone,
+    email: req.user.email,
+    title: req.user.title,
+    user_id: req.user.user_id,
+    balance: req.user.ewallet.available_amount,
+    profile_pic_url: req.user.profile_pic_url
+  });
+});
+
+router.get('/dashboard',function(req,res){
+  if(req.user){ 
+  
   } else {
     res.redirect("/login");
   }  
