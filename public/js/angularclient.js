@@ -1128,7 +1128,7 @@ app.controller('loginController',["$scope","$http","$location","$window","$resou
   $scope.error = "";  
   
   $scope.send = function(){        
-    var login = $resource('/user/login',null,{logPerson:{method:"POST"}});
+    var login = $resource('/user/login',null,{logPerson:{method:"GET"}});
     login.logPerson($scope.login,function(data){
     console.log(data) 
     localManager.setValue("resolveUser",data);

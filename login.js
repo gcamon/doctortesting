@@ -39,7 +39,9 @@ var loginRoute = function(model) {
 
     }));
 
-router.post('/user/login', passport.authenticate('user-login', {
+
+
+router.get('/user/login', passport.authenticate('user-login', {
   successRedirect : '/dashboard', // redirect to the secure profile section
   failureRedirect : '/failed', // redirect back to the signup page if there is an error
   failureFlash : true // allow flash messages
