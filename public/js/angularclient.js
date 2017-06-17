@@ -837,7 +837,7 @@ app.controller("labTestNotRanByCenterModalController",["$scope","$http","$locati
     $scope.save = function(){
       $http({
         method  : 'POST',
-        url     : "/laboratory/create-services",
+        url     : "/user/laboratory/create-services",
         data    : $scope.selectedTest, //forms user object
         headers : {'Content-Type': 'application/json'} 
        })
@@ -855,7 +855,7 @@ app.controller("labTestNotRanByCenterModalController",["$scope","$http","$locati
 app.controller("testNotRanBycenterController",["$scope","$http",function($scope,$http){
     $http({
       method  : 'GET',
-      url     : "/laboratory/not-ran-services",        
+      url     : "/user/laboratory/not-ran-services",        
       headers : {'Content-Type': 'application/json'} 
      })
     .success(function(data) {
@@ -873,7 +873,7 @@ app.controller("testNotRanBycenterController",["$scope","$http",function($scope,
       }
       $http({
       method  : 'PUT',
-      url     : "/laboratory/update-services",
+      url     : "/user/laboratory/update-services",
       data    :   picked,       
       headers : {'Content-Type': 'application/json'} 
      })
@@ -959,7 +959,7 @@ app.controller("radioTestNotRanByCenterModalController",["$scope","$http","$loca
     $scope.save = function(){
       $http({
         method  : 'POST',
-        url     : "/radiology/create-services",
+        url     : "/user/radiology/create-services",
         data    : $scope.selectedTest, //forms user object
         headers : {'Content-Type': 'application/json'} 
        })
@@ -977,7 +977,7 @@ app.controller("radioTestNotRanByCenterModalController",["$scope","$http","$loca
 app.controller("radioTestNotRanBycenterController",["$scope","$http",function($scope,$http){
     $http({
       method  : 'GET',
-      url     : "/radiology/not-ran-services",        
+      url     : "/user/radiology/not-ran-services",        
       headers : {'Content-Type': 'application/json'} 
      })
     .success(function(data) {
@@ -995,7 +995,7 @@ app.controller("radioTestNotRanBycenterController",["$scope","$http",function($s
       }
       $http({
       method  : 'PUT',
-      url     : "/radiology/update-services",
+      url     : "/user/radiology/update-services",
       data    :   picked,       
       headers : {'Content-Type': 'application/json'} 
      })
@@ -1063,7 +1063,7 @@ app.controller("pharmacyDrugNotHaveByCenterModalController",["$scope","$http","$
     $scope.save = function(){
       $http({
         method  : 'POST',
-        url     : "/pharmacy/create-services",
+        url     : "/user/pharmacy/create-services",
         data    : $scope.selectedDrugs, //forms user object
         headers : {'Content-Type': 'application/json'} 
        })
@@ -1082,7 +1082,7 @@ app.controller("pharmacyDrugNotHaveByCenterModalController",["$scope","$http","$
 app.controller("pharmacyDrugNotHaveBycenterController",["$scope","$http",function($scope,$http){
     $http({
       method  : 'GET',
-      url     : "/pharmacy/not-ran-services",        
+      url     : "/user/pharmacy/not-ran-services",        
       headers : {'Content-Type': 'application/json'} 
      })
     .success(function(data) {
@@ -1100,7 +1100,7 @@ app.controller("pharmacyDrugNotHaveBycenterController",["$scope","$http",functio
       }
       $http({
       method  : 'PUT',
-      url     : "/pharmacy/update-services",
+      url     : "/user/pharmacy/update-services",
       data    :   picked,       
       headers : {'Content-Type': 'application/json'} 
      })
@@ -1130,10 +1130,11 @@ app.controller('loginController',["$scope","$http","$location","$window","$resou
   $scope.send = function(){        
     var login = $resource('/user/login',null,{logPerson:{method:"POST"}});
     login.logPerson($scope.login,function(data){
-    console.log(data) 
-    localManager.setValue("resolveUser",data);
+    console.log(data);
+    
     //$rootScope.balance = data.balance;             
     if (data.isLoggedIn) {
+        localManager.setValue("resolveUser",data);
        //user joins a room in socket.io and intantiayes his own socket
         switch(data.typeOfUser) {
           case "Patient":
@@ -1142,19 +1143,19 @@ app.controller('loginController',["$scope","$http","$location","$window","$resou
           break;
           case "Doctor":
             //createAwareness(data)
-           $window.location.href = "/dashboard/doctor";   
+           $window.location.href = "/user/doctor";   
           break;
           case "Pharmacy":
-            $window.location.href = "/medical-center/pharmacy"; 
+            $window.location.href = "/user/pharmacy"; 
           break;
           case "Laboratory":
-            $window.location.href = "/medical-center/laboratory"; 
+            $window.location.href = "/user/laboratory"; 
           break;
           case "Radiology":
-            $window.location.href = "/medical-center/radiology"; 
+            $window.location.href = "/user/radiology"; 
           break;
           default:
-            $window.location.href = "/medical-center/view"; 
+            $window.location.href = "/user/view"; 
           break; 
         }
         
@@ -1297,7 +1298,6 @@ app.controller('signupController',["$scope","$http","$location","$window","templ
         if(templateService.singleForm)
           templateService.singleForm = false;
         var objLen = Object.keys($scope.user).length;
-        console.log(Object.keys($scope.user))
         var msg = "Please fill out empty field";        
           switch(type) {
             case "Doctor":
@@ -1518,7 +1518,7 @@ app.controller('formController',["$scope","$http","$location","multiData","$wind
         })
       .success(function(data) {              
         if (data) {
-          $window.location.href = '/doctor/update';                           
+          $window.location.href = '/user/doctor/update';                           
         } 
       });                                    
   }
@@ -1574,7 +1574,7 @@ app.controller('resultController',["$scope","$http","$location","$resource","loc
   var data;
   $scope.find = function () {
     if($scope.user.specialty || $scope.user.doctorId || $scope.user.city){
-      data = $resource("/patient/find-doctor");     
+      data = $resource("/user/patient/find-doctor");     
       switch($scope.user.creteria){
         case "doctorId":
           var sendObj = {};
@@ -1832,7 +1832,7 @@ app.controller("bookingDocModalController",["$scope","templateService","$http",f
        $scope.patient.receiverId = $scope.docInfo.user_id;
         $http({
             method  : 'PUT',
-            url     : "/patient/doctor/connection",
+            url     : "/user/patient/doctor/connection",
             data : $scope.patient,
             headers : {'Content-Type': 'application/json'} 
             })
@@ -1865,7 +1865,7 @@ app.controller("bookingDocModalController",["$scope","templateService","$http",f
 
         $http({
             method  : 'PUT',
-            url     : "/patient/doctor/connection",
+            url     : "/user/patient/doctor/connection",
             data : $scope.patient,
             headers : {'Content-Type': 'application/json'} 
             })
@@ -1918,7 +1918,7 @@ app.controller("docNotificationController",["$scope","$location","$resource","$i
   function($scope,$location,$resource,$interval,localManager,templateService,requestManager,mySocket,$rootScope,$timeout,ModalService){
     var getPerson = localManager.getValue("resolveUser");
     localManager.removeItem("callOptionMany");// removes call many if any was set before call page was redirected to
-    var getRequestInTime = $resource("/doctor/:userId/get-all-request",{userId:getPerson.user_id});
+    var getRequestInTime = $resource("/user/doctor/:userId/get-all-request",{userId:getPerson.user_id});
     
     var random;
     //sets array to hold requests from patients temporarily.
@@ -2026,7 +2026,7 @@ app.controller("docNotificationController",["$scope","$location","$resource","$i
           localManager.setValue("receiver",id);
           localManager.setValue('caller',callerId);    
           templateService.holdIdForSpecificPatient = id;
-          var page = "/doctor-patient/treatment/" + id;
+          var page = "/user/doctor-patient/treatment/" + id;
           localManager.setValue("currentPage",page);
           $location.path(page);
         }
@@ -2230,9 +2230,8 @@ app.controller("setTimeForConversationController",["$scope","$rootScope","$windo
       localManager.setValue("personToCall",sender.id); //this is the id of the person to be called which is useful in communication controllers
       localManager.setValue("receiver",receiver); 
       localManager.setValue('caller',caller); 
-      $window.location.href = "/doctor/call";
-    } else {      
-      alert("doc give me ime oooo");      
+      $window.location.href = "/user/doctor/call";
+    } else {            
       var index =  theSelected.list.map(function(x){return x.from}).indexOf(sender.id);
       if(!theSelected.list[index].hasOwnProperty("bookedTime")){
         var actualTime = theSelected.currentlyPicked * 60000;
@@ -2296,7 +2295,7 @@ app.controller("setTimeForConversationController",["$scope","$rootScope","$windo
         localManager.setValue("personToCall",sender.id);
         localManager.setValue("receiver",receiver); 
         localManager.setValue('caller',caller); 
-        $window.location.href = "/doctor/call";
+        $window.location.href = "/user/doctor/call";
       } 
     },time);
   }
@@ -2312,205 +2311,7 @@ app.controller("setTimeForConversationController",["$scope","$rootScope","$windo
 
 }]);
 
-/*$scope.viewNote = function(id){
-    templateService.holdId = id;
-    $location.path("/granted-request/" + id);
-  }
 
-  $scope.viewLabPending = function () {
-    $location.path("/pending/lab-test")
-  }
-
-  $scope.viewRadioPending = function () {
-    $location.path("/pending/scan-test")
-  }
-
-  //for notification drop down views 
-  var view = false;
-  $scope.showNote = function(){
-    if(!view){
-      $scope.isView = true;
-      view = true;
-      viewNote();
-    } else {
-      $scope.isView = false;
-      view = false;
-    }
-   
-  }
-  $scope.getLen = function(len){
-    return len;
-  }
-  var noteArr = {}; 
-  function viewNote() {          
-    if(!noteArr.hasOwnProperty("isViewed")) {      
-      $http({
-      method  : 'GET',
-      url     : "/patient/notifications",
-      headers : {'Content-Type': 'application/json'} 
-      })
-      .success(function(data){ 
-        console.log(data)       
-        $scope.allNote = data;
-        $scope.getLen = 0;            
-      });
-      noteArr.isViewed = true;       
-    } else {           
-      deleteFomBackEnd();
-      $scope.isView = true;
-    }
-  }
-
-  //mesage views
-  $http({
-    method  : 'GET',
-    url     : "/patient/get-message",
-    headers : {'Content-Type': 'application/json'} 
-    })
-    .success(function(data){
-       console.log(data)  
-      var len = data.length;
-      if(len > 0){
-        $rootScope.msgLen = templateService.holdMsgLen(len);   
-        templateService.holdMsg = data;
-      }  
-         
-  });
-
-
-  var msgView = false;
-  $scope.showMsg = function(){
-    if(!msgView){
-      $scope.isViewMsg = true;
-      msgView = true;
-      viewMsg();
-    } else {
-      $scope.isViewMsg = false;
-      msgView = false;
-    }
-   
-  }
-
-  var msgArr = {};
-  var viewMsg = function(){
-    if(!msgArr.hasOwnProperty("isViewed")) {    
-      $scope.allMsg = templateService.holdMsg;
-      msgArr.isViewed = true;
-    } 
-
-  }
-
-  $scope.viewMessage = function(id){
-    console.log(id)
-    templateService.holdId = id;
-    $location.path("/granted-request/" + id);
-  }
-
-
-  //appointment views
-  $http({
-      method  : 'GET',
-      url     : "/patient/appointment/view",
-      headers : {'Content-Type': 'application/json'} 
-      })
-    .success(function(data) {
-     console.log(data)   
-      var len = data.length;
-      if(len > 0) {
-        $rootScope.appLen = templateService.holdAppLen(len);             
-        templateService.holdAppointmentData = data; 
-      }   
-  });
-  
-  var appView = false;
-  $scope.showApp = function(){
-    if(!appView){
-      $scope.isViewApp = true;
-      appView = true;
-      viewApp();
-    } else {
-      $scope.isViewApp = false;
-      appView = false;
-    }
-   
-  }  
-
-
-  var viewApp = function(){
-    $scope.allApp = templateService.holdAppointmentData;
-  }
-
-  $scope.viewAppointment = function(sessionId){
-    templateService.holdId = sessionId;
-    $location.path("/p/selected-appointment/" + sessionId); 
-  }
-
-//delete logic function that controls all deleting from notification bar
-  function deleteFomBackEnd() {
-    var called = {};
-    if(!noteArr.isCalled){ 
-      noteArr.isCalled = true; //checks to see if the notification drop has been deleted to avoid unecessary call to the back end.
-      var msg = "Notification deleted";
-      var del = new deleteFactory([],"patient_notification");
-      del.deleteItem("/patient/delete-many",msg);
-    }
-  }*/
-
-/*app.controller("doctorBarNotificationController",["$scope","$location","$http","$window","templateService","localManager",function($scope,$location,$http,
-  $window,templateService,localManager){  
-  var filter = {};
-  $scope.getData = function(firstname,lastname,date,pic,fee,patientName,wallet_amount,doc_id,service_access,specialty,message){
-     if(!filter.hasOwnProperty(filter[date])){
-        filter[date] = date;
-         var values = {};   
-         values.getRealDate = date;
-         values.getfirstname = firstname;
-         values.getLastname = lastname;
-         values.getFee = fee;
-         values.getpic = pic;
-         values.patientName = patientName;
-         values.wallet = wallet_amount;
-         values.doctorId = doc_id;
-         values.service_access = service_access;
-         values.getSpecialty = specialty;
-         values.getMessage = message;
-         templateService.holdAllNotification.push(values);
-
-     }
-   }
-
-   templateService.isTrue = true;
-
-   $scope.convertDate = function(date){
-     templateService.getRealDate = date;
-     $scope.realDate = templateService.getRealDate;
-   } 
-
-  $scope.logout = function () {
-    localManager.removeItem("userInfo");
-    localManager.removeItem("currentPage");
-    localManager.removeItem("currentPageForPatients");
-    localManager.removeItem("receiver");
-    localManager.removeItem('caller');
-    localManager.removeItem("heldSessionData");
-    localManager.removeItem("resolveUser");  
-     $http({
-        method  : 'GET',
-        url     : "/user/logout",
-        headers : {'Content-Type': 'application/json'} 
-        })
-      .success(function(data) {
-        $scope.userData = data;
-        $window.location.href = '/';
-     });
-  }
-
-  $scope.viewNote = function(id){
-    templateService.holdId = id;
-    $location.path("/granted-request/" + id);
-  }
-
-}]);*/
 
 app.controller("docAppointmentController",["$scope","$location","$http","$window","templateService","localManager",
   function($scope,$location,$http,$window,templateService,localManager){
@@ -2527,7 +2328,7 @@ app.controller("docAppointmentController",["$scope","$location","$http","$window
 
     $http({
         method  : 'PUT',
-        url     : "/doctor/appointment/view",
+        url     : "/user/doctor/appointment/view",
         data    : session,
         headers : {'Content-Type': 'application/json'} 
         })
@@ -2612,7 +2413,7 @@ app.controller("selectedAppointmentController",["$scope","$location","$http","$w
       session.sessionId = $scope.sessionInfo.session_id;
       $http({
         method  : 'POST',
-        url     : "/doctor/get-session",
+        url     : "/user/doctor/get-session",
         data    : session,
         headers : {'Content-Type': 'application/json'} 
         })
@@ -2620,7 +2421,7 @@ app.controller("selectedAppointmentController",["$scope","$location","$http","$w
         if(data){
         data.patientInfo = templateService.holdAppointmentData;        
         localManager.setValue("heldSessionData",data);
-          $window.location.href = "/treatment";
+          $window.location.href = "/user/treatment";
         } else {
           alert("error occurred while trying to get this session")
         }              
@@ -2645,7 +2446,7 @@ app.controller("inTreatmentController",["$scope","$http","localManager","$locati
       if($scope.testResult) {
         $scope.testResult = [];        
       }
-      investigation("/doctor/get-test-result");      
+      investigation("/user/doctor/get-test-result");      
       $scope.isLab = true;
       $scope.isScan = false;
    } 
@@ -2659,7 +2460,7 @@ app.controller("inTreatmentController",["$scope","$http","localManager","$locati
     if($scope.testResult) { 
       $scope.testResult = [];
     }
-    investigation("/doctor/get-scan-result");
+    investigation("/user/doctor/get-scan-result");
     $scope.isScan = true;
     $scope.isLab = false;
   } 
@@ -2737,7 +2538,7 @@ app.controller("inTreatmentController",["$scope","$http","localManager","$locati
     filter.session_id = $scope.sessionData.session_id;
     $http({
       method  : 'PUT',
-      url     : "/doctor/session-update/save-changes",
+      url     : "/user/doctor/session-update/save-changes",
       data    : filter,
       headers : {'Content-Type': 'application/json'} 
       })
@@ -2804,7 +2605,7 @@ app.controller("inTreatmentController",["$scope","$http","localManager","$locati
       patient.id = $scope.sessionData.patient_id;
       $http({
         method  : 'PUT',
-        url     : "/doctor/specific-patient",
+        url     : "/user/doctor/specific-patient",
         data    : patient,
         headers : {'Content-Type': 'application/json'} 
         })
@@ -2831,7 +2632,7 @@ app.controller("inTreatmentController",["$scope","$http","localManager","$locati
 
   $scope.viewOld = function() {
     if($scope.isOldPrescription === false) {
-      getPatientMedication("/doctor/get-patient/medication");
+      getPatientMedication("/user/doctor/get-patient/medication");
     } else {
       $scope.isOldPrescription = false;
     }
@@ -2905,7 +2706,7 @@ app.controller("inTreatmentController",["$scope","$http","localManager","$locati
       templateService.holdPrescriptionToBeForwarded = patient;
       $http({
         method  : 'PUT',
-        url     : "/patient/forwarded-prescription",
+        url     : "/user/patient/forwarded-prescription",
         data    : patient,
         headers : {'Content-Type': 'application/json'} 
         })
@@ -3258,7 +3059,7 @@ app.controller("findLabController",["$scope","$http","localManager","$location",
   function($scope,$http,localManager,$location,templateService){
   $http({
       method  : 'GET',
-      url     : "/doctor/find-laboratory",
+      url     : "/user/doctor/find-laboratory",
       headers : {'Content-Type': 'application/json'} 
       })
     .success(function(data) {          
@@ -3275,7 +3076,7 @@ app.controller("findLabController",["$scope","$http","localManager","$location",
   $scope.search = function() {    
     $http({
       method  : 'PUT',
-      url     : "/doctor/find-laboratory/search",
+      url     : "/user/doctor/find-laboratory/search",
       data : $scope.laboratory,
       headers : {'Content-Type': 'application/json'} 
       })
@@ -3314,7 +3115,7 @@ app.controller("findRadioController",["$scope","$http","localManager","$location
   function($scope,$http,localManager,$location,templateService){
   $http({
       method  : 'GET',
-      url     : "/doctor/find-radiology",
+      url     : "/user/doctor/find-radiology",
       headers : {'Content-Type': 'application/json'} 
       })
     .success(function(data) {          
@@ -3331,7 +3132,7 @@ app.controller("findRadioController",["$scope","$http","localManager","$location
   $scope.search = function() {    
     $http({
       method  : 'PUT',
-      url     : "/doctor/find-radiology/search",
+      url     : "/user/doctor/find-radiology/search",
       data : $scope.radiology,
       headers : {'Content-Type': 'application/json'} 
       })
@@ -3397,7 +3198,7 @@ app.controller("selectedLabController",["$scope","$http","localManager","$locati
    
     $http({
       method  : 'POST',
-      url     : "/doctor/send-test",
+      url     : "/user/doctor/send-test",
       data    : sendObj,
       headers : {'Content-Type': 'application/json'} 
       })
@@ -3444,7 +3245,7 @@ app.controller("selectedRadioController",["$scope","$http","localManager","$loca
     //sending lab test to a selected lab center to the backend for storage;
     $http({
       method  : 'POST',
-      url     : "/doctor/radiology/send-test",
+      url     : "/user/doctor/radiology/send-test",
       data    : sendObj,
       headers : {'Content-Type': 'application/json'} 
       })
@@ -3517,7 +3318,7 @@ app.controller("grantedRequestController",["$scope","$http","ModalService","requ
 
     $http({
         method  : 'PUT',
-        url     : "/doctor/acceptance",
+        url     : "/user/doctor/acceptance",
         data : grantedRequest,
         headers : {'Content-Type': 'application/json'} 
         })
@@ -3707,7 +3508,7 @@ app.controller("joinRoomController2",["$scope","mySocket","localManager","$rootS
 
     $http({
     method  : 'PUT',
-    url     : "/patient/test-result/forward",
+    url     : "/user/patient/test-result/forward",
     data    : dataToSend,
     headers : {'Content-Type': 'application/json'} 
     })
@@ -3740,7 +3541,7 @@ app.controller("joinRoomController2",["$scope","mySocket","localManager","$rootS
    $scope.patient.receiverId = "161792665";
     $http({
         method  : 'PUT',
-        url     : "/patient/doctor/connection",
+        url     : "/user/patient/doctor/connection",
         data : $scope.patient,
         headers : {'Content-Type': 'application/json'} 
         })
@@ -3780,7 +3581,7 @@ app.controller("joinRoomController2",["$scope","mySocket","localManager","$rootS
       alert(data.callerFirstname + " " + data.callerLastname  + " wants have video chat now!!!");
       localManager.setValue("caller",data.receiver);
       localManager.setValue("receiver",data.caller);
-      $window.location.href = "/doctor/call";
+      $window.location.href = "/user/doctor/call";
       console.log(data);
       mySocket.emit("in call connected",{to:data.from});
     });
@@ -3843,7 +3644,7 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
   }
   
   var getRecords = function(){
-    var records = $resource("/patient-panel/get-medical-record");
+    var records = $resource("/user/get-medical-record");
     records.get(function(data){
       console.log("peaccccccccccccccccc");
       console.log(data)
@@ -3975,7 +3776,7 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
   $scope.isView = false;
 
   function getNotification() {
-    var note = $resource("/patient/notifications");
+    var note = $resource("/user/patient/notifications");
     note.query(function(data){
       $scope.allNote = data;
       console.log(data)
@@ -4018,7 +3819,7 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
  
   function getMessages() {
 
-    var note = $resource("/patient/get-message");
+    var note = $resource("/user/patient/get-message");
     note.query(function(data){
       console.log(data)  
       var len = data.length;
@@ -4058,7 +3859,7 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
       doctorId: doctorId,
       complaintId: complaintId
     }
-    var msg = $resource("/patient/get-response");
+    var msg = $resource("/user/patient/get-response");
     msg.get(sendObj,function(data){
       console.log(data)
       templateService.holdData = data;
@@ -4072,7 +3873,7 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
 
   //appointment views
   function getAppointment (){
-    var note = $resource("/patient/get-message");
+    var note = $resource("/user/patient/get-message");
     note.query(function(data){
       var len = data.length;
       if(len > 0) {
@@ -4107,7 +3908,7 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
   function deleteFomBackEnd(id,list) {    
       var msg = "Notification deleted";
       var del = new deleteFactory(id,"patient_notification");
-      del.deleteItem("/patient/delete-one/appointment","");//deletes notification once it is viewed.
+      del.deleteItem("/user/patient/delete-one/appointment","");//deletes notification once it is viewed.
       if($rootScope.noteLen > 0)
         $rootScope.noteLen--
   }
@@ -4182,7 +3983,7 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
       localManager.setValue("caller",data.receiver);
       localManager.setValue("receiver",data.caller);
       mySocket.emit("in call connected",{to:data.from});
-      $window.location.href = "/patient/call";
+      $window.location.href = "/user/patient/call";
       console.log(data)      
     } else {
       mySocket.emit("call rejected",{to:data.from});
@@ -4329,7 +4130,7 @@ app.controller("pendingLabTestController",["$scope","templateService","$window",
       center_name: center_name
     }
     localManager.setValue("doctorInfoforCommunication",center)
-    $window.location.href = "/patient/call";
+    //$window.location.href = "/user/patient/call";
   }
 
   $scope.liveChat = function (receiverId,center_name,patienId) {
@@ -4363,7 +4164,7 @@ app.controller("pendingRadioTestController",["$scope","templateService","$window
       center_name: center_name
     }
     localManager.setValue("doctorInfoforCommunication",center)
-    $window.location.href = "/patient/call";
+    //$window.location.href = "/user/patient/call";
     
     
   }
@@ -4561,7 +4362,7 @@ var newStr = str.replace(/\s*$/,"");//removes empty string by the end of charact
   var len = msgData.length;
   $rootScope.msgLen = templateService.holdMsgLen(len);
   var del = new deleteFactory(message_id,"patient_mail");
-  del.deleteItem("/patient/delete-one",msg);
+  del.deleteItem("/user/patient/delete-one",msg);
  }
 
 }]);
@@ -4937,7 +4738,7 @@ app.controller("walletController",["$scope","$http","$rootScope","$location","Mo
         userId: receiver,
         sendObj: templateService.sendObj
       }
-      var Debitor = walletService.resource("/patient/consultation-acceptance/confirmation",{userId: null},{confirmed:{method:'POST'}});
+      var Debitor = walletService.resource("/user/patient/consultation-acceptance/confirmation",{userId: null},{confirmed:{method:'POST'}});
       var confirmed = Debitor.confirmed(payObj,function(data){
         alert(data.message);
         if(data.balance) {
@@ -4947,7 +4748,7 @@ app.controller("walletController",["$scope","$http","$rootScope","$location","Mo
           if($rootScope.msgLen > 0)
             $rootScope.msgLen--;
           //$location.path(templateService.holdCurrentPage);
-          var updateDocList = $resource("/patient/get-my-doctors");
+          var updateDocList = $resource("/user/patient/get-my-doctors");
           updateDocList.query(null,function(data){            
             $rootScope.patientsDoctorList = data;
           });
@@ -4991,7 +4792,7 @@ app.controller("patientPanelController",["$scope","$location","$http","$rootScop
   templateUrlFactory.setUrl();
   var medical = {};
 
-  var records = $resource("/patient-panel/get-medical-record");
+  var records = $resource("/user/get-medical-record");
   records.get(function(data){
     var filter = {};
     var total = {};
@@ -5833,7 +5634,7 @@ function($scope,$location,$rootScope,$http,$interval,templateService,localManage
 
   if(user.typeOfUser === "Patient") {
    //$interval(getAtInterval,300000)
-    getList("/patient/get-my-doctors","patient");
+    getList("/user/patient/get-my-doctors","patient");
     $scope.userDoctor = function(id){
       var callerId = templateService.holdPatientIdForCommunication;
       localManager.setValue("receiver",id);
@@ -5854,7 +5655,7 @@ function($scope,$location,$rootScope,$http,$interval,templateService,localManage
 
   } else if(user.typeOfUser === "Doctor") {
 
-    getList("/doctor/my-online-patients","doctor");
+    getList("/user/doctor/my-online-patients","doctor");
     $scope.userPatient = function(id){
       var callerId = templateService.holdDoctorIdForCommunication;
       localManager.setValue("receiver",id);
@@ -5875,7 +5676,7 @@ function($scope,$location,$rootScope,$http,$interval,templateService,localManage
         $timeout(function(){
           $scope.isReceivedRequest = false;
         },10000);
-        getList("/doctor/my-online-patients","doctor");
+        getList("/user/doctor/my-online-patients","doctor");
       });
 
       //remove queue of received messages if any
@@ -10525,19 +10326,19 @@ app.controller("topHeaderController",["$scope","$window","$location","$resource"
   if($scope.checkLogIn){
     switch($scope.checkLogIn.typeOfUser) {
       case "Doctor":        
-        $scope.back = "/dashboard/doctor";       
+        $scope.back = "/user/doctor";       
       break;
       case "Patient":
-        $scope.back = "/dashboard/patient";
+        $scope.back = "/user/patient";
       break;
       case "Pharmacy":
-        $scope.back = "/medical-center/pharmacy";
+        $scope.back = "/user/pharmacy";
       break;
       case "Laboratory":
-        $scope.back = "/medical-center/laboratory";
+        $scope.back = "/user/laboratory";
       break;
       case "Radiology":
-        $scope.back = "/medical-center/radiology";
+        $scope.back = "/user/radiology";
       break;
       default:
       break;

@@ -30,7 +30,7 @@ var configuration = function (app,model) {
 	app.use('/assets',express.static(__dirname + '/public'));
 	//middleware
 	app.use(session({
-	  secret: 'key cat',
+	  secret: 'keyboard cat',
 	  store: store,
 	  resave: true,	  
 	  saveUninitialized: true,
@@ -49,9 +49,9 @@ var configuration = function (app,model) {
 	app.use(multer({dest: './uploads'}).any());
 	
 	app.use(function(req,res,next){
-		console.log(req.url)
-		console.log(req.session)
-		next();
+		console.log(req.url);
+		console.log(req.session);
+		next()
 	});
 
 

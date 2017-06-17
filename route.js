@@ -13,7 +13,11 @@ var emitter = new EventEmmiter();
 
 var basicRoute = function (model,sms,io) {
 
-  router.get("/",function (req,res) {
+  router.get("/",function(req,res){
+    res.render('index',{"message":""});
+  })
+
+  router.get("/user",function (req,res) {
     if(req.user){
      switch(req.user.type){
         case "Doctor":
@@ -46,7 +50,18 @@ var basicRoute = function (model,sms,io) {
     res.render('index',{"message":""});
   });
 
-  router.get("/dashboard/doctor",function(req,res){    
+  router.get("/user/patient",function(req,res){ 
+    if(req.user){
+      //getSocketInstance(req)
+      res.render("patient",{"userInfo": req.user});
+    } else {
+      res.redirect('/login');
+    }
+
+  });
+
+
+  router.get("/user/doctor",function(req,res){    
     if(req.user){
       //getSocketInstance(req)     
       res.render("profile",{"person":req.user});
@@ -57,7 +72,7 @@ var basicRoute = function (model,sms,io) {
 
   
 
-  router.get("/medical-center/view",function(req,res){
+  router.get("/user/view",function(req,res){
     if(req.user){
       //getSocketInstance(req)
        res.render("medical",{"userInfo": req.user});        
@@ -66,7 +81,7 @@ var basicRoute = function (model,sms,io) {
     }
   });
 
-  router.get("/medical-center/pharmacy",function(req,res){
+  router.get("/user/pharmacy",function(req,res){
       if(req.user){
         //getSocketInstance(req)
          res.render("pharmacy",{"userInfo": req.user});        
@@ -75,7 +90,7 @@ var basicRoute = function (model,sms,io) {
       }
   });
 
-  router.get("/medical-center/radiology",function(req,res){
+  router.get("/user/radiology",function(req,res){
       if(req.user){
         //getSocketInstance(req)
          res.render("radiology",{"userInfo": req.user});        
@@ -84,7 +99,7 @@ var basicRoute = function (model,sms,io) {
       }
   })
 
-  router.get("/medical-center/laboratory",function(req,res){
+  router.get("/user/laboratory",function(req,res){
       if(req.user){
         //getSocketInstance(req)
          res.render("laboratory",{"userInfo": req.user});        
@@ -94,7 +109,7 @@ var basicRoute = function (model,sms,io) {
   })//do for fitness center and physiotherapy
 
 
-  router.get("/doctor/update",function(req,res){
+  router.get("/user/doctor/update",function(req,res){
     if(req.user){            
       res.render("profile-update",{"person":req.user});
     } else {
@@ -650,7 +665,7 @@ var basicRoute = function (model,sms,io) {
     });
 
     //this route gets all the notifications for the doctor that just logged in
-    router.get("/doctor/notifications",function(req,res){
+    router.get("/user/doctor/notifications",function(req,res){
         if(req.user){
          model.user.findOne({user_id:req.user.user_id},{doctor_notification:1,_id:0},function(err,data){                
             res.send(data);
@@ -660,7 +675,7 @@ var basicRoute = function (model,sms,io) {
         }
     });
 
-    router.get("/doctor/get-patient-prescription-request",function(req,res){        
+    router.get("/user/doctor/get-patient-prescription-request",function(req,res){        
       if(req.user){
        model.user.findOne({user_id:req.user.user_id},{doctor_prescriptionRequest:1,_id:0},function(err,data){                
         res.send(data);
@@ -670,7 +685,7 @@ var basicRoute = function (model,sms,io) {
       }
     });
 
-    router.put("/doctor/acceptance",function(req,res){
+    router.put("/user/doctor/acceptance",function(req,res){
          if(req.user){ 
                   
              model.user.findOne(
@@ -747,8 +762,8 @@ var basicRoute = function (model,sms,io) {
 
     //this router gets all the patient medical records and prescriptions and send it to the front end as soon as the patient logs in. 
     //the data is sent as json and the controller that receives it on the front end is "patientPanelController" .
-    router.get("/patient-panel/get-medical-record",function(req,res){
-      console.log("pppppppppppppppppppppppppppppppppppppppp");   
+    router.get("/user/get-medical-record",function(req,res){
+      
       if(req.user) {
         model.user.findOne({user_id: req.user.user_id},{medical_records: 1,medications:1},function(err,data){
           if(err) throw err;          
@@ -781,7 +796,7 @@ var basicRoute = function (model,sms,io) {
     //this route gets a notifications for the fn getAllNotification for pharmacy on the client.
     
     //11/4/2016
-    router.get("/doctor/specific-patient",function(req,res){
+    router.get("/user/doctor/specific-patient",function(req,res){
       if(req.user){
         var projection = {
             firstname: 1,
@@ -809,7 +824,7 @@ var basicRoute = function (model,sms,io) {
       }
     });
 
-    router.get("/doctor/get-patient/medication",function(req,res){
+    router.get("/user/doctor/get-patient/medication",function(req,res){
       if(req.user) {        
         model.user.findOne({user_id: req.query.id},{medications:1},function(err,prescriptions){
           if(err) throw err;
@@ -821,7 +836,7 @@ var basicRoute = function (model,sms,io) {
       }
     });
 
-    router.put("/doctor/get-patient/medical-record",function(req,res){
+    router.put("/user/doctor/get-patient/medical-record",function(req,res){
       if(req.user){
         model.user.findOne({user_id: req.body.id},{medical_records:1},function(err,records){
           res.send(records);
@@ -869,7 +884,7 @@ var basicRoute = function (model,sms,io) {
 
   // this route runs when the patients wants to view his prescription track record. ie patient wants to see 
     //where all his prescriptions has been send sent to.
-    router.get("/patient/get-prescription/track-record",function(req,res){
+    router.get("/user/patient/get-prescription/track-record",function(req,res){
       if(req.user){
         model.user.findOne({user_id:req.user.user_id},{prescription_tracking:1,_id:0},function(err,data){
           console.log(data.prescription_tracking);
@@ -880,7 +895,7 @@ var basicRoute = function (model,sms,io) {
       }
     });
 
-    router.put("/patient/specific-doctor",function(req,res){
+    router.put("/user/patient/specific-doctor",function(req,res){
         //finds specific doctor and sends to the client.
         if(req.user){
           var projection = {
@@ -905,7 +920,7 @@ var basicRoute = function (model,sms,io) {
     });
 
     //patient searching for a pharmacy to forward his prescription route handlers.
-    router.get("/patient/getAllPharmacy",function(req,res){
+    router.get("/user/patient/getAllPharmacy",function(req,res){
         //gets all pharmacy in the database based on patient's location.
         if(req.user){
           var projection = {
@@ -927,7 +942,7 @@ var basicRoute = function (model,sms,io) {
         }
     });
 
-    router.put("/patient/pharmacy/refined-search",function(req,res){
+    router.put("/user/patient/pharmacy/refined-search",function(req,res){
         //coming from thesame controller as above. finds the pharmacy based on the patient search criteria in the req.body.
         console.log(req.body)
         var projection = {
@@ -946,7 +961,7 @@ var basicRoute = function (model,sms,io) {
         })
     });
 
-    router.put("/patient/pharmacy/referral-by-patient",function(req,res){
+    router.put("/user/patient/pharmacy/referral-by-patient",function(req,res){
       //this route handle patients sending his prescription to a pharmacy by himself.Therefore the prescription obj already exist. justs to
       //add the prescription object to the chosen pharmacy.
       if(req.user){
@@ -1024,7 +1039,7 @@ var basicRoute = function (model,sms,io) {
 
     });
 
-    router.put("/patient/pharmacy/referral-by-pharmacy",function(req,res){
+    router.put("/user/patient/pharmacy/referral-by-pharmacy",function(req,res){
       //this route takes runs when a pharmacy wish to forward unavailable drugs in the center to another pharmacy.
       if(req.user){
         model.user.findOne(
@@ -1092,7 +1107,7 @@ var basicRoute = function (model,sms,io) {
       }
     });
 
-    router.put("/patient/pharmacy/referral",function(req,res){
+    router.put("/user/patient/pharmacy/referral",function(req,res){
       //if prescription is forwarded by a doctor to a pharmacy it talks different form. ie doctor can send prescription
       //straight to a pharmacy. later the patient will be notified. 
       //this block represents doctor action by forwarding prescription to a pharmacy.
@@ -1230,7 +1245,6 @@ var basicRoute = function (model,sms,io) {
   
     //user getting the available on the dashboard balance route.
     router.get('/user/:userId/get-balance',function(req,res){
-      console.log("ppppppppppppppppppppppppppppppppppppppppnnnnmmmmmmhhhfrrrr6y");
       if(req.user){
         model.user.findOne({user_id: req.params.userId},{ewallet:1},function(err,wallet){
           if(err) throw err;
@@ -1241,7 +1255,7 @@ var basicRoute = function (model,sms,io) {
       }
     });
 
-    router.delete("/doctor/delete-prescriptionReq-test",function(req,res){
+    router.delete("/user/doctor/delete-prescriptionReq-test",function(req,res){
       if(req.user){
         model.user.findOne({user_id: req.user.user_id},{doctor_prescriptionRequest:1}).exec(function(err,data){
           if(err) throw err;
@@ -1261,7 +1275,7 @@ var basicRoute = function (model,sms,io) {
     })    
 
     //prescription foewarded by the doctor to a patient inbox
-    router.put("/patient/forwarded-prescription",function(req,res){   
+    router.put("/user/patient/forwarded-prescription",function(req,res){   
       if(req.user){  
       console.log(req.body)       
         model.user.findOne(
@@ -1350,7 +1364,7 @@ var basicRoute = function (model,sms,io) {
 
     
     //this route the patient forward his test result to his doctor for prescription.
-    router.put("/patient/test-result/forward",function(req,res){
+    router.put("/user/patient/test-result/forward",function(req,res){
       if(req.user) {
         model.user.findOne({user_id: req.body.doctorId},{doctor_prescriptionRequest:1}).exec(function(err,data){
           if(err) throw err;
@@ -1371,7 +1385,7 @@ var basicRoute = function (model,sms,io) {
     });
 
     //this route gets the lists of all prescription request from the doctor's patients
-    router.get("/doctor/get-patient-request",function(req,res){
+    router.get("/user/doctor/get-patient-request",function(req,res){
       if(req.user){
         model.user.findOne({user_id: req.user.user_id},{doctor_prescriptionRequest:1,_id:0},function(err,data){
           res.send(data.doctor_prescriptionRequest);
@@ -1382,12 +1396,12 @@ var basicRoute = function (model,sms,io) {
     });
 
     //this route deletes already attended prescription request from doctor_prescriptionRequest list and save to the database.
-    router.delete("/doctor/delete-request",function(req,res){
+    router.delete("/user/doctor/delete-request",function(req,res){
 
     });
     
     //this router takes call of pahrmacy search for a patient prescription from the data base;
-    router.put("/pharmacy/find-patient/prescription",function(req,res){
+    router.put("/user/pharmacy/find-patient/prescription",function(req,res){
        if(req.user){     
         model.user.findOne({user_id:req.user.user_id},{referral:1},function(err,data){
             if (err) throw err;           
@@ -1424,7 +1438,7 @@ var basicRoute = function (model,sms,io) {
       }
     });
 
-    router.put("/laboratory/find-patient/lab-test",function(req,res){
+    router.put("/user/laboratory/find-patient/lab-test",function(req,res){
       if(req.user){     
         model.user.findOne({user_id:req.user.user_id},{referral:1},function(err,data){
             if (err) throw err;           
@@ -1461,7 +1475,7 @@ var basicRoute = function (model,sms,io) {
       }
     });
 
-    router.get("/laboratory/get-referral",function(req,res){
+    router.get("/user/laboratory/get-referral",function(req,res){
       if(req.user){
         model.user.findOne({user_id:req.user.user_id},{referral:1,_id:0},function(err,data){
           res.send(data.referral);
@@ -1472,7 +1486,7 @@ var basicRoute = function (model,sms,io) {
 
     });
 
-    router.get("/radiology/get-referral", function(req,res){
+    router.get("/user/radiology/get-referral", function(req,res){
        if(req.user){
         model.user.findOne({user_id:req.user.user_id},{referral:1,_id:0},function(err,data){
           res.send(data.referral);
@@ -1483,7 +1497,7 @@ var basicRoute = function (model,sms,io) {
     });
 
     //this route handles test result sent by a laboratory to update existing doctor/patient session that initiated such test request.
-    router.put("/laboratory/test-result/session-update",function(req,res){
+    router.put("/user/laboratory/test-result/session-update",function(req,res){
       //note that sms will be sent to patient and doctor when a lab test result is available.
       if(req.user) {       
         model.user.findOne({"doctor_patient_session.session_id": req.body.laboratory.session_id},{doctor_patient_session:1}).exec(function(err,data){
@@ -1579,7 +1593,7 @@ var basicRoute = function (model,sms,io) {
 
     //this route is like above only it only updates the patient lab test on the patient dashboard. this is used for patient on em profile and 
     //patient who requested test without doctors approval.
-    router.put("/laboratory/test-result/patient-test-update",function(req,res){
+    router.put("/user/laboratory/test-result/patient-test-update",function(req,res){
       model.user.findOne({user_id: req.body.laboratory.patient_id},{medical_records: 1,patient_notification:1,user_id:1,presence:1,phone:1})
       .exec(function(err,data){
         if(err) throw err;       
@@ -1622,7 +1636,7 @@ var basicRoute = function (model,sms,io) {
 
     
     //updating radiology result in doctor's treatment page with patient.
-    router.put("/radiology/test-result/session-update",function(req,res){      
+    router.put("/user/radiology/test-result/session-update",function(req,res){      
       if(req.user) {        
         model.user.findOne({"doctor_patient_session.session_id": req.body.radiology.session_id},{doctor_patient_session:1}).exec(function(err,data){
           if(err) throw err;
@@ -1711,7 +1725,7 @@ var basicRoute = function (model,sms,io) {
   
     //this route is like above only it only updates the patient scan test on the patient dashboard. this is used for patient on em profile and 
     //patient who requested test without doctors approval.
-    router.put("/radiology/test-result/patient-scan-update",function(req,res){
+    router.put("/user/radiology/test-result/patient-scan-update",function(req,res){
       
       model.user.findOne({user_id: req.body.radiology.patient_id},{medical_records: 1,patient_notification:1,user_id:1,presence:1,phone:1}).exec(function(err,data){
         if(err) throw err;
@@ -1752,7 +1766,7 @@ var basicRoute = function (model,sms,io) {
       });
     })
 
-    router.put("/radiology/upload-scan",function(req,res){
+    router.put("/user/radiology/upload-scan",function(req,res){
       if(req.user){        
         console.log(req.files)
         console.log(req.body)
@@ -1768,7 +1782,7 @@ var basicRoute = function (model,sms,io) {
     })
     
     //route for funding wallet
-    router.patch("/user/fundwallet",function(req,res){
+    router.patch("/user/user/fundwallet",function(req,res){
       model.user.updateOne({ email: req.user.email},function(err,result){
         if(err) throw err;
         console.log("wallet funded");
@@ -1778,7 +1792,7 @@ var basicRoute = function (model,sms,io) {
     });
 
     
-    router.get("/doctor/call",function(req,res){
+    router.get("/user/doctor/call",function(req,res){
       if(req.user){
         res.render("video-chat",{"person":req.user})
       } else {
@@ -1787,7 +1801,7 @@ var basicRoute = function (model,sms,io) {
 
     });
 
-    router.get("/doctor/audio/call",function(req,res){
+    router.get("/user/doctor/audio/call",function(req,res){
       if(req.user){
         res.render("audio-chat",{"person":req.user})
       } else {
@@ -1797,7 +1811,7 @@ var basicRoute = function (model,sms,io) {
     });
 
 
-    router.get("/patient/call",function(req,res){
+    router.get("/user/patient/call",function(req,res){
       if(req.user){
         res.render("video-chat2",{"person":req.user})
       } else {
@@ -1806,7 +1820,7 @@ var basicRoute = function (model,sms,io) {
 
     });
 
-    router.get("/patient/audio/call",function(req,res){
+    router.get("/user/patient/audio/call",function(req,res){
       if(req.user){
         res.render("audio-chat2",{"person":req.user})
       } else {
@@ -1816,12 +1830,10 @@ var basicRoute = function (model,sms,io) {
     });
 
 
-    router.get("/chat",function(req,res){
-      
-    });
+   
 
     //doctor creates session with a patient
-    router.post("/doctor/patient-session",function(req,res){
+    router.post("/user/doctor/patient-session",function(req,res){
       if(req.user){        
         var session_id = Math.floor(Math.random() * 99999999999999922888);
 
@@ -1907,7 +1919,7 @@ var basicRoute = function (model,sms,io) {
 
 
     //note both patients and doctors are using this roiute to view their appointment.
-    router.put("/doctor/appointment/view",function(req,res){
+    router.put("/user/doctor/appointment/view",function(req,res){
       if(req.user){
         model.user.findOne({"appointment.session_id": req.body.id},{appointment:1,_id:0},function(err,data){     
           if(err) throw err;
@@ -1920,7 +1932,7 @@ var basicRoute = function (model,sms,io) {
       }
     });
 
-    router.get("/patient/appointment/view",function(req,res){
+    router.get("/user/patient/appointment/view",function(req,res){
       if(req.user){
         model.user.findOne({user_id: req.user.user_id},{appointment:1,_id:0},function(err,data){     
           if(err) throw err;
@@ -1932,7 +1944,7 @@ var basicRoute = function (model,sms,io) {
       }
     });
 
-    router.post("/doctor/get-session",function(req,res){
+    router.post("/user/doctor/get-session",function(req,res){
       if(req.user){
         model.user.findOne({"doctor_patient_session.session_id": req.body.sessionId},{doctor_patient_session:1},function(err,data){
           if(err) throw err;
@@ -1952,7 +1964,7 @@ var basicRoute = function (model,sms,io) {
       }
     });
 
-    router.get("/doctor/get-patient-sessions",function(req,res){ 
+    router.get("/user/doctor/get-patient-sessions",function(req,res){ 
       if(req.user){
          model.user.findOne({user_id: req.user.user_id},{doctor_patient_session:1},function(err,data){       
           var list = data.doctor_patient_session;
@@ -1973,7 +1985,7 @@ var basicRoute = function (model,sms,io) {
       }
     });
 
-    router.get("/treatment",function(req,res){
+    router.get("/user/treatment",function(req,res){
       if(req.user){
         model.user.findOne({user_id:req.user.user_id},function(err,user){
           if(err) throw err;
@@ -1985,7 +1997,7 @@ var basicRoute = function (model,sms,io) {
     });
 
     //doctor updates changes doctor made when consulting the patient. based on the patient presenting complain and others
-    router.put("/doctor/session-update/save-changes",function(req,res){
+    router.put("/user/doctor/session-update/save-changes",function(req,res){
       if(req.user){
         //save changes in the treatment session to the database
         model.user.findOne({"doctor_patient_session.session_id": req.body.session_id},{doctor_patient_session:1}).exec(function(err,data){
@@ -2085,7 +2097,7 @@ var basicRoute = function (model,sms,io) {
     })
 
     //doctor finds the patient's lab tests if
-    router.put("/doctor/get-test-result",function(req,res){
+    router.put("/user/doctor/get-test-result",function(req,res){
         if(req.user){         
           model.user.findOne({user_id: req.user.user_id},{doctor_patient_session:1}).exec(function(err,data){
             if(err) throw err;
@@ -2138,7 +2150,7 @@ var basicRoute = function (model,sms,io) {
         }
     });
     //doctors finds the patient's scan if any
-    router.put("/doctor/get-scan-result",function(req,res){/////////////////////////////
+    router.put("/user/doctor/get-scan-result",function(req,res){/////////////////////////////
         if(req.user){
           model.user.findOne({user_id: req.user.user_id},{doctor_patient_session:1}).exec(function(err,data){
             if(err) throw err;
@@ -2195,7 +2207,7 @@ var basicRoute = function (model,sms,io) {
     });
 
 
-    router.get("/doctor/find-laboratory",function(req,res){
+    router.get("/user/doctor/find-laboratory",function(req,res){
       if(req.user){
         model.user.find({type: "Laboratory",city: req.user.city,country: req.user.country},
           {name:1,address:1,user_id:1,city:1,country:1,profile_pic_url:1,type:1},
@@ -2208,7 +2220,7 @@ var basicRoute = function (model,sms,io) {
       }
     });
 
-    router.put("/doctor/find-laboratory/search",function(req,res){
+    router.put("/user/doctor/find-laboratory/search",function(req,res){
       if(req.user){
           if(!req.body.country)
             req.body.country = req.user.country;
@@ -2227,7 +2239,7 @@ var basicRoute = function (model,sms,io) {
     });
     
     //this route takes care doctor sending new test to a laboratory.
-    router.post("/doctor/send-test",function(req,res){
+    router.post("/user/doctor/send-test",function(req,res){
         if(req.user) {  
         var random = Math.floor(Math.random() * 9999999);
         var testId = Math.floor(Math.random() * 9999999999999999);       
@@ -2382,7 +2394,7 @@ var basicRoute = function (model,sms,io) {
   
 
     //this route takes care of  un ran test which was forwarded to another center by a center.
-    router.post("/center/send-test",function(req,res){    
+    router.post("/user/center/send-test",function(req,res){    
         model.user.findOne({user_id: req.body.user_id},{
           diagnostic_center_notification:1,referral:1,address:1,name:1,city:1,country:1,phone:1,user_id:1,presence:1})
         .exec(function(err,result){
@@ -2492,7 +2504,7 @@ var basicRoute = function (model,sms,io) {
 
     //radiology continued
 
-    router.put("/radiology/find-patient/scan-test",function(req,res){
+    router.put("/user/radiology/find-patient/scan-test",function(req,res){
       if(req.user){     
         model.user.findOne({user_id:req.user.user_id},{referral:1},function(err,data){
             if (err) throw err;           
@@ -2530,7 +2542,7 @@ var basicRoute = function (model,sms,io) {
     });
 
 //doctor activities for radiology centers.
-  router.get("/doctor/find-radiology",function(req,res){
+  router.get("/user/doctor/find-radiology",function(req,res){
       if(req.user){
         model.user.find({type: "Radiology",city: req.user.city,country: req.user.country},
           {name:1,address:1,user_id:1,city:1,country:1,profile_pic_url:1,type:1},
@@ -2543,7 +2555,7 @@ var basicRoute = function (model,sms,io) {
       }
     });
 
-    router.put("/doctor/find-radiology/search",function(req,res){
+    router.put("/user/doctor/find-radiology/search",function(req,res){
       if(req.user){
           if(!req.body.country)
             req.body.country = req.user.country;
@@ -2562,7 +2574,7 @@ var basicRoute = function (model,sms,io) {
     });
     
     //this route takes care doctor sending new test to a radiology.
-    router.post("/doctor/radiology/send-test",function(req,res){  
+    router.post("/user/doctor/radiology/send-test",function(req,res){  
         if(req.user) { 
         var random = Math.floor(Math.random() * 9999999);
         var testId = Math.floor(Math.random() * 9999999999999999);       
@@ -2720,7 +2732,7 @@ var basicRoute = function (model,sms,io) {
   
 
     //this route takes care of  un ran test which was forwarded to another center by a center.
-    router.post("/center/radiology/send-test",function(req,res){    
+    router.post("/user/center/radiology/send-test",function(req,res){    
         model.user.findOne({user_id: req.body.user_id},{diagnostic_center_notification:1,referral:1,address:1,name:1,city:1,country:1,phone:1,user_id:1})
         .exec(function(err,result){
           if(err) throw err;         
@@ -2825,7 +2837,7 @@ var basicRoute = function (model,sms,io) {
 
    
     //patients get notifications/messages/appointments
-    router.get("/patient/notifications",function(req,res){
+    router.get("/user/patient/notifications",function(req,res){
       if(req.user){
         model.user.findOne({user_id: req.user.user_id},{patient_notification:1},function(err,data){
           if(err) throw err;
@@ -2840,7 +2852,7 @@ var basicRoute = function (model,sms,io) {
       }
     });
 
-    router.get("/patient/get-message",function(req,res){
+    router.get("/user/patient/get-message",function(req,res){
       if(req.user){
         model.user.findOne({user_id: req.user.user_id},{patient_mail: 1},function(err,data){
           if(data){
@@ -2854,7 +2866,7 @@ var basicRoute = function (model,sms,io) {
       }
     });
 
-    router.get("/center/notification",function(req,res){
+    router.get("/user/center/notification",function(req,res){
       if(req.user) {
         model.user.findOne({user_id:req.user.user_id},{diagnostic_center_notification:1},function(err,data){
           if(err) throw err;
@@ -2869,7 +2881,7 @@ var basicRoute = function (model,sms,io) {
       }
     });
 
-    router.delete("/center/delete-notification",function(req,res){
+    router.delete("/user/center/delete-notification",function(req,res){
       if(req.user){        
         model.user.findOne({user_id: req.user.user_id},{diagnostic_center_notification:1}).exec(function(err,data){
           if(err) throw err;
@@ -2951,7 +2963,7 @@ var basicRoute = function (model,sms,io) {
 
     /*centers update the store and services**/
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////to be atteded later
-    router.post("/laboratory/create-services",function(req,res){
+    router.post("/user/laboratory/create-services",function(req,res){
       model.services.findOne({user_id:req.user.user_id}).exec(function(err,user){
         if(err) throw err;
         if(!user){
@@ -3000,14 +3012,14 @@ var basicRoute = function (model,sms,io) {
 
     });
 
-     router.get("/laboratory/not-ran-services",function(req,res){
+     router.get("/user/laboratory/not-ran-services",function(req,res){
       model.services.findOne({user_id: req.user.user_id},{unavailable_services:1,_id:0},function(err,data){
         if(err) throw err;
         res.send(data.unavailable_services);
       })
     });
 
-    router.put("/laboratory/update-services",function(req,res){
+    router.put("/user/laboratory/update-services",function(req,res){
       
       model.services.findOne({user_id:req.user.user_id},{unavailable_services:1}).exec(function(err,data){
         if(err) throw err;
@@ -3026,7 +3038,7 @@ var basicRoute = function (model,sms,io) {
     });
 
     //radiology
-    router.post("/radiology/create-services",function(req,res){
+    router.post("/user/radiology/create-services",function(req,res){
       console.log(req.body)
       model.services.findOne({user_id:req.user.user_id}).exec(function(err,user){
         console.log(user)
@@ -3078,14 +3090,14 @@ var basicRoute = function (model,sms,io) {
 
     });
 
-     router.get("/radiology/not-ran-services",function(req,res){
+     router.get("/user/radiology/not-ran-services",function(req,res){
       model.services.findOne({user_id: req.user.user_id},{unavailable_services:1,_id:0},function(err,data){
         if(err) throw err;
         res.send(data.unavailable_services);
       })
     });
 
-     router.put("/radiology/update-services",function(req,res){      
+     router.put("/user/radiology/update-services",function(req,res){      
       model.services.findOne({user_id:req.user.user_id},{unavailable_services:1}).exec(function(err,data){
         if(err) throw err;
         res.send({message: "success"});
@@ -3102,7 +3114,7 @@ var basicRoute = function (model,sms,io) {
       })
     });
 //for pharmacy
-     router.post("/pharmacy/create-services",function(req,res){
+     router.post("/user/pharmacy/create-services",function(req,res){
         model.services.findOne({user_id:req.user.user_id}).exec(function(err,user){
           if(err) throw err;
           if(!user){
@@ -3151,7 +3163,7 @@ var basicRoute = function (model,sms,io) {
      });
 
     
-    router.get("/pharmacy/not-ran-services",function(req,res){
+    router.get("/user/pharmacy/not-ran-services",function(req,res){
       if(req.user){
         model.services.findOne({user_id: req.user.user_id},{unavailable_services:1,_id:0},function(err,data){
           if(err) throw err;
@@ -3164,7 +3176,7 @@ var basicRoute = function (model,sms,io) {
       }
     });
 
-     router.put("/pharmacy/update-services",function(req,res){    
+     router.put("/user/pharmacy/update-services",function(req,res){    
       model.services.findOne({user_id:req.user.user_id},{unavailable_services:1}).exec(function(err,data){
         if(err) throw err;
         res.send({message: "success"});
@@ -3180,7 +3192,7 @@ var basicRoute = function (model,sms,io) {
       })
     });
 
-    router.put("/pharmacy/search/find-drugs",function(req,res){
+    router.put("/user/pharmacy/search/find-drugs",function(req,res){
       console.log(req.body)
       if(req.user && req.body.city === undefined)
         req.body.city = req.user.city;
@@ -3266,7 +3278,7 @@ var basicRoute = function (model,sms,io) {
 
     });
 
-  router.put("/drug-search/pharmacy/referral",function(req,res){
+  router.put("/user/drug-search/pharmacy/referral",function(req,res){
    if(req.user){
     var person = (req.body.phone && req.body.phone !== "") ? {phone: req.body.phone} : {user_id: req.user.user_id};
     model.user.findOne(person,{firstname:1,lastname:1,title:1,profile_pic_url:1,city:1,country:1,name:1,age:1,prescription_tracking:1,medications:1})
@@ -3405,7 +3417,7 @@ var basicRoute = function (model,sms,io) {
 
 
 //for lab test search
-router.put("/laboratory/search/find-tests",function(req,res){
+router.put("/user/laboratory/search/find-tests",function(req,res){
   console.log(req.body)
   if(req.user && req.body.city === undefined)
     req.body.city = req.user.city;
@@ -3494,7 +3506,7 @@ router.put("/laboratory/search/find-tests",function(req,res){
 
 });
 
-router.put("/test-search/laboratory/referral",function(req,res){
+router.put("/user/test-search/laboratory/referral",function(req,res){
     if(req.user){
     var person = (req.body.phone && req.body.phone !== "") ? {phone: req.body.phone} : {user_id: req.user.user_id};
     model.user.findOne(person,{firstname:1,lastname:1,title:1,profile_pic_url:1,city:1,country:1,name:1,age:1,user_id:1})
@@ -3626,7 +3638,7 @@ router.put("/test-search/laboratory/referral",function(req,res){
 });
 
 //for scan test search
-router.put("/radiology/search/find-tests",function(req,res){
+router.put("/user/radiology/search/find-tests",function(req,res){
   
   if(req.user && req.body.city === undefined)
     req.body.city = req.user.city;
@@ -3715,7 +3727,7 @@ router.put("/radiology/search/find-tests",function(req,res){
 
 });
 
-router.put("/scan-search/radiology/referral",function(req,res){
+router.put("/user/scan-search/radiology/referral",function(req,res){
     if(req.user){
     var person = (req.body.phone && req.body.phone !== "") ? {phone: req.body.phone} : {user_id: req.user.user_id};
     model.user.findOne(person,{firstname:1,lastname:1,title:1,profile_pic_url:1,city:1,country:1,name:1,age:1,user_id:1})
@@ -3942,9 +3954,12 @@ router.delete("/user/delete-all-chat",function(req,res){
 
 /************ patient waiting room ************/
 
-router.get("/patients/waiting-room",function(req,res){
-  
+router.get("/user/patients/waiting-room",function(req,res){
+  if(req.user.type === "Doctor"){
     res.render("patient-waiting-room")
+  } else {
+    res.send('Opps! You are note allowed to view this page')
+  }
   
 });
 
@@ -4075,7 +4090,7 @@ router.post("/user/response/patients-histories",function(req,res){
   }
 });
 
-router.get("/patient/get-response",function(req,res){
+router.get("/user/patient/get-response",function(req,res){
   if(req.user && req.user.type === "Patient"){
     model.help.findOne({complaint_id: req.query.complaintId},function(err,complain){
       if(err) throw err;
@@ -4097,7 +4112,7 @@ router.get("/user/get-person-profile/:personId",function(req,res){
   }
 });
 
-router.get("/patient/get-my-doctors",function(req,res){
+router.get("/user/patient/get-my-doctors",function(req,res){
   if(req.user) {   
     model.user.find({"doctor_patients_list.patient_id": req.user.user_id,type:"Doctor"},
       {
@@ -4139,7 +4154,7 @@ router.get("/patient/get-my-doctors",function(req,res){
 });
 /***************  will be modified as above ************/
  //this route get all the doctor's patients to include which patient is online or not.
- router.get("/doctor/my-online-patients",function(req,res){
+ router.get("/user/doctor/my-online-patients",function(req,res){
     if(req.user){
       model.user.find({"accepted_doctors.doctor_id":req.user.user_id,type:"Patient"},
         {user_id:1,_id:0,firstname:1,lastname:1,presence:1,profile_pic_url:1},function(err,data){
@@ -4168,7 +4183,7 @@ router.get("/patient/get-my-doctors",function(req,res){
 
   //this route gets all doctors accepted patient. just for other ourposes wihich may no include whether use is presence or not at first.
 
-  router.get("/doctor/my-patients",function(req,res){
+  router.get("/user/doctor/my-patients",function(req,res){
     if(req.user){
       model.user.findOne({"accepted_doctors.doctor_id":req.user.user_id},{doctor_patients_list:1,_id:0},function(err,data){
         if(err) throw err;
@@ -4180,7 +4195,7 @@ router.get("/patient/get-my-doctors",function(req,res){
   });
 
 //this route gets all patients accepted doctors. just for other ourposes wihich may no include whether use is presence or not at first.
-  router.get("/patient/my-doctors",function(req,res){
+  router.get("/user/patient/my-doctors",function(req,res){
     if(req.user){
       model.user.findOne({email: req.user.email},{accepted_doctors:1,_id:0},function(err,data){
         if(err) throw err;
@@ -4209,7 +4224,7 @@ b',
 /** this route gets all the request sent by patient for a doctor. The response is an object with properties like
 doctor_notification, doctor_prescriptionRequest,doctor_mail,inPerson_appointment, chat_request,video_call_request,audio_call_request.
 this route will be called with set time interval to update the doctor's dashboard of any request sent buy a patient.***/
-router.get("/doctor/:userId/get-all-request",function(req,res){
+router.get("/user/doctor/:userId/get-all-request",function(req,res){
  
   if(req.user){
     model.user.findOne({user_id: req.params.userId},{doctor_notification:1,_id:0,doctor_prescriptionRequest:1},function(err,data){
@@ -4268,7 +4283,7 @@ router.get("/doctor/:userId/get-all-request",function(req,res){
 
 
 //this route checks to see if doctor is logged in or in conversation array before any communication session is established.
-router.get("/:id/communication-request",function(req,res){
+router.get("/user/:id/communication-request",function(req,res){
   if(req.user){
   
     model.user.findOne({user_id: req.params.id},{presence:1,_id:0},function(err,user){
@@ -4283,7 +4298,7 @@ router.get("/:id/communication-request",function(req,res){
 
 //this route actually saves the patient object to the doctors_notification
 //note req.param.id refers to the id of the doctor in this case who the patient wish to communicate to.
-router.post("/:id/communication-request",function(req,res){
+router.post("/user/:id/communication-request",function(req,res){
   if(req.user){
 
     model.communication.findOne({},{ongoing_conversation:1},function(err,conversation){
@@ -4323,7 +4338,7 @@ router.post("/:id/communication-request",function(req,res){
 
 //this route gets the response to the response
 //@params id refers to the id of the initiator of request
-router.get("/user/get-response/:id",function(req,res){ 
+router.get("/user/user/get-response/:id",function(req,res){ 
   if(req.user){
     
     emitter.on(req.params.id,function(data){

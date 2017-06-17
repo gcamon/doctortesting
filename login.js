@@ -40,11 +40,14 @@ var loginRoute = function(model) {
     }));
 
 router.post('/user/login', passport.authenticate('user-login', {
-  //successRedirect : '/dashboard', // redirect to the secure profile section
+  successRedirect : '/user/dashboard', // redirect to the secure profile section
   failureRedirect : '/failed', // redirect back to the signup page if there is an error
   failureFlash : true // allow flash messages
-}),function(req,res){
-   model.user.findOne({user_id: req.user.user_id},{presence:1,set_presence:1}).exec(function(err,data){
+}));
+
+router.get('/user/dashboard',function(req,res){
+  if(req.user){ 
+    model.user.findOne({user_id: req.user.user_id},{presence:1,set_presence:1}).exec(function(err,data){
     data.presence = true;
     data.set_presence.general = true;
     data.save(function(err,info){
@@ -63,26 +66,10 @@ router.post('/user/login', passport.authenticate('user-login', {
     balance: req.user.ewallet.available_amount,
     profile_pic_url: req.user.profile_pic_url
   });
-});
-
-router.get('/dashboard',function(req,res){
-  if(req.user){ 
-  
   } else {
     res.redirect("/login");
   }  
 });
-
-router.get("/user/patient",function(req,res){ 
-  if(req.user){
-    //getSocketInstance(req)
-    res.render("patient",{"userInfo": req.user});
-  } else {
-    res.redirect('/login');
-  }
-
-});
-
 
 router.get('/failed',function(req,res){        
     res.send(false);
