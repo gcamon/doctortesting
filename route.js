@@ -305,7 +305,7 @@ var basicRoute = function (model,sms,io) {
     }
   });
 
-  router.get("/doctor/schedule",function(req,res){
+  router.get("/user/doctor/schedule",function(req,res){
       if(req.user){
       res.render("profile",{"person":req.user});
       } else {
@@ -319,7 +319,7 @@ var basicRoute = function (model,sms,io) {
       res.send('images');
   });
   // fetch data for patient profile update inner page
-  router.get("/profile/getDetails",function(req,res){
+  router.get("/user/profile/getDetails",function(req,res){
       if(req.user) {
           res.send({
               profile_pic_url: req.user.profile_pic_url,
@@ -337,9 +337,9 @@ var basicRoute = function (model,sms,io) {
       }
     });
     // put updated data to the database.
-    router.put("/patient-profile/update", function(req,res){
+    router.put("/user/patient-profile/update", function(req,res){
         if(req.user){
-            model.user.update({email: req.user.email},req.body,function(err,info){
+            model.user.update({user_id: req.user.user_id},req.body,function(err,info){
                 res.send("updated");
             });
         } else {
@@ -493,7 +493,7 @@ var basicRoute = function (model,sms,io) {
     });
 
     
-    router.get("/patient/find-doctor",function(req,res){
+    router.get("/user/patient/find-doctor",function(req,res){
       if(req.user){
         console.log(req.query)
         var criteria;
@@ -637,7 +637,7 @@ var basicRoute = function (model,sms,io) {
     });
 
     //route for qusetions and requsts from patients to a doctor through the modal
-    router.put("/patient/doctor/connection",function(req,res){
+    router.put("/user/patient/doctor/connection",function(req,res){
         if(req.user){           
         req.body.sender_firstname = req.user.firstname;
         req.body.sender_lastname = req.user.lastname;
@@ -747,15 +747,15 @@ var basicRoute = function (model,sms,io) {
         }
     });
 
-    router.put("/admin/patient-mail",function(req,res){
+    router.put("/user/admin/patient-mail",function(req,res){
 
     });
 
-    router.put("/doctor/decline-mail",function(req,res){
+    router.put("/user/doctor/decline-mail",function(req,res){
 
     })
 
-    router.put("/doctor/redirect-mail",function(req,res){
+    router.put("/user/doctor/redirect-mail",function(req,res){
       
     })
     
