@@ -3268,6 +3268,8 @@ app.controller("selectedRadioController",["$scope","$http","localManager","$loca
 //and pass some data like the doctor's firstname.
 app.controller("requestController",["$scope","ModalService","requestManager","templateService",function($scope,ModalService,requestManager,templateService){
   $scope.data = requestManager.get();
+  console.log("000000000000000000000")
+  console.log(requestManager.get())
   $scope.docName = templateService.getfirstname;
 
   $scope.accept = function(){   
@@ -3303,98 +3305,32 @@ app.controller("grantedRequestController",["$scope","$http","ModalService","requ
   
   $scope.sendAcceptance = function(){
     var date = + new Date();
-    console.log(raw);
     if($scope.user.fee > 0){
-    var grantedRequest = {};
-    grantedRequest.patientId = $scope.data.sender_id;
-    grantedRequest.date = date;
-    grantedRequest.user_id = templateService.getid;
-    grantedRequest.firstname = $scope.docName;
-    grantedRequest.lastname = templateService.getlastname;
-    grantedRequest.consultation_fee = raw;
-    grantedRequest.profile_pic_url = templateService.getpic;
-    grantedRequest.service_access = false;
-    grantedRequest.specialty = templateService.getspecialty;
-
-    $http({
-        method  : 'PUT',
-        url     : "/user/doctor/acceptance",
-        data : grantedRequest,
-        headers : {'Content-Type': 'application/json'} 
-        })
-      .success(function(data) {              
-        if(data.status){
-          alert("Success! Patient will be notified");
-        } else {
-          $scope.message = "Oops! Something went wrong.";
-        }
-      });
+      var grantedRequest = {};
+      grantedRequest.patientId = $scope.data.sender_id;
+      grantedRequest.date = date;      
+      grantedRequest.consultation_fee = raw;      
+      grantedRequest.service_access = false;
+      
+      $http({
+          method  : 'PUT',
+          url     : "/user/doctor/acceptance",
+          data : grantedRequest,
+          headers : {'Content-Type': 'application/json'} 
+          })
+        .success(function(data) {              
+          if(data.status){
+            alert("Success! Patient will be notified");
+          } else {
+            $scope.message = "Oops! Something went wrong.";
+          }
+        });
 
     } else {
-      $scope.message = "please enter your consultation fee amount below."
+        $scope.message = "please enter your consultation fee amount below."
     }
   }
 }]);
-/************ for socket connection initialization ***********/
-
-//this controller joins or creates a room on the back end for user that just logged in
-/*app.controller("patientJoinRoomController",["$scope","mySocket","localManager","$rootScope","$resource",
-  function($scope,mySocket,localManager,$rootScope,$resource){
-
-
-  
-  $rootScope.message1 = [];
-  
-
-  $scope.user = {};
-
-  var user = localManager.getValue("resolveUser");
-
-  mySocket.emit('join',{userId: user.user_id});
-
-  
-  $scope.sendChat1 = function(){ 
-    $scope.user.isSent = true;   
-    mySocket.emit("send message",{to: "161792665",message:$scope.user.text1,from:"135920854"},function(data){
-      var date = + new Date();
-      var msg = {};
-      msg.time = date;
-      msg.sent = data.message
-      $rootScope.message1.push(msg);
-      console.log($scope.message1);
-    });
-    $scope.user.text1 = "";
-  }
-
-
-  mySocket.on("new_msg", function(data) {
-      var date = + new Date();
-      var msg = {};
-      msg.time = date;
-      msg.received = data.message;
-      if(data.from === "161792665") {
-        $rootScope.message1.push(msg);
-      } else {
-        alert("new message from another patient") 
-        //then push the message to the list of patients so that user can view later.
-      }
-      console.log(data)
-  });
-
-  $scope.$watch("user.text1",function(newVal,oldVal){
-    if(newVal !== "" && newVal !== undefined){      
-      mySocket.emit("user typing",{to: "161792665",message:"Typing..."})
-    } else {
-      mySocket.emit("user typing",{to: "161792665",message:""})
-    }
-  });
-
-  mySocket.on("typing", function(data) {
-    console.log(data)
-    $scope.typing = data;
-  });
-   
-}]);*/
 
 app.controller("joinRoomController2",["$scope","mySocket","localManager","$rootScope","$http","$window",
   function($scope,mySocket,localManager,$rootScope,$http,$window){
@@ -3873,12 +3809,12 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
 
   //appointment views
   function getAppointment (){
-    var note = $resource("/user/patient/get-message");
+    var note = $resource("/user/patient/appointment/view");
     note.query(function(data){
       var len = data.length;
       if(len > 0) {
         $rootScope.appLen = templateService.holdAppLen(len);             
-        //templateService.holdAppointmentData = data; 
+        templateService.holdAppointmentData = data; 
         $scope.allApp = data;
       }   
     })

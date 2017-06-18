@@ -32,7 +32,8 @@ var loginRoute = function(model) {
               return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
           }
           
-         
+          req.session.user = user;
+          // all is well, return successful user
           return done(null, user);
       });
 

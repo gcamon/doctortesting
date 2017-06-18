@@ -707,26 +707,26 @@ var basicRoute = function (model,sms,io) {
                         req.body.service_access = true;
                         result.ewallet.available_amount -= req.body.consultation_fee;
                     }*/
-                    req.body.service_access = true; // use for check on the front end to distinguish messages sent.
-                    var random = Math.floor(Math.random() * 999999999);
+                    req.body.service_access = true;
+                    var random = Math.floor(Math.random() * 999999999); // use for check on the front end to distinguish messages sent.
                     result.patient_mail.push({
                       message_id: random,
-                      user_id: req.body.user_id,
-                      firstname: req.body.firstname,
-                      lastname: req.body.lastname,
+                      user_id: req.user.user_id,
+                      firstname: req.user.firstname,
+                      lastname: req.user.lastname,
                       title: req.user.title,
                       message: "Consultation request accepted",
                       date: req.body.date,
                       consultation_fee: req.body.consultation_fee,
                       service_access: req.body.service_access,
-                      profile_pic_url: req.body.profile_pic_url,
-                      specialty: req.body.specialty
+                      profile_pic_url: req.user.profile_pic_url,
+                      specialty: req.user.specialty
                     });
 
                     if(result.presence === true){
                       io.sockets.to(result.user_id).emit("message notification",{status:true})
                     } else {
-                      var msgBody = "Doctor accepted your consultation request! Visit http://applinic.com/login";
+                      var msgBody = req.user.title + " " + req.user.firstname + " " + req.user.lastname + " accepted your consultation request! Visit http://applinic.com/login";
                       var phoneNunber = "234" + result.phone;
                       sms.message.sendSms('Applinic',phoneNunber,msgBody,function(err,responseData){
 
