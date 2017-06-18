@@ -1813,7 +1813,7 @@ app.controller('bookController',["$scope","$http","$location","$window","localMa
                       
 }]);
 
-app.controller("bookingDocModalController",["$scope","templateService","$http",function($scope,templateService,$http){
+app.controller("bookingDocModalController",["$scope","templateService","$http","mySocket",function($scope,templateService,$http,mySocket){
   $scope.docInfo = templateService.holdForSpecificDoc;
   $scope.isViewDoc = true;
 
