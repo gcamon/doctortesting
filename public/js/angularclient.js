@@ -1138,11 +1138,11 @@ app.controller('loginController',["$scope","$http","$location","$window","$resou
        //user joins a room in socket.io and intantiayes his own socket
         switch(data.typeOfUser) {
           case "Patient":
-            //createAwareness(data)
+            createAwareness(data)
             $window.location.href = '/user/patient';   
           break;
           case "Doctor":
-            //createAwareness(data)
+            createAwareness(data)
            $window.location.href = "/user/doctor";   
           break;
           case "Pharmacy":
@@ -4664,7 +4664,7 @@ app.controller("walletController",["$scope","$http","$rootScope","$location","Mo
     
     $http({
         method  : 'POST',
-        url     : "/users/token",//"/user/account/pin-top-up",//"/user/account/top-up",
+        url     : "/user/token",//"/user/account/pin-top-up",//"/user/account/top-up",
         data    : payObj,
         headers : {'Content-Type': 'application/json'} 
         })
@@ -4947,7 +4947,7 @@ app.controller("selectedAppointmentControllerForPatient",["$scope","$location","
       var len = appData.length;
       $rootScope.appLen = templateService.holdAppLen(len);           
       var deleteAppointment = new deleteFactory(found.session_id,"appointment");
-      deleteAppointment.deleteItem("/patient/delete-one/appointment","Appointment deleted!");
+      deleteAppointment.deleteItem("/user/patient/delete-one/appointment","Appointment deleted!");
       $scope.notDeleted = false;
       $scope.delbtn = "Appointment deleted!";
     }
@@ -4969,7 +4969,7 @@ app.controller("patientLabTestController",["$scope","$location","$http","$window
       center_name: center_name
     }
     localManager.setValue("doctorInfoforCommunication",center)
-    $window.location.href = "/patient/call";
+    //$window.location.href = "/user/patient/call";
   }
 
   $scope.liveChat = function (receiverId,center_name,patienId) {
@@ -4980,7 +4980,7 @@ app.controller("patientLabTestController",["$scope","$location","$http","$window
       center_name: center_name
     }
     localManager.setValue("doctorInfoforCommunication",center)
-    //$window.location.href = "/patient/chat";
+    $window.location.href = "/user/patient/chat";
   }
 
   $scope.sendDocTest = function(testObj) {
@@ -4988,7 +4988,7 @@ app.controller("patientLabTestController",["$scope","$location","$http","$window
     templateService.holdTestToBeForwarded = testObj;
     $http({
       method  : 'GET',
-      url     : "/patient/my-doctors",        
+      url     : "/user/patient/my-doctors",        
       headers : {'Content-Type': 'application/json'} 
       })
     .success(function(data) {
@@ -5085,7 +5085,7 @@ app.controller("patientRadioTestController",["$scope","$location","$http","$wind
       center_name: center_name
     }
     localManager.setValue("doctorInfoforCommunication",center)
-    $window.location.href = "/patient/call";
+    //$window.location.href = "/patient/call";
   }
 
   $scope.liveChat = function (receiverId,center_name,patienId) {
@@ -5096,7 +5096,7 @@ app.controller("patientRadioTestController",["$scope","$location","$http","$wind
       center_name: center_name
     }
     localManager.setValue("doctorInfoforCommunication",center)
-    //$window.location.href = "/patient/chat";
+    $window.location.href = "/user/patient/chat";
   }
 
   $scope.sendDocTest = function(testObj) {
@@ -5104,7 +5104,7 @@ app.controller("patientRadioTestController",["$scope","$location","$http","$wind
     templateService.holdTestToBeForwarded = testObj;
     $http({
       method  : 'GET',
-      url     : "/patient/my-doctors",        
+      url     : "/user/patient/my-doctors",        
       headers : {'Content-Type': 'application/json'} 
       })
     .success(function(data) {
@@ -5224,7 +5224,7 @@ app.controller("selectedDoctorToSendTestController",["$scope","$location","$http
 
     $http({
     method  : 'PUT',
-    url     : "/patient/test-result/forward",
+    url     : "/user/patient/test-result/forward",
     data    : dataToSend,
     headers : {'Content-Type': 'application/json'} 
     })
@@ -5260,7 +5260,7 @@ app.controller("changePictureController",["$scope","$location","$http","$window"
 
   $http({
     method  : 'GET',
-    url     : "/profile/getDetails",
+    url     : "/user/profile/getDetails",
     headers : {'Content-Type': 'application/json'} 
     })
   .success(function(data) {
@@ -5305,7 +5305,7 @@ app.controller("patientProfileEditController",["$scope","$location","$http","$wi
      
   $http({
     method  : 'GET',
-    url     : "/profile/getDetails",
+    url     : "/user/profile/getDetails",
     headers : {'Content-Type': 'application/json'} 
     })
   .success(function(data) {
@@ -5321,7 +5321,7 @@ app.controller("patientProfileEditController",["$scope","$location","$http","$wi
   }
 
   $scope.updateDetails = function(){
-    var uploadUrl = "/patient-profile/update";     
+    var uploadUrl = "/user/patient-profile/update";     
     multiData.sendPic(uploadUrl,$scope.user);  
   }
 
@@ -5367,7 +5367,7 @@ app.controller("prescriptionTemplateController",["$scope","$location","$http","t
 
     $http({
       method  : 'GET',
-      url     : "/patient/get-prescription/track-record",        
+      url     : "/user/patient/get-prescription/track-record",        
       headers : {'Content-Type': 'application/json'} 
       })
     .success(function(data) {
@@ -5487,7 +5487,7 @@ app.controller("searchForPharmacyController",["$scope","$location","$http","temp
 
   $http({
         method  : 'GET',
-        url     : "/patient/getAllPharmacy",
+        url     : "/user/patient/getAllPharmacy",
         headers : {'Content-Type': 'application/json'} 
         })
       .success(function(data) {        
@@ -5506,7 +5506,7 @@ app.controller("searchForPharmacyController",["$scope","$location","$http","temp
        searchObj.type = "Pharmacy";
        $http({
         method  : 'PUT',
-        url     : "/patient/pharmacy/refined-search", 
+        url     : "/user/patient/pharmacy/refined-search", 
         data    : searchObj,
         headers : {'Content-Type': 'application/json'} 
         })
@@ -5557,20 +5557,20 @@ app.controller("selectedCenterController",["$scope","$location","$http","templat
         case "Pharmacy":
           if(templateService.holdPrescriptionToBeForwarded.sender === "doctor"){
             console.log(templateService.holdPrescriptionToBeForwarded)
-            sending(id,type,"/patient/pharmacy/referral");
+            sending(id,type,"/user/patient/pharmacy/referral");
           } else if (templateService.holdPrescriptionToBeForwarded.sender ==="patient") {
-            sending(id,type,"/patient/pharmacy/referral-by-patient");
+            sending(id,type,"/user/patient/pharmacy/referral-by-patient");
           } else if(templateService.holdPrescriptionToBeForwarded.sender ==="Pharmacy") {
-             sending(id,type,"/patient/pharmacy/referral-by-pharmacy");
+             sending(id,type,"/user/patient/pharmacy/referral-by-pharmacy");
           }
         break;
 
         case "Laboratory":
-          sending(id,type,"/patient/laboratory/referral");
+          sending(id,type,"/user/patient/laboratory/referral");
         break;
 
         case "Radiology":
-          sending(id,type,"/patient/radiology/referral");
+          sending(id,type,"/user/patient/radiology/referral");
         break;
 
         default:
@@ -5937,7 +5937,7 @@ app.controller("myDoctorController",["$scope","$location","$http","$window","$ro
 
     $http({
       method  : 'PUT',
-      url     : "/patient/specific-doctor",
+      url     : "/user/patient/specific-doctor",
       data    : doctor,
       headers : {'Content-Type': 'application/json'} 
       })
@@ -6237,7 +6237,7 @@ app.controller("myPatientController",["$scope","$http","$location","$window","$r
   patient.id = templateService.holdIdForSpecificPatient || userId;
   var user = localManager.getValue("resolveUser");
 
-  var getPatientData = $resource("/doctor/specific-patient")
+  var getPatientData = $resource("/user/doctor/specific-patient")
   getPatientData.get(patient,function(data){
     console.log(data)        
     $scope.patientInfo = data;        
@@ -10359,7 +10359,6 @@ app.controller("topHeaderController",["$scope","$window","$location","$resource"
   }
 
   $scope.logout = function(){
-    alert($scope.checkLogIn.isLoggedIn)
     mySocket.emit("set presence",{status:"offline",userId:$scope.checkLogIn.user_id},function(response){
       if(response.status === false){
         if($scope.checkLogIn.typeOfUser === "Doctor"){

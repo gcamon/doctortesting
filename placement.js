@@ -7,7 +7,7 @@ var Wallet = require("./wallet");
 function placementRoute(model,sms){
 
 	//user sends help and the new help object is instantiated and saved to the data base.
-	router.post("/user/help",function(req,res){
+	router.post("/user/user/help",function(req,res){
 		if(req.user){		
 			model.user.findOne({user_id: req.body.userId},{age:1,gender:1,city:1},function(err,user){
 				var random = Math.floor(Math.random() * 9999999);

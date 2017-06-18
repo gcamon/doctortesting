@@ -10,7 +10,7 @@ var Wallet = require("./wallet");
 var basicPaymentRoute = function(model,sms,io){
 
 	//this route creates the token for use ie creating vouchers
-	router.post("/users/token",function(req,res){
+	router.post("/user/token",function(req,res){
 		if(req.user && req.user.admin === true){
 			model.pins.findOne({}).exec(function(err,data){
 				if(err) throw err;
@@ -96,7 +96,7 @@ var basicPaymentRoute = function(model,sms,io){
 		}
 	});
 	
-	router.post("/admin/view-vouchers",function(req,res){
+	router.post("/user/admin/view-vouchers",function(req,res){
 		if(req.user && req.user.admin === true){
 			model.user.findOne({username: req.query.userId,password: req.query.password},function(err,user){
 				if(err) throw err;
@@ -409,7 +409,7 @@ var basicPaymentRoute = function(model,sms,io){
 
 	/*this route handles the patient accepting consultation fee. the patient wallet will be debited and doctor's wallet credited slightly*/
 	
-	router.post("/patient/consultation-acceptance/confirmation",function(req,res){
+	router.post("/user/patient/consultation-acceptance/confirmation",function(req,res){
 		console.log(req.body)
 		if(req.user && req.body && req.body.userId !== req.user.user_id && req.body.otp && req.user.type === "Patient"){
 			model.pins.findOne({"otp.otp":req.body.otp},{otp:1}).exec(function(err,data){
@@ -447,16 +447,16 @@ var basicPaymentRoute = function(model,sms,io){
 			})
 		
 			function createConnection(debitor){
-							var DocObj = {					
-								doctor_id: req.body.sendObj.user_id,
-								date_of_acceptance: req.body.sendObj.date_of_acceptance,
-								doctor_firstname: req.body.sendObj.firstname,
-								doctor_lastname:  req.body.sendObj.lastname,
-								doctor_name: req.body.sendObj.name,
-								doctor_profile_pic_url: req.body.sendObj.profile_pic_url,
-								service_access: true,
-								doctor_specialty: req.body.sendObj.specialty,
-							}
+				var DocObj = {					
+					doctor_id: req.body.sendObj.user_id,
+					date_of_acceptance: req.body.sendObj.date_of_acceptance,
+					doctor_firstname: req.body.sendObj.firstname,
+					doctor_lastname:  req.body.sendObj.lastname,
+					doctor_name: req.body.sendObj.name,
+					doctor_profile_pic_url: req.body.sendObj.profile_pic_url,
+					service_access: true,
+					doctor_specialty: req.body.sendObj.specialty,
+				}
 
 	             model.user.findOne(
 	                {
