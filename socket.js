@@ -170,7 +170,7 @@ module.exports = function(model,io) {
 	    	model.user.findOne({user_id: data.doctorId},{set_presence:1,presence:1,firstname:1,title:1},function(err,doc){
 	    		if(err) throw err;
 	    		if(doc.set_presence.general === true && doc.presence === true) {
-
+	    			console.log("did it happen bro !!!!")
 	    			io.sockets.to(data.doctorId).emit("receive prescription request",{status: "success"})
 	    		} else {
 	    			var msg = doc.title + " " + doc.firstname + " is currently not available. Try later."
@@ -179,11 +179,12 @@ module.exports = function(model,io) {
 	    	});
 	    });
 
-	    //patients sends notification in real time to update doctor about the prescription request sent
+	    //patients sends notification in real time to update doctor about the  request sent
 	    socket.on("i sent consultation",function(data,cb){
 	    	model.user.findOne({user_id: data.doctorId},{set_presence:1,presence:1,firstname:1,title:1},function(err,doc){
 	    		if(err) throw err;
 	    		if(doc.set_presence.general === true && doc.presence === true) {
+	    			console.log("did it happen bro !!!!");
 	    			io.sockets.to(data.doctorId).emit("receive consultation request",{status: "success"})
 	    		} else {
 	    			var msg = doc.title + " " + doc.firstname + " is currently not available. Try later."

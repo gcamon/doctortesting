@@ -1822,6 +1822,7 @@ app.controller("bookingDocModalController",["$scope","templateService","$http","
     $scope.isToConfirm = true;
     $scope.docInfo = templateService.holdForSpecificDoc;
     $scope.patient = {};
+    alert($scope.docInfo.user_id)
 
     $scope.sendRequest = function() {
           
