@@ -652,7 +652,7 @@ var basicRoute = function (model,sms,io) {
         
         model.user.findOne({user_id:req.body.receiverId},{doctor_notification:1,presence:1,set_presence:1,phone:1}).exec(function(err,data){
           if(err) throw err;
-          data.doctors_notification.push(requestData);
+          data.doctor_notification.push(requestData);
           if(data.presence === true && data.set_presence.general === true){
             console.log("did it happen bro !!!!");
             io.sockets.to(req.body.receiverId).emit("receive consultation request",{status: "success"})
@@ -662,6 +662,7 @@ var basicRoute = function (model,sms,io) {
             sms.message.sendSms('Applinic',phoneNunber,msgBody,function(err,responseData){})
           }
           data.save(function(err,info){});
+          res.send({status:"notified"});
         });
       
       } else {
