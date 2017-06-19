@@ -17,21 +17,23 @@ Wallet.prototype.credit = function(model,receiver,amount){
 			  amount -= 1000;
 				model.user.findOne({admin: true},{ewallet:1}).exec(function(err,admin){
 					if(err) throw err;
-					admin.ewallet.available_amount += 1000;
-					var names = self.firstname + " " + self.lastname;
-					var transacObj = {
-						date: self.date,
-						source: names,
-						activity: "Credit",
-						message: self.message,
-						body: {
-							amount: amount,
-							beneficiary: "Admin"
+					if(admin) {
+						admin.ewallet.available_amount += 1000;
+						var names = self.firstname + " " + self.lastname;
+						var transacObj = {
+							date: self.date,
+							source: names,
+							activity: "Credit",
+							message: self.message,
+							body: {
+								amount: amount,
+								beneficiary: "Admin"
+							}
 						}
+						admin.save(function(err,info){
+							console.log("admin fee paid");
+						})
 					}
-					admin.save(function(err,info){
-						console.log("admin fee paid");
-					})
 				})
 			}
 			data.ewallet.available_amount += amount;			
