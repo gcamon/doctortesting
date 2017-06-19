@@ -5893,13 +5893,13 @@ app.controller("myDoctorController",["$scope","$location","$http","$window","$ro
     }
 
     $scope.audioRequest = function(type,docObj){
-      //$window.location.href = "/patient/call";
+      //$window.location.href = "/user/patient/call";
       docObj.type = type;
       reqModal(docObj);
     }
 
     $scope.inPersonRequest = function(type,docObj){
-      //$window.location.href = "/patient/call";
+      
       docObj.type = type;
       reqModal(docObj);
     }
@@ -5993,8 +5993,7 @@ app.controller("myDoctorController",["$scope","$location","$http","$window","$ro
       $rootScope.message1.push(msg);
       msg.userId = user.user_id;
       msg.partnerId = doctor.id;
-      mySocket.emit("save message",msg);
-      alert("yessss")          
+      mySocket.emit("save message",msg);        
       templateService.playAudio(3); // note all sounds can be turned of through settings.
     } else {
 
@@ -6014,7 +6013,6 @@ app.controller("myDoctorController",["$scope","$location","$http","$window","$ro
     }
 
     mySocket.emit("msg received",{to: data.from});
-
   });
 
 
@@ -6277,7 +6275,6 @@ app.controller("myPatientController",["$scope","$http","$location","$window","$r
       msg.userId = user.user_id;
       msg.partnerId = patient.id;
       mySocket.emit("save message",msg);
-      alert("yessss");
       templateService.playAudio(3);;
     } else {
       alert("You have new message");
@@ -6323,9 +6320,9 @@ app.controller("myPatientController",["$scope","$http","$location","$window","$r
       localManager.setValue("receiver",receiver); 
       localManager.setValue('caller',caller);
       if(type === "video") {  
-        $window.location.href = "/doctor/call";
+        $window.location.href = "/user/doctor/call";
       } else if(type === "audio"){
-        $window.location.href = "/doctor/audio/call";
+        $window.location.href = "/user/doctor/audio/call";
       }
     }
 
