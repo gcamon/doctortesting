@@ -279,12 +279,12 @@ app.config(function($routeProvider){
 
  .when("/lab",{
   templateUrl: "/assets/pages/lab-test-list.html",
-  controller: "labController"
+  controller: 'labController'
  })
 
  .when("/preview-test",{
   templateUrl: "/assets/pages/preview-lab-test.html",
-  controller: "previewLabTestController"
+  controller: 'previewLabTestController'
  })
 
  .when("/preview-scan-test",{
@@ -361,7 +361,7 @@ app.config(function($routeProvider){
 
  .when("/patient/laboratory-test",{
   templateUrl:"/assets/pages/laboratory/lab-test.html",
-  controller: "patientLabTestController"
+  controller: 'patientLabTestController'
  })
 
  .when("/patient/radiology-test",{
@@ -5174,11 +5174,11 @@ app.controller("selectedDoctorToSendTestController",["$scope","$location","$http
           break;
         }
         //notify doctor in real time
-        mySocket.emit("i sent test",{doctorId: $scope.doctor.doctor_id},function(response){
+        /*mySocket.emit("i sent test",{doctorId: $scope.doctor.doctor_id},function(response){
           if(response.error){
             alert(response.error);
           }
-        });
+        });*/
       } else {
         alert("Oops! Something went wrong while sending test reusult. Try again...")
       }
@@ -10252,6 +10252,7 @@ app.controller("topHeaderController",["$scope","$window","$location","$resource"
     }
     
   }
+
   console.log(localManager.getValue("resolveUser"))
   $scope.checkLogIn = localManager.getValue("resolveUser");
 
@@ -10275,6 +10276,18 @@ app.controller("topHeaderController",["$scope","$window","$location","$resource"
       default:
       break;
     }
+  }
+
+  $scope.print = function(){
+    var sendObj = {
+      grade: 10000,
+      quantity: 20
+    }
+
+    var token = $resource("/user/token",null,{createToken:{method:"POST"}});
+    token.createToken(sendObj,function(response){
+      alert(response);
+    });
   }
 
   $scope.addPic = function(){

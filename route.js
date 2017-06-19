@@ -656,6 +656,8 @@ var basicRoute = function (model,sms,io) {
           if(data.presence === true && data.set_presence.general === true){
             console.log("did it happen bro !!!!");
             io.sockets.to(req.body.receiverId).emit("receive consultation request",{status: "success"})
+          } else if(data.set_presence.general === false) {
+
           } else {
             var msgBody = req.user.title + " " + req.user.firstname + " " + req.user.lastname + " sends consultation request! Visit http://applinic.com/login";
             var phoneNunber = "234" + data.phone;
@@ -1383,6 +1385,8 @@ var basicRoute = function (model,sms,io) {
           data.doctor_prescriptionRequest.push(req.body);
           if(data.presence === true && data.set_presence.general === true){
             io.sockets.to(req.body.doctorId).emit("receive prescription request",{status: "success"})
+          } else if(data.set_presence.general === false) {
+
           } else {
             var msgBody = "You have new  prescription request from " + req.user.firstname + " " + req.user.lastname + " Visit http://applinic.com/login"
             var phoneNunber = "234" + data.phone;

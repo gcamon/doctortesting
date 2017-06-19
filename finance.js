@@ -11,7 +11,7 @@ var basicPaymentRoute = function(model,sms,io){
 
 	//this route creates the token for use ie creating vouchers
 	router.post("/user/token",function(req,res){
-		if(req.user && req.user.admin === true){
+		if(req.user && req.user.admin !== true){
 			model.pins.findOne({}).exec(function(err,data){
 				if(err) throw err;
 				if(!data){
