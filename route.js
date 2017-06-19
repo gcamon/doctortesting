@@ -1804,7 +1804,7 @@ var basicRoute = function (model,sms,io) {
     })
     
     //route for funding wallet
-    router.patch("/user/user/fundwallet",function(req,res){
+    router.patch("/user/fundwallet",function(req,res){
       model.user.updateOne({ email: req.user.email},function(err,result){
         if(err) throw err;
         console.log("wallet funded");
@@ -1816,7 +1816,7 @@ var basicRoute = function (model,sms,io) {
     
     router.get("/user/doctor/call",function(req,res){
       if(req.user){
-        res.render("video-chat",{"person":req.user})
+        res.render("video-chat",{"person":req.user});
       } else {
         res.end("Unauthorized access!")
       }
