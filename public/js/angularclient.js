@@ -5997,6 +5997,7 @@ app.controller("myDoctorController",["$scope","$location","$http","$window","$ro
       alert("yessss")          
       templateService.playAudio(3); // note all sounds can be turned of through settings.
     } else {
+
       alert("You have new message");
       var elemPos = $rootScope.patientsDoctorList.map(function(x){return x.doctor_id}).indexOf(data.from);
       var found = $rootScope.patientsDoctorList[elemPos];
@@ -6298,7 +6299,7 @@ app.controller("myPatientController",["$scope","$http","$location","$window","$r
   });
 
 
-  $scope.$watch("user.text1",function(newVal,oldVal){
+  $scope.$watch("user.text2",function(newVal,oldVal){
     if(newVal !== "" && newVal !== undefined){      
       mySocket.emit("user typing",{to: patient.id,message:"Typing..."})
     } else {
