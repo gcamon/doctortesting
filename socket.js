@@ -62,7 +62,8 @@ module.exports = function(model,io) {
 	    })
 
 	    socket.on("user typing",function(data){
-	    	if(user.isPresent === true)
+	    	console.log(user.isPresent)
+	    	//if(user.isPresent === true)
 	    		io.sockets.to(data.to).emit('typing',data.message);	      
 	    });
 
