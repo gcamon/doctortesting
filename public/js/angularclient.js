@@ -7181,7 +7181,7 @@ app.controller("videoCommunicationDoctorController",["$scope","$resource","$wind
     localManager.setValue("patientInfoForCommunication",patient);
     localManager.setValue("receiver",receiver);
     localManager.setValue('caller',caller);
-    $window.location.href = "/doctor/call"; 
+    $window.location.href = "/user/doctor/call"; 
   }
 
   function genId() {
@@ -7235,7 +7235,7 @@ app.controller("audioCommunicationDoctorController",["$scope","$resource","$wind
     localManager.setValue("patientInfoForCommunication",patient);
     localManager.setValue("receiver",receiver);
     localManager.setValue('caller',caller);
-    $window.location.href = "/doctor/audio/call"; 
+    $window.location.href = "/user/doctor/audio/call"; 
   }
 
   function genId() {
@@ -7266,7 +7266,7 @@ app.controller("VideoDiagnosisController",["$scope","$location","$window","$http
   patient.id = localManager.getValue("personToCall");
    $http({
         method  : 'PUT',
-        url     : "/doctor/specific-patient",
+        url     : "/user/doctor/specific-patient",
         data    : patient,
         headers : {'Content-Type': 'application/json'} 
         })
@@ -7340,7 +7340,7 @@ app.controller("VideoDiagnosisController",["$scope","$location","$window","$http
       templateService.holdPrescriptionToBeForwarded = patient;
       $http({
         method  : 'PUT',
-        url     : "/patient/forwarded-prescription",
+        url     : "/user/patient/forwarded-prescription",
         data    : patient,
         headers : {'Content-Type': 'application/json'} 
         })
@@ -7357,7 +7357,7 @@ app.controller("VideoDiagnosisController",["$scope","$location","$window","$http
        $scope.treatment.typeOfSession = "video chat";
        $http({
         method  : 'POST',
-        url     : "/doctor/patient-session",
+        url     : "/user/doctor/patient-session",
         data    : $scope.treatment,
         headers : {'Content-Type': 'application/json'} 
         })
@@ -7387,7 +7387,7 @@ app.controller("VideoDiagnosisController",["$scope","$location","$window","$http
           $scope.treatment.appointment.profilePic = patient.patient_profile_pic_url;
           $http({
             method  : 'POST',
-            url     : "/doctor/patient-session",
+            url     : "/user/doctor/patient-session",
             data    : $scope.treatment,
             headers : {'Content-Type': 'application/json'} 
             })
@@ -7427,7 +7427,7 @@ app.controller("pharmacyCenterNotificationController",["$scope","$location","$ht
 
   $http({
       method  : 'GET',
-      url     : "/pharmacy/get-referral",      
+      url     : "/user/pharmacy/get-referral",      
       headers : {'Content-Type': 'application/json'} 
       })
     .success(function(data) {
@@ -7455,7 +7455,7 @@ app.controller("pharmacyCenterNotificationController",["$scope","$location","$ht
 
   $scope.viewNote = function(id){
     templateService.holdId = id;
-    var pageUrl = "/pharmacy/view-prescription/" + id;
+    var pageUrl = "/user/pharmacy/view-prescription/" + id;
     $location.path(pageUrl);
     localManager.setValue("currPageForPharmacy",pageUrl);
   }
@@ -7619,7 +7619,7 @@ app.controller("referredPatientsController",["$scope","$location","$http","templ
   var typeOfSearch = function(criteria) {   
     $http({
           method  : 'PUT',
-          url     : "/pharmacy/find-patient/prescription",
+          url     : "/user/pharmacy/find-patient/prescription",
           data    : criteria,
           headers : {'Content-Type': 'application/json'} 
           })
@@ -7675,7 +7675,7 @@ app.controller("labCenterNotificationController",["$scope","$location","$http","
 
   $http({
       method  : 'GET',
-      url     : "/laboratory/get-referral",      
+      url     : "/user/laboratory/get-referral",      
       headers : {'Content-Type': 'application/json'} 
       })
     .success(function(data) {
@@ -7741,7 +7741,7 @@ app.controller("labCenterNotificationController",["$scope","$location","$http","
  
   $http({
       method  : 'GET',
-      url     : "/center/notification",
+      url     : "/user/center/notification",
       headers : {'Content-Type': 'application/json'} 
       })
     .success(function(data) {     
@@ -7794,7 +7794,7 @@ app.controller("labReferredPatientsController",["$scope","$location","$http","te
   var typeOfSearch = function(criteria) {     
     $http({
           method  : 'PUT',
-          url     : "/laboratory/find-patient/lab-test",
+          url     : "/user/laboratory/find-patient/lab-test",
           data    : criteria,
           headers : {'Content-Type': 'application/json'} 
           })
@@ -7834,7 +7834,7 @@ app.controller("labTestControler",["$scope","$location","$http","templateService
     if(localManager.getValue("deletedNotifications") !== null) {
       $http({
         method  : 'DELETE',
-        url     : "/center/delete-notification",
+        url     : "/user/center/delete-notification",
         data    :  deleted,
         headers : {'Content-Type': 'application/json'} 
         })
@@ -7856,7 +7856,7 @@ app.controller("labTestControler",["$scope","$location","$http","templateService
     if(objectFound === undefined){
       $http({
         method  : 'GET',
-        url     : "/laboratory/get-referral",      
+        url     : "/user/laboratory/get-referral",      
         headers : {'Content-Type': 'application/json'} 
         })
       .success(function(data) {      
@@ -8063,10 +8063,10 @@ app.controller("labTestControler",["$scope","$location","$http","templateService
     refInfo.laboratory.date = date;
 
     if(refInfo.laboratory.session_id) {
-      url = "/laboratory/test-result/session-update";
+      url = "/user/laboratory/test-result/session-update";
       msg = "SUCCESS!!! Test result sent to Dr " + refInfo.referral_firstname + " " + refInfo.referral_lastname;
     } else {
-      url = "/laboratory/test-result/patient-test-update";
+      url = "/user/laboratory/test-result/patient-test-update";
       msg = "Success!!! Test report sent to patient";
     }
  
@@ -8158,7 +8158,7 @@ app.controller("unRanTestModalController",["$scope","$location","templateService
 app.controller("laboratoryfindLabController",["$scope","$http","$location","templateService",function($scope,$http,$location,templateService){
   $http({
       method  : 'GET',
-      url     : "/doctor/find-laboratory",// this route is use both for doctor and laboratory to find a center.
+      url     : "/user/doctor/find-laboratory",// this route is use both for doctor and laboratory to find a center.
       headers : {'Content-Type': 'application/json'} 
       })
     .success(function(data) {          
@@ -8176,7 +8176,7 @@ app.controller("laboratoryfindLabController",["$scope","$http","$location","temp
   $scope.search = function() {    
     $http({
       method  : 'PUT',
-      url     : "/doctor/find-laboratory/search", //this route is use both for doctor and laboratory to find a center.
+      url     : "/user/doctor/find-laboratory/search", //this route is use both for doctor and laboratory to find a center.
       data : $scope.laboratory,
       headers : {'Content-Type': 'application/json'} 
       })
@@ -8225,7 +8225,7 @@ app.controller("laboratorySelectedLabController",["$scope","$http","localManager
     
     $http({
       method  : 'POST',
-      url     : "/center/send-test",
+      url     : "/user/center/send-test",
       data    : sendObj,
       headers : {'Content-Type': 'application/json'} 
       })
@@ -8279,7 +8279,7 @@ app.controller("radioCenterNotificationController",["$scope","$location","$http"
 
   $http({
       method  : 'GET',
-      url     : "/radiology/get-referral",      
+      url     : "/user/radiology/get-referral",      
       headers : {'Content-Type': 'application/json'} 
       })
     .success(function(data) {
@@ -8348,7 +8348,7 @@ app.controller("radioCenterNotificationController",["$scope","$location","$http"
  
   $http({
       method  : 'GET',
-      url     : "/center/notification",
+      url     : "/user/center/notification",
       headers : {'Content-Type': 'application/json'} 
       })
     .success(function(data) {
@@ -8402,7 +8402,7 @@ app.controller("radioReferredPatientController",["$scope","$location","$http","t
   var typeOfSearch = function(criteria) {     
     $http({
         method  : 'PUT',
-        url     : "/radiology/find-patient/scan-test",
+        url     : "/user/radiology/find-patient/scan-test",
         data    : criteria,
         headers : {'Content-Type': 'application/json'} 
         })
@@ -8441,7 +8441,7 @@ app.controller("radioTestControler",["$scope","$location","$http","templateServi
     if(localManager.getValue("deletedNotifications") !== null) {
       $http({
         method  : 'DELETE',
-        url     : "/center/delete-notification",
+        url     : "/user/center/delete-notification",
         data    :  deleted,
         headers : {'Content-Type': 'application/json'} 
         })
@@ -8464,7 +8464,7 @@ app.controller("radioTestControler",["$scope","$location","$http","templateServi
     if(objectFound === undefined){
       $http({
         method  : 'GET',
-        url     : "/radiology/get-referral",      
+        url     : "/user/radiology/get-referral",      
         headers : {'Content-Type': 'application/json'} 
         })
       .success(function(data) {      
@@ -8675,10 +8675,10 @@ app.controller("radioTestControler",["$scope","$location","$http","templateServi
     refInfo.radiology.filesUrl = templateService.holdScanImageList;
 
     if(refInfo.radiology.session_id) {
-      url = "/radiology/test-result/session-update";
+      url = "/user/radiology/test-result/session-update";
       msg = "SUCCESS!!! Test result sent to Dr " + refInfo.referral_firstname + " " + refInfo.referral_lastname;
     } else {
-      url = "/radiology/test-result/patient-scan-update"
+      url = "/user/radiology/test-result/patient-scan-update"
       msg = "Success!!! Test report sent to patient";
     }
 
@@ -8778,7 +8778,7 @@ app.controller("unRanTestModalController",["$scope","$location","templateService
 app.controller("radiologyfindRadioController",["$scope","$http","$location","templateService",function($scope,$http,$location,templateService){
   $http({
       method  : 'GET',
-      url     : "/doctor/find-radiology",// this route is use both for doctor and laboratory to find a center.
+      url     : "/user/doctor/find-radiology",// this route is use both for doctor and laboratory to find a center.
       headers : {'Content-Type': 'application/json'} 
       })
     .success(function(data) {          
@@ -8796,7 +8796,7 @@ app.controller("radiologyfindRadioController",["$scope","$http","$location","tem
   $scope.search = function() {    
     $http({
       method  : 'PUT',
-      url     : "/doctor/find-radiology/search", //this route is use both for doctor and laboratory to find a center.
+      url     : "/user/doctor/find-radiology/search", //this route is use both for doctor and laboratory to find a center.
       data : $scope.radiology,
       headers : {'Content-Type': 'application/json'} 
       })
@@ -8845,7 +8845,7 @@ app.controller("radiologySelectedRadioController",["$scope","$http","localManage
     
     $http({
       method  : 'POST',
-      url     : "/center/send-test",
+      url     : "/user/center/send-test",
       data    : sendObj,
       headers : {'Content-Type': 'application/json'} 
       })
@@ -8902,19 +8902,19 @@ app.service("searchtestservice",["$window","$http","templateService","$location"
   this.goBack = function(type){
     switch(type){
       case "Patient":
-        $window.location.href = "/patient/dashboard";
+        $window.location.href = "/user/patient";
         break;
       case "Doctor":
-        $window.location.href = "/doctor/dashboard";
+        $window.location.href = "/user/doctor";
         break;
       case "Laboratory":
-        $window.location.href = "/medical-center/laboratory";
+        $window.location.href = "/user/laboratory";
         break;
       case "Radiology":
-        $window.location.href = "/medical-center/radiology";
+        $window.location.href = "/user/radiology";
         break;
       case "Pharmacy":
-        $window.location.href = "/medical-center/pharmacy";
+        $window.location.href = "/user/pharmacy";
         break;
       default:
         $window.location.href = "/";
@@ -9131,7 +9131,7 @@ function($scope,$location,$window,templateService,localManager,Drugs,searchtests
   }
 
   function send(data){
-    searchtestservice.find(data,"/pharmacy/search/find-drugs","/pharmacy/drug-search/result")
+    searchtestservice.find(data,"/user/pharmacy/search/find-drugs","/pharmacy/drug-search/result")
   }
   
 }]);
@@ -9226,7 +9226,7 @@ function($scope,$location,$window,$http,templateService,localManager,ModalServic
     }
     $scope.data.prescription_body = drugArr;
     console.log($scope.data)
-    send($scope.data,"/drug-search/pharmacy/referral");
+    send($scope.data,"/user/drug-search/pharmacy/referral");
   }
 
   
@@ -9427,7 +9427,7 @@ function($scope,$location,$window,templateService,localManager,labTests,searchte
   }
 
   function send(data){
-    searchtestservice.find(data,"/laboratory/search/find-tests","/laboratory/test-search/result")
+    searchtestservice.find(data,"/user/laboratory/search/find-tests","/laboratory/test-search/result")
   }
 
 }]);
@@ -9522,7 +9522,7 @@ function($scope,$location,$window,$http,templateService,localManager,ModalServic
     }
     $scope.data.test_to_run = testArr;
     console.log($scope.data)
-    send($scope.data,"/test-search/laboratory/referral");
+    send($scope.data,"/user/test-search/laboratory/referral");
   }
 
   
@@ -9710,7 +9710,7 @@ function($scope,$location,$window,templateService,localManager,scanTests,searcht
   }
 
   function send(data){
-    searchtestservice.find(data,"/radiology/search/find-tests","/radiology/scan-search/result")
+    searchtestservice.find(data,"/user/radiology/search/find-tests","/radiology/scan-search/result")
   }
 
 }]);
@@ -9805,7 +9805,7 @@ function($scope,$location,$window,$http,templateService,localManager,ModalServic
     }
     $scope.data.test_to_run = testArr;
     console.log($scope.data)
-    send($scope.data,"/scan-search/radiology/referral");
+    send($scope.data,"/user/scan-search/radiology/referral");
   }
 
   
