@@ -166,7 +166,7 @@ module.exports = function(model,io) {
 	    });
 
 	    //patients sends notification in real time to update doctor about the prescription request sent
-	    socket.on("i sent test",function(data,cb){	    	
+	   	 /*socket.on("i sent test",function(data,cb){	    	
 	    	model.user.findOne({user_id: data.doctorId},{set_presence:1,presence:1,firstname:1,title:1},function(err,doc){
 	    		if(err) throw err;
 	    		if(doc.set_presence.general === true && doc.presence === true) {
@@ -177,10 +177,10 @@ module.exports = function(model,io) {
 	    			cb({error: msg});
 	    		}
 	    	});
-	    });
+	    });*/
 
 	    //patients sends notification in real time to update doctor about the  request sent
-	    socket.on("i sent consultation",function(data,cb){
+	    /*socket.on("i sent consultation",function(data,cb){
 	    	model.user.findOne({user_id: data.doctorId},{set_presence:1,presence:1,firstname:1,title:1},function(err,doc){
 	    		if(err) throw err;
 	    		if(doc.set_presence.general === true && doc.presence === true) {
@@ -191,7 +191,7 @@ module.exports = function(model,io) {
 	    			cb({error: msg});
 	    		}
 	    	});	    	
-	    });
+	    });*/
 	    
 
 			//sending video or audio request

@@ -319,7 +319,7 @@ app.config(function($routeProvider){
 
  .when("/laboratory/view-test/:id",{
    templateUrl:"/assets/pages/laboratory/lab-view-test.html",
-   controller: "labTestControler"
+   controller: 'labTestControler'
  })
 
  .when("/laboratory/find-laboratory",{
@@ -1829,7 +1829,7 @@ app.controller("bookingDocModalController",["$scope","templateService","$http","
       var random = Math.floor(Math.random() * 1000);       
        $scope.patient.type = "consultation";      
        $scope.patient.message_id = random;
-       $scope.patient.date = new Date();
+       $scope.patient.date = + new Date();
        $scope.patient.receiverId = $scope.docInfo.user_id;
         $http({
             method  : 'PUT',
@@ -1840,11 +1840,6 @@ app.controller("bookingDocModalController",["$scope","templateService","$http","
           .success(function(data) {            
               if(data.status) {             
                 $scope.message = "Your consultation request has been sent!";
-                 mySocket.emit("i sent consultation",{doctorId:$scope.docInfo.user_id},function(response){
-                  if(response.error){
-                    alert(response.error);
-                  }
-                });
               }
               $scope.isViewDoc = false;
               $scope.isToConfirm = false;
@@ -2092,7 +2087,7 @@ Meet In-Person',docInfo)"><i class="fa fa-user"> </i> &nbsp;Meet IN-PERSON</li>
 
   //doctor receives prescription request in real time.
   mySocket.on("receive prescription request",function(data){
-    alert("yes i received test")
+   
     // instead of geting the data from back end and adding it to the list of prescription request
     // i simply called the function below for "/doctor/:userId/get-all-request" for doctors to update its 
     // request and do thsame.
@@ -2106,7 +2101,7 @@ Meet In-Person',docInfo)"><i class="fa fa-user"> </i> &nbsp;Meet IN-PERSON</li>
 
   //doctor receives consultation request in real time.
   mySocket.on("receive consultation request",function(data){
-    alert("yes i received test")
+    
     // instead of geting the data from back end and adding it to the list of prescription request
     // i simply called the function below for "/doctor/:userId/get-all-request" for doctors to update its 
     // request and do thsame.

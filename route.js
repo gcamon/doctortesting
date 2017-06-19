@@ -638,29 +638,35 @@ var basicRoute = function (model,sms,io) {
 
     //route for qusetions and requsts from patients to a doctor through the modal
     router.put("/user/patient/doctor/connection",function(req,res){
-        if(req.user){           
+      if(req.user){           
         req.body.sender_firstname = req.user.firstname;
         req.body.sender_lastname = req.user.lastname;
         req.body.sender_profile_pic_url = req.user.profile_pic_url;
         req.body.sender_id = req.user.user_id;
         var requestData = {};
         for(var item in req.body){
-            if(req.body.hasOwnProperty(item) && item !== "receiverId") {
-                requestData[item] = req.body[item];
-            }
+          if(req.body.hasOwnProperty(item) && item !== "receiverId") {
+              requestData[item] = req.body[item];
+          }
         }
         
-        model.user.update(
-        { user_id: req.body.receiverId},
-        { "$push": { doctor_notification: requestData} },
-        function(err,info) {
+        model.user.findOne({user_id:req.body.receiverId},{doctor_notification:1,presence:1,set_presence:1,phone:1}).exec(function(err,data){
           if(err) throw err;
-          res.send({status:"notified"});
-        }
-        );
-        } else {
-            res.send("not allowed");
-        }
+          data.doctors_notification.push(requestData);
+          if(data.presence === true && data.set_presence.general === true){
+            console.log("did it happen bro !!!!");
+            io.sockets.to(req.body.receiverId).emit("receive consultation request",{status: "success"})
+          } else {
+            var msgBody = req.user.title + " " + req.user.firstname + " " + req.user.lastname + " sends consultation request! Visit http://applinic.com/login";
+            var phoneNunber = "234" + data.phone;
+            sms.message.sendSms('Applinic',phoneNunber,msgBody,function(err,responseData){})
+          }
+          data.save(function(err,info){});
+        });
+      
+      } else {
+        res.redirect("/login");
+      }
         
     });
 
@@ -671,7 +677,7 @@ var basicRoute = function (model,sms,io) {
             res.send(data);
          })
         } else {
-            res.send("not allowed");
+          res.redirect("/login");
         }
     });
 
@@ -1366,17 +1372,28 @@ var basicRoute = function (model,sms,io) {
     //this route the patient forward his test result to his doctor for prescription.
     router.put("/user/patient/test-result/forward",function(req,res){
       if(req.user) {
-        model.user.findOne({user_id: req.body.doctorId},{doctor_prescriptionRequest:1}).exec(function(err,data){
+        model.user.findOne({user_id: req.body.doctorId},{doctor_prescriptionRequest:1,presence:1,set_presence:1,phone:1}).exec(function(err,data){
           if(err) throw err;
           req.body.sender_firstname = req.user.firstname;
           req.body.sender_lastname = req.user.lastname;
           req.body.sender_profile_pic_url = req.user.profile_pic_url;
           req.body.sender_id = req.user.user_id;
           req.body.status = "new";
-          data.doctor_prescriptionRequest.push(req.body)
+          data.doctor_prescriptionRequest.push(req.body);
+          if(data.presence === true && data.set_presence.general === true){
+            io.sockets.to(req.body.doctorId).emit("receive prescription request",{status: "success"})
+          } else {
+            var msgBody = "You have new  prescription request from " + req.user.firstname + " " + req.user.lastname + " Visit http://applinic.com/login"
+            var phoneNunber = "234" + data.phone;
+            sms.message.sendSms('Applinic',phoneNunber,msgBody,function(err,responseData){
+              
+            }); //"2348096461927"
+          }
+
           data.save(function(err,info){
             if(err) throw err;
           });
+
           res.json({status: "success",doctor_id:req.body.doctorId})
         });
       } else {
