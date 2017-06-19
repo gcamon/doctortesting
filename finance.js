@@ -21,7 +21,8 @@ var basicPaymentRoute = function(model,sms,io){
 					Pins.save(function(err,info){
 						console.log("pins initialized");
 						res.send('Vouchers initilized! Please resend to print vouchers.')
-					})
+					});
+
 				} else {
 
 					switch(req.body.grade){
@@ -53,8 +54,7 @@ var basicPaymentRoute = function(model,sms,io){
 						console.log(info)
 						var detail = req.body.quantity + " new vouchers printed! \ntotal vouchers  printed so far is " + info.length;
 						res.send(detail)
-					})
-
+					});
 				}
 
 				function printPins(grade) {
@@ -245,18 +245,18 @@ var basicPaymentRoute = function(model,sms,io){
 			//because is assumed the user at that moment is making the request which means his req.user.user_id will be used.
 			var personId = req.body.userId || req.user.user_id;
 
-			model.user.findOne({user_id: personId},{phone:1,ewallet:1,user_id:1},function(err,data){
+			model.user.findOne({user_id: personId},{phone:1,ewallet:1,user_id:1},function(err,user){
 				if(err) throw err;
-				if(!data){
+				if(!user){
 					res.send({message: "User does not exist!"});
 				} else {
-					if(data.ewallet.available_amount >= req.body.amount){
+					if(user.ewallet.available_amount >= req.body.amount){
 						var random1 = Math.floor(Math.random() * 999);
 						var random2 = Math.floor(Math.random() * 999);
 						var password = check(random1) + " " + check(random2);
 
 						var verify = {
-							user_id: data.user_id,//this refers to the id of the debitor. ie the person otp will be sent to.
+							user_id: user.user_id,//this refers to the id of the debitor. ie the person otp will be sent to.
 							otp: password,
 							amount: req.body.amount,
 							time: req.body.time
@@ -280,7 +280,7 @@ var basicPaymentRoute = function(model,sms,io){
 								console.log(responseData);
 							}
 							var msgBody = "Your payment OTP is " + password + " \nPlease disclose only to the right user."
-							var phoneNunber = "234" + data.phone;
+							var phoneNunber = "234" + user.phone;
 							sms.message.sendSms('Appclinic',phoneNunber,msgBody,callBack); //"2348096461927"
 
 							res.send({message:"One time pin number has been sent. The pin is needed for payment confirmation",success:true,time_stamp:req.body.time})
