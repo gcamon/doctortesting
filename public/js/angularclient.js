@@ -3883,7 +3883,7 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
   });
 
   //patient receives message in real time.
-  mySocket.on("message notification",function(){
+  mySocket.on("message notification",function(data){
     if(data.status){
       templateService.playAudio(0);
       data.type = "message";

@@ -718,7 +718,7 @@ var basicRoute = function (model,sms,io) {
                     }*/
                     req.body.service_access = true;
                     var random = Math.floor(Math.random() * 999999999); // use for check on the front end to distinguish messages sent.
-                    result.patient_mail.push({
+                      result.patient_mail.push({
                       message_id: random,
                       user_id: req.user.user_id,
                       firstname: req.user.firstname,
