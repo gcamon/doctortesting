@@ -7257,38 +7257,33 @@ app.controller("videoCommunicationPatientController",["$scope","localManager","m
 
 
 
-app.controller("VideoDiagnosisController",["$scope","$location","$window","$http","localManager","templateService","Drugs",
-  function($scope,$location,$window,$http,localManager,templateService,Drugs){
+app.controller("VideoDiagnosisController",["$scope","$location","$window","$http","localManager","templateService","Drugs","$resource",
+  function($scope,$location,$window,$http,localManager,templateService,Drugs,$resource){
   $scope.treatment = {};
   var patient = {};  
 
   var random = Math.floor(Math.random() * 999999999999 );
   patient.id = localManager.getValue("personToCall");
-   $http({
-        method  : 'PUT',
-        url     : "/user/doctor/specific-patient",
-        data    : patient,
-        headers : {'Content-Type': 'application/json'} 
-        })
-      .success(function(data) { 
-        $scope.patientInfo = data;
-        patient.prescriptionId = random;
-        patient.patient_id = patient.id;    
-        patient.firstname = $scope.patientInfo.firstname;
-        patient.lastname = $scope.patientInfo.lastname;
-        patient.gender = $scope.patientInfo.gender;
-        patient.age = $scope.patientInfo.age;
-        patient.address = $scope.patientInfo.address;
-        patient.city = $scope.patientInfo.city;
-        patient.country = $scope.patientInfo.country;
-        patient.patient_profile_pic_url = $scope.patientInfo.profile_pic_url;
-        patient.lab_analysis = $scope.patientInfo.lab_analysis;
-        patient.scan_analysis = $scope.patientInfo.scan_analysis;
-        patient.allergy = $scope.patientInfo.allergy;
-        patient.title = $scope.patientInfo.title;
-        patient.sender = "doctor";
-    })
-
+  var getPatientData = $resource("/user/doctor/specific-patient");
+  getPatientData.get(patient,function(data){
+    $scope.patientInfo = data;
+    patient.prescriptionId = random;
+    patient.patient_id = patient.id;    
+    patient.firstname = $scope.patientInfo.firstname;
+    patient.lastname = $scope.patientInfo.lastname;
+    patient.gender = $scope.patientInfo.gender;
+    patient.age = $scope.patientInfo.age;
+    patient.address = $scope.patientInfo.address;
+    patient.city = $scope.patientInfo.city;
+    patient.country = $scope.patientInfo.country;
+    patient.patient_profile_pic_url = $scope.patientInfo.profile_pic_url;
+    patient.lab_analysis = $scope.patientInfo.lab_analysis;
+    patient.scan_analysis = $scope.patientInfo.scan_analysis;
+    patient.allergy = $scope.patientInfo.allergy;
+    patient.title = $scope.patientInfo.title;
+    patient.sender = "doctor";
+  });
+   
     
 
     //creates drug object for the ng-repeat on the view.
