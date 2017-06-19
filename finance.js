@@ -47,6 +47,14 @@ var basicPaymentRoute = function(model,sms,io){
 						break;
 					}
 
+					data.save(function(err,info){
+						if(err) throw err;
+						console.log("vouchers printed!");
+						console.log(info)
+						var detail = req.body.quantity + " new vouchers printed! \ntotal vouchers  printed so far is " + info.length;
+						res.send(detail)
+					})
+
 				}
 
 				function printPins(grade) {
@@ -82,13 +90,6 @@ var basicPaymentRoute = function(model,sms,io){
 				  return toStr;
 				}
 				
-				data.save(function(err,info){
-					if(err) throw err;
-					console.log("vouchers printed!");
-					console.log(info)
-					var detail = req.body.quantity + " new vouchers printed! \ntotal vouchers  printed so far is " + info.length;
-					res.send(detail)
-				})
 			});
 
 		} else {
