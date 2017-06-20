@@ -254,27 +254,27 @@ app.config(function($routeProvider){
 
  .when("/patient/selected-center/:id",{
   templateUrl: "/assets/pages/selected-center.html",
-  controller: "selectedCenterController"
+  controller: 'selectedCenterController'
  })
 
  .when("/patient/view-prescription-history/:id",{
   templateUrl : "/assets/pages/patient-view-prescription-history.html",
-  controller : "trackedPrescriptionController"
+  controller : 'trackedPrescriptionController'
  })
 
  .when('/doctor/call',{
   templateUrl: "/assets/pages/empty.html",
-  controller: "callController"
+  controller: 'callController'
  })
 
  .when("/selected-appointment/:id",{
   templateUrl: "/assets/pages/doctor-appointment.html",
-  controller: "selectedAppointmentController"
+  controller: 'selectedAppointmentController'
  })
 
  .when("/p/selected-appointment/:id",{
   templateUrl: "/assets/pages/patient/patient-appointment.html",
-  controller: "selectedAppointmentControllerForPatient"
+  controller: 'selectedAppointmentControllerForPatient'
  })
 
  .when("/lab",{

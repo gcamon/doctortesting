@@ -10,6 +10,7 @@ var passport = require('passport');
 var flash = require('connect-flash');
 var cookieParser = require("cookie-parser");
 var MongoDBStore = require('connect-mongodb-session')(session);
+var ExpressPeerServer = require('peer').ExpressPeerServer;
  
 
 
@@ -48,6 +49,12 @@ var configuration = function (app,model) {
 	app.use(bodyParser.json());
 	app.use(multer({dest: './uploads'}).any());
 	
+	var options = {
+    debug: true
+  }
+
+	app.use('/peerjs',ExpressPeerServer(app,options))
+
 	app.use(function(req,res,next){
 		console.log(req.url);
 		console.log(req.session);
