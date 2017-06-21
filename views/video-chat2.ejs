@@ -504,9 +504,13 @@
     var port = window.location.port || (window.location.protocol === 'https:' ? 443 : 8080)
     var peer = new Peer(caller,{
     host: host,
-    port: 8080,
+    port: 9000,
     path: '/peerjs',
-    config: { 'iceServers': [
+    debug: 3
+    });
+
+/*
+config: { 'iceServers': [
     { url: 'stun:stun01.sipphone.com' },
     { url: 'stun:stun.ekiga.net' },
     { url: 'stun:stunserver.org' },
@@ -528,11 +532,7 @@
         }
       ]
     },
-
-    debug: 3
-    });
-
-
+*/
 
     //////////////////
     
