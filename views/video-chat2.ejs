@@ -497,16 +497,16 @@
     
     //var peer = new Peer(caller,{key: "pciwsjsoykb21emi"});
     // PeerJS object
-   
-    var peer = new Peer(caller,{key: "pciwsjsoykb21emi"});
-    /*var host = window.location.hostname || "localhost";
+    console.log("port: " + window.location.port);
+    console.log("host: " + window.location.hostname)
+    //var peer = new Peer(caller,{key: "pciwsjsoykb21emi"});
+    var host = window.location.hostname || "localhost";
     var port = window.location.port || (window.location.protocol === 'https:' ? 443 : 8080)
     var peer = new Peer(caller,{
-    host: host,
-    port: "",
+    host:host,
     path: '/call',
     debug: 3
-    });*/
+    });
 
 /*
 config: { 'iceServers': [

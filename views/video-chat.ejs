@@ -664,15 +664,14 @@
     // PeerJS object
     console.log("port: " + window.location.port);
     console.log("host: " + window.location.hostname)
-    var peer = new Peer(caller,{key: "pciwsjsoykb21emi"});
-    /*var host = window.location.hostname || "localhost";
+    //var peer = new Peer(caller,{key: "pciwsjsoykb21emi"});
+    var host = window.location.hostname || "localhost";
     var port = window.location.port || (window.location.protocol === 'https:' ? 443 : 8080)
     var peer = new Peer(caller,{
-    port: host,
-    path: '/call',
-    port:"",    
+    host: host,
+    path: '/call',    
     debug: 3
-    });*/
+    });
 
 
     ///
