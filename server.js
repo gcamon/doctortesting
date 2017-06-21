@@ -18,14 +18,14 @@ var express = require('express'),
   placement = require("./placement"),
   mySocket = require("./socket"),
   port = process.env.PORT || 9000;
-  var ExpressPeerServer = require('peer').ExpressPeerServer;
+  //var ExpressPeerServer = require('peer').ExpressPeerServer;
 
     
 var options = {
   debug: true
 }
 
-app.use('/call',ExpressPeerServer(http,options))   
+//app.use('/call',ExpressPeerServer(http,options))   
 
 http.listen(port,function(){
     console.log('listening on *:8080');
