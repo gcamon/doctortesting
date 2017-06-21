@@ -25,7 +25,7 @@ var options = {
   debug: true
 }
 
-app.use('/peerjs',ExpressPeerServer(http,options))   
+app.use('/call',ExpressPeerServer(http,options))   
 
 http.listen(port,function(){
     console.log('listening on *:8080');

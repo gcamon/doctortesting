@@ -503,8 +503,8 @@
     var host = window.location.hostname || "localhost";
     var port = window.location.port || (window.location.protocol === 'https:' ? 443 : 8080)
     var peer = new Peer(caller,{
+    host: host,
     path: '/call',
-    port: 8080,
     debug: 3
     });
 
