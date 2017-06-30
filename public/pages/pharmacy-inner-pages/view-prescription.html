@@ -1,10 +1,39 @@
-<div class="col-sm-12 col-md-12 col-lg-12">
+<div class="col-sm-12 col-md-12 col-lg-12" >
 	<div class="row">
-		<div class="col-sm-12 col-md-3 col-lg-3 pull-right">
+		<div class="col-sm-12 col-md-4 col-lg-4 pull-right">
 			<img ng-src="{{refData.pharmacy.patient_profile_pic_url}}">
+			<h5 style="text-align: center;border-bottom: 1px solid rgba(0,0,0,0.4)">{{refData.pharmacy.patient_firstname}} {{refData.pharmacy.patient_lastname}} <span style="display:block;font-size: 12px; color:#000">Patient</span><address style="display:block;font-size: 12px; color:#000">{{refData.pharmacy.patient_address}}, {{refData.pharmacy.patient_city}}, {{refData.pharmacy.patient_country}}</address></h5>
+			<div id="accordion">
+                <h6 style="color: #fff;padding:5px;text-align:center;margin:15px 0 20px">
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="/#collapseSeven" aria-expanded="false" aria-controls="collapseSeven" style="background-color:#e97147; font-size: 18px;color:#fff;border-radius:10px;padding:10px">Bill Patient</a>
+                </h6>                 
+                <div style="list-style:none;font-size:18px" id="collapseSeven" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSeven">
+                     
+                     <table>
+                     	<tr>
+                     		<thead>
+                     			<th>Drug</th>
+                     			<th>Cost</th>
+                     		</thead>
+                     	</tr>
+                     	<tr>
+                     		<tbody ng-repeat = "j in drugsForSurchage">
+                     			<td style="width: 55%;padding:10px">{{j.name}}</td>
+                     			<td style="width: 45%"><input type="number" ng-model="j.amount" style="padding:10px"></td>
+                     		</tbody>
+                     	</tr>
+                     </table>
+                     <div>
+                     	<strong>Total : <em>{{str}}</em></strong>
+                     </div>
+                     <div style="text-align:center;margin-top:20px" ng-if="isFilled === true">
+                     	<button style="background-color:#996b88;color:#fff;font-size:14px;border-radius:20px" ng-click="sendBill(refData.pharmacy.patient_id)">Send billing to patient</button>
+                     </div>
+                </div>
+            </div>
 		</div>
-		<div class="col-sm-12 col-md-9 col-lg-9">
-			<h5 style="text-align: center">{{refData.pharmacy.patient_firstname}} {{refData.pharmacy.patient_lastname}} <span style="display:block;font-size: 12px; color:#000">Patient</span><address style="display:block;font-size: 12px; color:#000">{{refData.pharmacy.patient_address}}, {{refData.pharmacy.patient_city}}, {{refData.pharmacy.patient_country}}</address></h5>
+		<div class="col-sm-12 col-md-8 col-lg-8">
+			
 			<h6 style="border-bottom: 1px solid rgba(0,0,0,0.4); width: 180px">Referrence Details</h6>
 			<ul class="ref-details">
 				<li><strong>Referred By </strong>| {{refData.referral_title}} {{refData.referral_firstname}} {{refData.referral_lastname}} {{refData.referral_name}}</li>
@@ -40,7 +69,7 @@
 			<div style="margin-top: 20px; margin-bottom: 30px">
 				<button ng-click="done()">Done</button>
 				<button ng-click="toAnotherPharmacy()">Forward unticked drug to a pharmacy</button>
-				<button ng-click="toList(refData.pharmacy.patient_firstname,refData.pharmacy.patient_lastname,refData.pharmacy.patient_profile_pic_url,refData.ref_id,refData.date)">Attend later</button>				
+				<button ng-click="toList(refData.pharmacy.patient_firstname,refData.pharmacy.patient_lastname,refData.pharmacy.patient_profile_pic_url,refData.ref_id,refData.date)" ng-if="allNote.length !== 0">Attend later</button>				
 			</div>
 			<div class="prescription-info">
 				<p style="font-size: 18px; font-weight:100">This prescription was writen by:</p>

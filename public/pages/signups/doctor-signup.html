@@ -109,7 +109,7 @@
             </div>
             
             <div class="form-group">
-            	<label>Office address * : </label> 
+            	<label>Place of work address * : </label> 
                 <input type="text" class="form-control placeholder-color" ng-model="user.address" required>
             </div>
             <div class="form-group">
@@ -124,6 +124,14 @@
                 <p style="color:red;text-align:center">{{showErr}}</p>
             	<label>Phone number * : </label> 
                 <input type="number" class="form-control placeholder-color" placeholder="(080*****)" id="phone" ng-model="user.phone" required>
+            </div>
+
+            <hr style="padding-bottom: 10px"/>
+            <div class="form-group">
+                <p style="color:red;">{{usernameError}}</p>                
+                <label>Username * : </label> 
+                <input type="text" class="form-control placeholder-color" id="username" ng-model="user.username">
+                <p style="color: green">{{info}}</p>
             </div>
             
             <div class="form-group">

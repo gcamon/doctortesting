@@ -212,6 +212,7 @@ var basicPaymentRoute = function(model,sms,io){
 
 	router.get("/user/verify",function(req,res){
 		if(req.user && req.query.phone || req.query.userId){
+			console.log(req.query)
 			var obj;
 			if(req.query.phone){
 				var toNum = parseInt(req.query.phone)
@@ -235,12 +236,13 @@ var basicPaymentRoute = function(model,sms,io){
 		} else {
 			res.send({error: "Incomplete transaction!"});
 		}
-	})
+	});
+
 	router.post("/user/payment/verification",function(req,res){
-			
+
 		if(req.user && req.body.userId !== req.user.user_id){
 			//generate otp for confirmation. the debitor's id is sent from the request including the amount.
-			// request is obj of the debitor's id, amount to debit ie the person paying for the service.
+			//request is obj of the debitor's id, amount to debit ie the person paying for the service.
 			//note for payment req.body must have userId of who is to be debited is required while for transfer req.body do not have userId
 			//because is assumed the user at that moment is making the request which means his req.user.user_id will be used.
 			var personId = req.body.userId || req.user.user_id;
@@ -255,14 +257,71 @@ var basicPaymentRoute = function(model,sms,io){
 						var random2 = Math.floor(Math.random() * 999);
 						var password = check(random1) + " " + check(random2);
 
-						var verify = {
+						if(req.body.old_time){ //checks if otp was resend therefore removes the old otp which will not be in use anymore.
+							model.otpSchema.remove({time:req.body.old_time},function(err){
+								if(err) throw err;
+							});
+						}
+
+						/*var verify = {
 							user_id: user.user_id,//this refers to the id of the debitor. ie the person otp will be sent to.
 							otp: password,
 							amount: req.body.amount,
 							time: req.body.time
+						}*/
+						
+						
+			      var otp = new model.otpSchema({
+			        user_id: user.user_id,//this id refers to the debitors id. the person whose account will be debited.
+			        time: req.body.time,
+			        otp: password,
+			        amount: req.body.amount,
+			        senderId: req.user.user_id
+			      });
+			      
+
+			      //sets the expiration time for each otp sent.
+			      var date = new Date();
+			      otp.expirationDate = new Date(date.getTime() + 300000);
+			      otp.expirationDate.expires = 300;
+			      console.log(otp);
+
+			      otp.save(function(err,info){
+			        if(err) throw err;
+			        console.log("otp saved");
+			      }); 
+
+
+			      var callBack = function(err,responseData){
+							if(err) console.log(err);
+							console.log(responseData);
 						}
 
-						model.pins.findOne({},{otp:1}).exec(function(err,data){
+						var msgBody = "Your payment OTP is " + password + " \nPlease disclose only to the right user."
+						var phoneNunber = "234" + user.phone;
+						sms.message.sendSms('Appclinic',phoneNunber,msgBody,callBack); //"2348096461927"
+
+						res.send({message:"One time pin number has been sent. The pin is needed for payment confirmation",success:true,time_stamp:req.body.time}) 
+
+					} else {
+						res.send({message: 'The person to debit has insufficient fund for the service!'});
+					}   
+
+					function check(num) {
+						var toStr = num.toString();  
+					  if(toStr.length < 3) {
+					    for( var i = toStr.length - 1; i < 2; i++){
+					      toStr+= 0;
+					    }
+					  } 
+					  return toStr; 
+				  }
+				 }
+
+				})
+
+
+						/*model.pins.findOne({},{otp:1}).exec(function(err,data){
 							if(err) throw err;
 							if(req.body.old_time){//checks if otp was resend therefore removes the old otp which will not be in use anymore.
 								var elemPos = data.otp.map(function(x){return x.time}).indexOf(req.body.old_time);
@@ -299,7 +358,7 @@ var basicPaymentRoute = function(model,sms,io){
 				  } 
 				  return toStr;
 				}
-			});
+			});*/
 
 		} else {
 			res.send({message: "Unathorized transaction"});
@@ -312,25 +371,24 @@ var basicPaymentRoute = function(model,sms,io){
 	//this route will be used by diagnostic centers, special centers, hospitals, pharmcy for payment confirmation.
 	router.post("/user/payment/confirmation",function(req,res){
 		if(req.user && req.body && req.body.userId !== req.user.user_id && req.body.otp){
-			model.pins.findOne({"otp.otp":req.body.otp},{otp:1}).exec(function(err,data){
+			model.otpSchema.findOne({otp:req.body.otp}).exec(function(err,data){
 				if(err) throw err;
+				
 				if(!data){
 					res.send({message:"Confirmation failed! Transaction canceled."})
 					data.save(function(err,info){
 						if(err) throw err;
 					});
-				} else {
-					var elemPos = data.otp.map(function(x){return x.otp}).indexOf(req.body.otp);					
-					var del = data.otp.splice(elemPos,1);
-					var objFound = del[0];
+				} else {						
 					//check is is the right otp for a user
-					if(objFound.user_id === req.body.userId) {
+					if(data.user_id === req.body.userId && data.senderId === req.user.user_id) {
+						delete data.otp;
 						//do the actual transaction. success!
 						model.user.findOne({user_id: req.body.userId},{ewallet:1,firstname:1,lastname:1,name:1}).exec(function(err,debitor){
 							var name = req.user.firstname || req.user.name;
 							var pay = new Wallet(req.body.date,name,req.user.lastname,req.body.message);
 							//note firstname or lastname of patient may change.
-							pay.payment(model,objFound.amount,debitor,req.user.user_id);
+							pay.payment(model,data.amount,debitor,req.user.user_id);
 							res.send({message: "Transaction successful! Your account is credited."});
 						});						
 						data.save(function(err,info){
@@ -352,19 +410,17 @@ var basicPaymentRoute = function(model,sms,io){
 	//@params object. properties otp,date,message,userId or phone
 	router.post("/user/tranfer/confirmation",function(req,res){
 		if(req.user && req.body && req.body.userId !== req.user.user_id && req.body.otp && req.body.phone !== req.user.phone){
-			model.pins.findOne({"otp.otp":req.body.otp},{otp:1}).exec(function(err,data){
+			model.otpSchema.findOne({otp:req.body.otp}).exec(function(err,data){
 				if(err) throw err;
 				if(!data){
 					res.send({message:"Confirmation failed! Transaction canceled."});
 					data.save(function(err,info){
 						if(err) throw err;
 					});
-				} else {
-					var elemPos = data.otp.map(function(x){return x.otp}).indexOf(req.body.otp);					
-					var del = data.otp.splice(elemPos,1);
-					var objFound = del[0];
+				} else {					
 					//check is the right otp for a user
-					if(objFound.user_id === req.user.user_id) {
+					if(data.user_id === req.user.user_id) {
+						delete data.otp;
 						//do the actual transaction. success!
 						var receiver;	
 						if(req.body.phone){
@@ -387,7 +443,7 @@ var basicPaymentRoute = function(model,sms,io){
 								var name = req.user.firstname || req.user.name;
 								var pay = new Wallet(req.body.date,name,debitor.lastname,req.body.message);
 								//note firstname or lastname of patient may change.							
-								pay.transfer(model,objFound.amount,debitor,receiver,person);
+								pay.transfer(model,data.amount,debitor,receiver,person);
 								res.send({message: "Transaction successful! Your account is debited.",balance:debitor.ewallet.available_amount});
 							});
 						}	
@@ -413,7 +469,7 @@ var basicPaymentRoute = function(model,sms,io){
 	router.post("/user/patient/consultation-acceptance/confirmation",function(req,res){
 		console.log(req.body)
 		if(req.user && req.body && req.body.userId !== req.user.user_id && req.body.otp && req.user.type === "Patient"){
-			model.pins.findOne({"otp.otp":req.body.otp},{otp:1}).exec(function(err,data){
+			model.otpSchema.findOne({otp:req.body.otp}).exec(function(err,data){
 				if(err) throw err;
 				
 				if(!data){
@@ -421,18 +477,16 @@ var basicPaymentRoute = function(model,sms,io){
 					data.save(function(err,info){
 						if(err) throw err;
 					});
-				} else {
-					var elemPos = data.otp.map(function(x){return x.otp}).indexOf(req.body.otp);					
-					var del = data.otp.splice(elemPos,1);
-					var objFound = del[0];
+				} else {					
 					//check is is the right otp for a user
-					if(objFound.user_id === req.user.user_id) {
+					if(data.user_id === req.user.user_id) {
+						delete data.otp;
 						//do the actual transaction. success!
 						model.user.findOne({user_id: req.user.user_id},{ewallet:1,firstname:1,lastname:1,name:1}).exec(function(err,debitor){
 							var name = req.user.firstname || req.user.name;
 							var pay = new Wallet(req.body.date,name,req.user.lastname,req.body.message);
 							//note firstname or lastname of patient may change.
-							pay.consultation(model,objFound.amount,debitor,req.body.userId);
+							pay.consultation(model,data.amount,debitor,req.body.userId);
 							createConnection(debitor);
 						});						
 						data.save(function(err,info){
@@ -563,8 +617,40 @@ var basicPaymentRoute = function(model,sms,io){
 		}
 	});
 
+	//this route takes care of patient billing ie making payments for services and drugs purchased.
+	//the cost will be split into percentage.
+	// the percentage will be contoled by a percentage setter controlled by the admin.
+	router.post("/user/payment/patient-billing",function(req,res){
+		if(req.user){
+			console.log(req.body);
+			model.otpSchema.findOne({otp:req.body.otp},function(err,data){
+				if(err) throw err;
+				if(!data){
+					res.send({message:"Confirmation failed! Transaction canceled."});					
+				} else {
+					//do the actual transaction
+					if(data.user_id === req.body.patientId && data.senderId === req.user.user_id) {					
+						model.user.findOne({user_id:req.user.user_id},{ewallet:1,user_id:1,city_grade:1,type:1,email:1}).exec(function(err,center){
+						console.log(center)						
+							if(err) throw err;
+							var pay = new Wallet(req.body.date,req.body.patient_firstname,req.body.patient_lastname,"billing");
+							pay.billing(model,req.body,center,sms);
+							model.otpSchema.remove({otp:req.body.otp},function(err,info){});							
+							res.send({message: "Transaction successful! Your account is credited.",balance:center.ewallet.available_amount});							
+						});
+						
+					} else {
+						res.send({message: 'Transaction cancelled! Reason: This OTP is not for the right user.'});						
+					}
+					
+				}				
+			})
+		} else {
+			res.send("Unauthorized access!!!");
+		}
+	});
+
 	router.get("/user/:userId/transactions",function(req,res){
-		console.log(req.query)
 		if(req.user){
 			model.user.findOne({user_id:req.params.userId},{ewallet:1},function(err,data){
 				if(err) throw err;				

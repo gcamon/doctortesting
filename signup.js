@@ -12,106 +12,179 @@ var http = require("http");
 
 var signupRoute = function(model,sms) {
 	passport.use('signup', new LocalStrategy({
-		usernameField : 'email',
+		usernameField : 'username',
 	    passwordField : 'password',
 	    passReqToCallback : true 
 	},
-	function(req,email,password,done){
+	function(req,username,password,done){
 		process.nextTick(function(){	
-			model.user.findOne({email:email},function(err,user){
+			model.user.findOne({username:username},function(err,user){
 			if(err) return done(err);
 			if(user){
-				return done(null, false, req.flash('signupMessage', 'That email has already been use please find another one'));	
+				return done(null, false, req.flash('signupMessage', 'That username has already been use please find another one'));	
 			} else {
-				if(req.body.agree === true) {
+				var userphone = {}
+				model.verifyPhone.findOne({phone:req.body.phone,pin:req.body.v_pin},function(err,data){
+					if(err) throw err;
+					console.log(data);
+					if(data){
+						userphone.testuserPhone = true;
+						//model.verifyPhone.remove({phone:req.body.phone,pin:req.body.v_pin},function(err,a){});
+						createUser();
+					} else {
+						return done(null, false, req.flash('signupMessage', 'Please you have to agree to our terms and conditions'));
+					}
+				});
+
+				function createUser() {
+					if(req.body.agree === true && userphone.testuserPhone) {					
+						var uid = genId(req.body.username);
+						var referrral_link = "/referral/" + uid + "/signup";
+						var User = new model.user({
+						email: req.body.email,
+						user_id: uid,
+	          password: salt.createHash(password),
+	          phone: req.body.phone,
+	          admin: false,
+	          type: req.body.typeOfUser,
+	          city: req.body.city,
+	          firstname: req.body.firstname,
+	          lastname: req.body.lastname,
+	          username: username,
+						address: req.body.address,
+						gender: req.body.gender,
+						title: req.body.title,
+						age: req.body.age,
+						profile_pic: {
+							filename:""
+						},
+						specialty: req.body.specialty,
+						profile_url: "/ranking/views/" + uid,
+						profile_pic_url: "/download/profile_pic/nopic",
+						work_place: req.body.work_place,
+						country: req.body.country,
+						name: req.body.name,
+						verified: false,
+						ref_link: referrral_link					
+					});
+
+						User.ewallet = {
+							available_amount: 0,
+							firstname: req.body.firstname,
+			    		lastname: req.body.lastname,
+						}
+
+						if(req.body.typeOfUser === "Doctor"){
+							User.name = "Dr " + req.body.firstname + " " + req.body.lastname.slice(0,1).toUpperCase();
+						}			
 					
-					var uid = genId(req.body.email);
-					var referrral_link = "/referral/" + uid + "/signup";											
-					var User = new model.user({
-					email: email,
-					user_id: uid,
-          password: salt.createHash(password),
-          phone: req.body.phone,
-          admin: false,
-          type: req.body.typeOfUser,
-          city: req.body.city,
-          firstname: req.body.firstname,
-          lastname: req.body.lastname,
-          username: req.body.username,
-					address: req.body.address,
-					gender: req.body.gender,
-					title: req.body.title,
-					age: req.body.age,
-					profile_pic: {
-						filename:""
-					},
-			specialty: req.body.specialty,
-			profile_url: "/ranking/views/" + uid,
-			profile_pic_url: "/download/profile_pic/nopic",
-			work_place: req.body.work_place,
-			country: req.body.country,
-			name: req.body.name,
-			verified: false,
-			ref_link: referrral_link					
-			});
-
-			if(req.body.typeOfUser === "Doctor"){
-				User.name = "Dr " + req.body.firstname + " " + req.body.lastname.slice(0,1).toUpperCase();
-			}
-
-			User.ewallet = {
-				available_amount: 0,
-				firstname: req.body.firstname,
-    		lastname: req.body.lastname,
-			}
+						if(req.body.typeOfUser === "Pharmacy" || req.body.typeOfUser === "Laboratory" || req.body.typeOfUser === "Radiology"){
+							var city = (req.body.city === "Lagos" || req.body.city === "Laboratory" || req.body.city === "Port-Harcourt" ) ? true : false;
+							if(city){
+								User.city_grade = 20
+							} else {
+								User.city_grade = 15
+							}
+						}				
 
 
-					User.save(function(err){
-						console.log("user saved");
-						if(err) throw err;					
-						return done(null,User);
-					})
-				} else {
-					return done(null, false, req.flash('signupMessage', 'Please you have to agree to our terms and conditions'))
+						User.save(function(err){
+							console.log("user saved");
+							if(err) throw err;					
+							return done(null,User);
+						});					
+
+						} else {
+							return done(null, false, req.flash('signupMessage', 'Please you have to agree to our terms and conditions'))
+						}
+					}
+				}//end of function creatuser
+
+				function genId(username) {
+					var getFirstLetter;
+					var toStr;
+					if(username) {
+						var getRandomNumber = Math.floor(Math.random() * 9999);
+						toStr = username + getRandomNumber;
+					}				
+					return toStr;					
 				}
-			}
-			})
-
-			function genId(userId) {
-				var getRandomNumber = Math.floor(Math.random() * 199999999);
-				return getRandomNumber;
-			}
+			})			
 		})
 	}));
 	
 
-	router.post('/user/signup', function(req, res, next) {    
+	router.post('/user/signup', function(req, res, next) {	
 	  passport.authenticate('signup', function(err, user, info) {
+	  	console.log(req.body.password)    
 	    if (err) {
 	      return next(err); // will generate a 500 error
 	    }
 	    // Generate a JSON response reflecting signup
 	    if (!user) {	
-	      	res.send({error:true,errorMsg: "User with that email already exist!"});
+	      	res.send({error:true,message: "User phone number not active or wrong verification pin!"});
 	    } else {	    	
-	    	res.send({error: false});
+    		var msgBody = "Your Applinic login details" + " \nUsername: " + req.body.username + " \nPassword: " + req.body.password;
+				var phoneNunber = "234" + req.body.phone;
+				function callBack(err,info){
+					console.log(err)
+				}
+				sms.message.sendSms('Appclinic',phoneNunber,msgBody,callBack); //"2348096461927"	    	
+    		res.send({error: false,message: "Success! Account created. Login credentials sent to your phone via sms."});	    	
 	    }
-
 	  })(req, res, next);
 	});
 
+	router.put("/user/verify-phone-number",function(req,res){
+		var genPin = Math.floor(Math.random() * 999999);			
+
+		var testPhone = new model.verifyPhone({
+			phone: req.body.phone,
+			pin: genPin
+		});
+
+		console.log(testPhone);
+		var date = new Date()
+		testPhone.expirationDate = new Date(date.getTime() + 300000);
+		testPhone.expirationDate.expires  = 60 * 60;
+
+		testPhone.save(function(err,info){});
+
+		function callBack(err,response){
+			console.log(err)
+		}
+		var msgBody = "Your SMS verification Pin is" + genPin + " \nUse to complete your registeration."
+		var phoneNunber = "234" + req.body.phone;
+		sms.message.sendSms('Appclinic',phoneNunber,msgBody,callBack); //"2348096461927"
+		res.send({message:"Phone verification pin sent to your phone"});
+	})
+
 	//check to see if a user with a phone number already exist
 	router.get('/user/signup',function(req,res){
-		console.log(req.query);
-		model.user.findOne({phone:req.query.phone},function(err,userPhone){
-			if(err) throw err;
-			console.log(userPhone);
-			if(!userPhone){
-				res.send({error: false,errorMsg: ""})
-			} else {
-				res.send({error: true,errorMsg: "User with this phone number already exist!"})
-			}
-		});
+		if(req.query.phone){
+			model.user.findOne({phone:req.query.phone},function(err,userPhone){
+				if(err) throw err;
+				console.log(userPhone);
+
+				if(!userPhone){			
+					
+					res.send({error: false,errorMsg: ""});
+				} else {
+					res.send({error: true,errorMsg: "User with this phone number already exist!"})
+				}
+			});
+		} else if(req.query.username){
+			model.user.findOne({username:req.query.username},function(err,username){
+				if(err) throw err;
+				console.log(username);
+				if(!username){	
+					res.send({error: false,errorMsg: ""});
+				} else {
+					res.send({error: true,errorMsg: "username already taken!"})
+				}
+			});
+		}
+		
 	});
 
 

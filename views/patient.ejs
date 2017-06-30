@@ -46,10 +46,10 @@
                                 <li><a href="#/find-specialist">Find a doctor</a></li> <!-- /user/find-specialist -->                         
                                 <li><a href="#/drug">Find Drug</a></li><!--/user/find-drug -->
                                 <li><a href="#/scan-search">Find Scan</a></li><!--/user/find-scan-test-->
-                                <li class="no-bottom"><a href="#/search-test">Find Test</a></li> <!--/user/find-lab-test-->                                              
+                                <li class="no-bottom"><a href="#/search-test">Find Test</a></li> <!--/user/find-lab-test-->                    
                             </ul>
                             <a href="/user/logout" style="color:red;font-size:18px">logOut</a>
-                            <!--<button ng-click="print()">Print voucher</button>-->                 
+                            <button ng-click="print()">Print voucher</button>                 
                         </div>
                        
                        
@@ -291,10 +291,10 @@
                                 <h3>My doctor(s)</h3>                                
                                 <div>
                                     <ul style="max-height: 600px; overflow-y: auto; background-color:#d2ed88;padding-left:20px" id="my-doctors-list">
-                                        <li ng-repeat= " i in patientsDoctorList" style="list-style-type: none; padding: 10px;border-bottom: 1px dashed rgba(0,0,0,0.2);border-radius: 20px;cursor: pointer;position:relative" class="clearfix" ng-click="checkoutDoctor()">
+                                        <li ng-repeat= " i in patientsDoctorList" style="list-style-type: none; padding: 15px 10px;border-bottom: 1px dashed rgba(0,0,0,0.2);border-radius: 20px;position:relative;cursor: pointer" class="clearfix" ng-click="checkoutDoctor()">
                                             <div style="cursor: pointer;" ng-click="userDoctor(i.doctor_id)">                                                
                                                 <img ng-src="{{i.doctor_profile_pic_url}}" style="width:32px;height:32px" alt="image description">
-                                                <span style="font-size: 18px">{{i.doctor_firstname}}</span> <!--{{i.doctor_lastname}}-->
+                                                <span style="font-size: 18px;padding-left: 10px">Dr. {{i.doctor_firstname}} {{i.doctor_lastname}}</span> 
                                                 <span style="font-size: 18px">{{i.specialty}}</span>
                                                 
                                                 <img src="/assets/images/icons/online.png" ng-if="i.presence === true" style="float:right;margin-top:5px">
@@ -302,8 +302,7 @@
                                                 <i class="fa fa-comment" style="top:15px;display:inline-block;position:absolute;right: 45px;color:#d2ed88;text-shadow:0px 2px 1px rgba(79,98,35,0.7)" ng-if="i.queueLen > 0"></i>
                                                 <strong ng-if="i.queueLen > 0" style="top:-4px;display:inline-block;position:absolute;right: 30px;font-size: 12px;color:#d16d1c;border-radius:5px;padding:1px 7px;text-align:center">{{i.queueLen}}</strong>                                                  
                                             </div>
-                                            <div>
-                                            </div>
+                                           
                                         </li>
                                        
                                     </ul>

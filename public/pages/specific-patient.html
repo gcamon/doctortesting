@@ -82,41 +82,37 @@
 					</div>
 					<div style="position:absolute;right:5px;top:0">
 						<i class="fa fa-video-camera" style="font-size:22px;padding:10px; cursor:pointer; margin-right: 25px" title="Video chat with {{patientInfo.firstname}}" ng-click="makeCall('video')"></i>
-						<i class="fa fa-phone" style="font-size:22px;padding: 10px; cursor:pointer; margin-right: 25px" title="Make an audio call to {{patientInfo.firstname}}" ng-click="makeCall('audio')"></i>		
-						
+						<i class="fa fa-phone" style="font-size:22px;padding: 10px; cursor:pointer; margin-right: 25px" title="Make an audio call to {{patientInfo.firstname}}" ng-click="makeCall('audio')"></i>						
 						<i class="fa fa-calendar" style="font-size:22px;padding: 10px ; cursor:pointer" title="Book appointment with {{patientInfo.firstname}}" aria-hidden="true" ng-click="appointment(patientInfo)"></i>	
-					</div>
-					
+					</div>					
 				</header>
 				<main style="max-height:800px" ng-if="isChat || isChat === undefined">
 					<div class="chat-area" style="padding:none">
-					<div class="some-class">                  
-		                
-		                    <div class="chat-body" >
+					<div class="some-class">                
+		                    <div class="chat-body">
 		                        <ul style='list-style:none;margin-top: 40px'>
-		                            <li ng-repeat="u in message1">
-		                            	
-		                                <div ng-if="u.sent" ng-class="{'isYou' : u.sent}">
-		                                    <!--<p style="text-align:center"> &nbsp;{{u.time | date: "shortTime"}} &nbsp;{{u.time | date: "mediumDate"}}</p> -->  
-		                                    <article style="text-align:right;background-color:#d2ed88" class="chat">
-		                                        <span>{{u.sent}}</span>
-		                                        <small style="font-size:9px;font-style:italic"> &nbsp;{{u.time | date: "shortTime"}}</small>
-		                                        <i class="fa fa-check" style="font-size:10px" ng-class="{'msg-received': u.isReceived === true}"></i>
-		                                        <i class="fa fa-check" style="font-size:10px;margin-left:-10px;margin-top:8px" ng-class="{'msg-received': u.isReceived === true}" ng-if="u.isSent === true"></i>    
-		                                    </article>
-		                                </div>
-		                                <div ng-if="u.received" class="chatPallet">                                                         
-		                                    <article class="chat" style="background-color:#fff">
-		                                        <span>{{u.received}}</span>
-		                                        <small style="font-size:9px;font-style:italic"> &nbsp;{{u.time | date: "shortTime"}}</small>    
-		                                    </article>                                               
-		                                </div>		                               
-		                                                               
+		                            <li style="background-color:re;" >
+		                            	<div ng-repeat="u in message1">
+			                                <div ng-if="u.sent" ng-class="{'isYou' : u.sent}">
+			                                    <!--<p style="text-align:center"> &nbsp;{{u.time | date: "shortTime"}} &nbsp;{{u.time | date: "mediumDate"}}</p> -->  
+			                                    <article style="text-align:right;background-color:#d2ed88" class="chat">
+			                                        <span>{{u.sent}}</span>
+			                                        <small style="font-size:9px;font-style:italic"> &nbsp;{{u.time | date: "shortTime"}}</small>
+			                                        <i class="fa fa-check" style="font-size:10px" ng-class="{'msg-received': u.isReceived === true}"></i>
+			                                        <i class="fa fa-check" style="font-size:10px;margin-left:-10px;margin-top:8px" ng-class="{'msg-received': u.isReceived === true}" ng-if="u.isSent === true"></i>    
+			                                    </article>
+			                                </div>
+			                                <div ng-if="u.received" class="chatPallet">                                                         
+			                                    <article class="chat" style="background-color:#fff">
+			                                        <span>{{u.received}}</span>
+			                                        <small style="font-size:9px;font-style:italic"> &nbsp;{{u.time | date: "shortTime"}}</small>    
+			                                    </article>                                               
+			                                </div>		                               
+		                                </div>                             
 		                            </li>
 		                            <li>
 		                            	 <div><article style="margin-left: 18px;margin-top:5px;color:rgba(0,0,0,0.4);font-style:italic;box-shadow: 0px 1px 2px rgba(0,0,0,0.5);background-color:#eee" ng-if="typing" class="chat">{{typing}}</article></div>
-		                            </li>
-		                            
+		                            </li>	                            
 		                                                      
 		                        </ul>                     
 		                    </div>

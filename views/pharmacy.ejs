@@ -38,53 +38,121 @@
             <!--************************************
                             Header Start
             *************************************-->
-            <header id="header" class="tg-haslayout">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <strong class="logo">
-                                <a href="/"><img src="/assets/images/logo.png" alt="image description"></a>
-                            </strong>
-                            <nav id="tg-nav" class="tg-nav">
-                                <div class="navbar-header">
-                                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#tg-navigation" aria-expanded="false">
-                                        <span class="sr-only">Toggle navigation</span>
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
-                                    </button>
-                                </div>
-                                <div class="collapse navbar-collapse" id="tg-navigation">
-                                    <ul>
-                                        <li>
-                                            <a href="/home">Home</a>                                           
-                                        </li>
-                                        <li>
-                                            <a href="#">Top Ranking</a>
-                                            <ul> 
-                                                <li><a href="/topview/doctors">Doctors</a></li>                                                     
-                                                <li><a href="/topview/hospitals">Hospitals</a></li>
-                                                <li><a href="/topview/clinics">Clinics</a></li>
-                                                <li><a href="/topview/pharmacy">Pharmacy</a></li>
-                                                <li><a href="/topview/laboratories">Laboratory Centers</a></li>
-                                                <li><a href="/topview/radiology">Radiology Centers</a></li>
-                                                <li><a href="/topview/fitness">fitness Centers</a></li>                                                                           
-                                                <!--<li><a href="doctor-detail2.html">Doctor Detail 2</a></li>-->
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="#">Blog</a>
-                                            <ul>
-                                                <li><a href="blog-list.html">Blog List</a></li>
-                                                <li><a href="blog-grid.html">Blog Grid</a></li>
-                                                <li><a href="blog-detail.html">Blog Detail</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="packages.html">packages</a></li>
-                                        <li><a href="contactus.html">Contact</a></li>                                     
-                                    </ul>
-                                </div>
-                            </nav>
+            <header id="header" class="tg-haslayout" ng-controller = "pharmacyCenterNotificationController">
+                <div  class="navbar-header top-navbar-dashboard" ng-controller="topHeaderController">
+                    <div style="width: 77%;margin: 0 auto;padding: 0px 5px">
+                        <div style="" class="menu-drp">                        
+                            <i class="fa fa-bars" aria-hidden="true" style="color:#fff;font-size:23px;font-weight:100; cursor:pointer" title="Menu" ng-click="isClicked()"></i>
+                            <ul> <!--ng-class="{'drp-list': drop}"-->
+                                <li><a href="#/find-specialist">Find a doctor</a></li> <!-- /user/find-specialist -->                         
+                                <li><a href="#/drug">Find Drug</a></li><!--/user/find-drug -->
+                                <li><a href="#/scan-search">Find Scan</a></li><!--/user/find-scan-test-->
+                                <li class="no-bottom"><a href="#/search-test">Find Test</a></li> <!--/user/find-lab-test-->                                              
+                            </ul>
+                            <a href="/user/logout" style="color:red;font-size:18px">logOut</a>
+                            <!--<button ng-click="print()">Print voucher</button>-->                 
+                        </div>
+                       
+                       
+                        <div style="width:65%; text-align:right;display:inline-block" ng-controller = "createRoomController">
+                            <div class="msg-box">
+                                 <i class="fa fa-bell noti-bell" style="font-size:20px"><span style="display:inline-block;background-color:#996b88;border-radius:14px;padding:7px;left: 14px; top:-14px;position:absolute;color:#fff;font-size:12px;border:none" ng-if="noteLen > 0 " ng-cloak>{{noteLen}}</span></i>
+
+                                 <ul class="all-notify app-drp">
+
+                                    <li> <h6 style="text-align: center">Notification(s)</h6> </li>                                    
+                                    <li><button style="color:green;" ng-click = "addAllNote()">Add all notifications to attendance list </button></li>
+                                    <li ng-repeat = "note in allNote" style="text-align: left" class="note-list-li" ng-click="viewNote(note.ref_id)">
+                                       <img src="{{note.sender_profile_pic_url}}" style="width: 32px; height:32px">
+                                        <aside>
+                                            <p>{{note.sender_firstname}} {{note.sender_lastname}}
+                                                <span>{{note.message}}</span>
+                                                <span>{{note.sent_date}}</span>
+                                            </p>                                                 
+                                        </aside>                                                
+                                    <li>
+
+                                 </ul>
+                            </div>
+                            <!--<div class="msg-box">
+                                <i class="fa fa-envelope" aria-hidden="true" style="font-size:20px;color:#fff;position:relative;top:4px;cursor:pointer">
+                                <span style="display:inline-block;background-color:#996b88;border-radius:14px;padding:7px;left: 14px; top:-14px;position:absolute;color:#fff;font-size:12px;border:none" ng-if=" msgLen > 0 " ng-cloak> {{msgLen}}</span></i>
+
+                                <ul class="all-notify app-drp">
+                                    <li> <h6 style="text-align: center">Message(s)</h6> </li>
+                                    <li ng-repeat = "msg in allMsg" class="msg-drp-list" ng-click= "viewMessage(msg.user_id,msg.message_id)" ng-if="msg.category !== 'need_doctor'">                                        
+                                        <img ng-src="{{msg.profile_pic_url}}" style="width: 32px; height: 32px">
+                                        <div>
+                                            <div style="padding:5px 0;font-size:12px;">{{msg.date | date: "mediumDate"}} &nbsp;&nbsp;{{msg.date | date: "mediumTime"}}</div>                   
+                                            <strong style="padding-left:0px;font-size:12px;">{{msg.title}} {{msg.firstname}} {{msg.lastname}}</strong>                      
+                                            <em style="font-size:12px;">{{msg.message}}</em>
+                                        <div>                                        
+                                    </li>
+                                    <li ng-repeat = "msg in allMsg" class="msg-drp-list" ng-click= "viewResponse(msg.user_id,msg.complaint_id)" ng-if="msg.category === 'need_doctor'">                                        
+                                        <img ng-src="{{msg.doctor_profile_pic_url}}" style="width: 32px; height: 32px">
+                                        <i class="fa fa-user-md" style="font-size: 32px"></i>
+                                        <div>
+                                            <small style="display:block;text-align: left">Ref {{msg.complaint_id}}&nbsp;&nbsp;&nbsp;&nbsp;{{msg.date | date: "mediumDate"}}</small>                  
+                                            <em>{{msg.message}}</em>
+                                        <div>                                        
+                                    </li>
+
+                                    <% for(var i = userInfo.patient_mail.length -1; i >= 0; i--) { %>                                                          
+                                        <div>{{getData("<%= userInfo.patient_mail[i].doctor_firstname%>","<%= userInfo.patient_mail[i].doctor_lastname %>","<%= userInfo.patient_mail[i].date %>","<%= userInfo.patient_mail[i].doctor_profile_pic_url %>","<%= userInfo.patient_mail[i].consultation_fee %>","<%= userInfo.firstname %>","<%= userInfo.ewallet.available_amount %>","<%= userInfo.patient_mail[i].doctor_id %>","<%= userInfo.patient_mail[i].service_access %>","<%= userInfo.patient_mail[i].doctor_specialty %>","<%= userInfo.patient_mail[i].message %>")}}
+                                        </div>                                                
+                                            
+                                    <% } %>
+                                </ul>
+                            </div>
+                            <div class="msg-box">
+                                <i class="fa fa-calendar" aria-hidden="true" style="font-size:20px;color:#fff;position:relative;top:4px;cursor:pointer"><span style="display:inline-block;background-color:#996b88;border-radius:14px;padding:7px;left: 14px; top:-14px;position:absolute;color:#fff;font-size:12px;border:none" ng-if="appLen > 0 " ng-cloak>{{appLen}}</span></i>
+                                <ul class="all-notify app-drp">
+                                    <li> <h6 style="text-align: center">Appointment(s)</h6> </li>
+                                    <li ng-repeat = "app in allApp" class="msg-drp-list" ng-click= "viewAppointment(app.session_id)">                                       
+                                        <img ng-src = "{{app.profilePic}}" style="width: 32px; height: 32px">
+                                        <div>                   
+                                            <span>{{app.title}} {{app.firstname}} {{app.lastname}}</span>                      
+                                            <em>Hi, you have an appointment with me.</em>
+                                        <div>                                        
+                                    </li>                                                         
+                                </ul>
+                            </div>
+                            <div class="msg-box">
+                                <i class="fa fa-video-camera" aria-hidden="true" style="font-size:20px;color:#fff;position:relative;top:4px;cursor:pointer"><span style="display:inline-block;background-color:#996b88;border-radius:14px;padding:7px;left: 14px; top:-14px;position:absolute;color:#fff;font-size:12px;border:none" ng-if="videoLen > 0 " ng-cloak>{{videoLen}}</span></i>
+                                <ul class="all-notify app-drp">
+                                    <li> <h6 style="text-align: center">Video Call Notification</h6> </li>
+                                    <li ng-repeat = "call in holdVideoCallResponse" class="msg-drp-list" ng-click= "viewVideoAppointment(call.message_id)">
+                                        <div>                 
+                                            <span>From :  {{call.title}} {{call.firstname}} {{call.lastname}}</span>                      
+                                            <em>Hi, your {{call.type}} was granted! conversation holds in less than {{call.time}} minutes.Hang on!</em>
+                                        <div>                                        
+                                    </li>                                                         
+                                </ul>
+                            </div>
+                           <div class="msg-box">
+                                <i class="fa fa-phone" aria-hidden="true" style="font-size:20px;color:#fff;position:relative;top:4px;cursor:pointer"><span style="display:inline-block;background-color:#996b88;border-radius:14px;padding:7px;left: 14px; top:-14px;position:absolute;color:#fff;font-size:12px;border:none" ng-if="<%= userInfo.appointment.length %> > 0 " ng-cloak>{{audioLen}}</span></i>
+                                <ul class="all-notify app-drp">
+                                    <li> <h6 style="text-align: center">Audio Call Notification</h6> </li>
+                                    <li ng-repeat = "call in holdAudioCallResponse" class="msg-drp-list">                                      
+                                        
+                                        <div>
+                                                     
+                                            <span>From :  {{call.title}} {{call.firstname}} {{call.lastname}}</span>                      
+                                            <em>Hi, you have {{call.type}} appointment with me by <strong>{{call.time}} minutes</strong></em>
+                                        <div>                                        
+                                    </li>                                                         
+                                </ul>
+                            </div>-->
+                            <div class="profile-drp">                            
+                                <img src="<%= userInfo.profile_pic_url %>" style="width: 32px; height: 32px; border-left: 1px solid grey;border-bottom: 1px solid grey;border-top: 1px solid grey;box-shadow:0px 2px 4px grey;cursor:pointer">
+                                <strong style="color:#fff;font-weight: 500;padding: 5px 10px 5px 5px;border-right:2px solid rgba(200,220,220,0.3);border-radius: 2px"><%= userInfo.firstname %> !</strong>
+                                <strong style="color:#fff;font-weight: 100;padding: 5px">ID <%= userInfo.user_id %></strong>
+                                <ul>
+                                    <li><a href="#/edit-picture"> Change profile picture </a></li>
+                                    <li><a href="#/pharmacy-edit-profile">Edit profile</a></li>                                    
+                                    <li ng-click="logout()">Logout</li>
+                                </ul>
+                            </div>                            
                         </div>
                     </div>
                 </div>
@@ -96,117 +164,98 @@
                 Home Slider Start
         *************************************-->
        
-        <!--************************************
-                Main Start
-        *************************************-->
-        <main id="main" class="tg-main-section tg-haslayout">
-            <div class="container-fluid">
+        <!--************************************-->
+        <main id="main" class="tg-main-section tg-haslayout" style="padding-top:0;">
+            <div class="container-fluid" style="padding:0;margin:0;overflow-x:hidden" ng-controller="pharmacyCenterDashboardController">                
                 <div class="row">
-                    <div class="col-lg-9 col-md-9 col-sm-8 pull-right" ng-controller="pharmacyCenterDashboardController">
+                    <div class="col-lg-9 col-md-9 col-sm-8 col-xs-12 pull-right" ng-controller="balanceController">
                         <div class="row">
-                            <div class="col-sm-12 col-md-9 col-lg-9">
+                                <div class="col-xs-4 col-md-4">
+                                    <h5 style="color:#000;text-align:righ">Pharmacy Dashboard</h5>                            
+                                </div>
+                                <div class="col-xs-7 col-md-7 col-lg-7">                            
+                                    <h5>
+                                        <i class="fa fa-question-circle" aria-hidden="true" style="font-size: 22px;color:#81a51e"></i>
+                                        <a href="#/help" style="color:#000;font-size:18px;padding-right: 40px;text-decoration:underline">Need help?</a>
+                                <i class="fa fa-user-md" style="font-size: 22px;color:#81a51e"></i> <a href="#/need-specialist" style="color:#000;font-size: 18px;padding: 0px;text-decoration:underline">Find patient prescription</a>
+                                        <span style="color:#000;float:right;font-size:12px">Available balance | <em style="font-size: 18px">{{balance}}</em></span>
+                                    </h5>                          
+                                    
+                                </div>
+                            </div>
+                        <div class="row">
+                            <div class="col-sm-12 col-md-11 col-lg-11">                                
                                 <div class="view-animate-container row" >  
                                     <div class="view-animate" ng-view >
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-12 col-md-3 col-lg-3" style="padding: 0px 3px">
-                                <aside id="tg-sidebar">                                                           
-                                <div class="tg-widget tg-tab-widget" ng-controller="checkingOutPatientController">
-                                <h3>Attendance list</h3>
-                                <form>
-                                    <input type="text" placeholder="Look up a patient in this list"/>
-                                    <input type="button" value="Find"/>
-                                </form>
-                                <div>
-                                    <ul style="height: 600px; overflow-x: auto">
-                                        <li ng-repeat="person in attendanceList" style="list-style: none; margin-bottom: 10px; border-bottom: 1px dashed rgba(0,0,0,0.3);padding-bottom: 5px; cursor:pointer" ng-click="patientPrescription(person.ref)">
-                                            <img ng-src="{{person.profile_pic_url}}" style="width:32px; height:32px"/>
-                                            <span>{{person.firstname}}  {{person.lastname}}<span style="display:block;font-size: 12px">{{person.date | date: "mediumDate" }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{person.date | date: "mediumTime"}}</span></span>                                            
-                                        </li>
-                                    </ul>
-                                </div>
-                               </aside>
-                            </div>                 
+                            </div>                           
                         </div>
                     </div>
-                    <div class="col-lg-3 col-md-3 col-sm-4">
-                        <aside id="tg-sidebar">                            
-                            
-                            <div class="tg-widget tg-widget-accordions">
-                                <h3>Dashboard</h3>
-                                <ul class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                                <li class="panel panel-default">
-                                        <span ng-click="dashboardhome()"><i class="fa fa-home" style="font-size: 32px; color: rgba(0,100,0,0.7);margin-right: 10px; cursor:pointer" title="Back to dashboard home"></i></span>                                        
-                                        
-                                    </li>                                                          
-                                    
+                    
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12"  style="padding:0;">
+                        <aside id="tg-sidebar" style="padding-left: 15px;background-color:#397432">
+
+                             <div class="tg-widget tg-tab-widget" ng-controller="checkingOutPatientController">
+                                <h3>Attendance list</h3>                                
+                                <div>
+                                    <ul style="max-height: 600px; overflow-x: auto;background-color:#d2ed88;padding-left:20px">
+                                        <li style="margin-bottom: 10px"><input type="text" ng-model="person.pharmacy.patient_lastname" placeholder="Filter by name, Date or Ref No"></li>
+                                        <li ng-repeat="person in attendanceList | filter: person.pharmacy.patient_lastname || person.pharmacy.patient_firstname || person.pharmacy.date || person.pharmacy.ref_id" style="list-style: none; margin-bottom: 10px; border-bottom: 1px dashed rgba(0,0,0,0.3);padding-bottom: 5px; cursor:pointer" ng-click="viewNote(person.ref_id)">
+                                            <img ng-src="{{person.pharmacy.patient_profile_pic_url}}" style="width:32px; height:32px"/>
+                                            <span style="display:inline-block; margin-left:10px; font-weight:bold">{{person.pharmacy.patient_firstname}}  {{person.pharmacy.patient_lastname}} </span>                                            
+                                        </li>
+                                    </ul>
+                                </div>                                
+                            </div>
+
+                            <div class="tg-widget tg-widget-accordions" style="padding-left: 15px;background-color:#131f11">
+                                
+                                <ul class="panel-group" id="accordion" role="tablist" aria-multiselectable="true" style="background-color:inherit">                                    
                                     <li class="panel panel-default">
-                                        <div class="tg-panel-heading" role="tab" id="headingSix">
+                                        <div class="tg-panel-heading" role="tab" id="headingThree">
                                              <h3 class="panel-title" style="border-bottom: 1px solid rgba(0,0,0,0.3)">
-                                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="/#collapseSix" aria-expanded="false" aria-controls="collapseSix" style="color:rgba(0,180,0,0.6); font-size: 18px;">Appointments(0)</a>
+                                                <i class="icon-Pills icon-style" title="View all prescriptions" style="color:#fff;"></i>
+                                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="/#collapseThree" aria-expanded="false" aria-controls="collapseThree" style="color:#fff; font-size: 22px;">Stock</a>
                                             </h3>
                                         </div>
-                                        <div id="collapseSix" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingSix">
-                                            <div class="panel-body">
-                                                <ol>
-                                                <% for(var k = 0; k < userInfo.medications.length; k++) { %>
-                                                <li ng-click="viewPrescription(<%= userInfo.appointments[k].doctor_id %>)" style="padding: 5px 2px; cursor: pointer"> </li>
-                                                <% } %>
-                                                </ol>
-                                            </div>
-                                        </div>
-                                    </li>                                                                  
-                                    <li class="panel panel-default">
-                                        <div class="tg-panel-heading" role="tab" id="headingTwo">
-                                            <h3 class="panel-title" style="border-bottom: 1px solid rgba(0,0,0,0.3)">
-                                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="/#collapseTwo" aria-expanded="true" aria-controls="collapseOne" style="color:rgba(0,180,0,0.6); font-size: 18px;">Account profile</a>
-                                            </h3>
-                                        </div>
-                                        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                                            <div class="panel-body">
-                                                <p><a href="#/pharmacy-edit-profile">Edit your profile</a></p>
-                                                <p><a href="#/pharmacy/drug-service/update">Update drug stock</a></p>                       
+                                        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+                                            <div class="panel-body">                                                
+                                                <a href="#/pharmacy/drug-service/update" style="text-indent:20px;color:#d2ed88">Update drug stock</a> 
                                             </div>
                                         </div>
                                     </li>
-                                    <li class="panel panel-default">
-                                        <div class="tg-panel-heading" role="tab" id="headingTwo">
-                                            <h3 class="panel-title" style="border-bottom: 1px solid rgba(0,0,0,0.3)">
-                                                <a role="button" data-toggle="collapse" data-parent="#accordion" href="/#collapseFive" aria-expanded="true" aria-controls="collapseOne" style="color:rgba(0,180,0,0.6); font-size: 18px;">Chat History</a>
-                                            </h3>
-                                        </div>
-                                        <div id="collapseFive" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFive">
-                                            <div class="panel-body">
-                                                                                          
-                                            </div>
-                                        </div>
-                                    </li>                                                  
+
+                                    <!-- change all to angularjs -->                                                                 
+                                    
                                     <li class="panel panel-default">
                                         <div class="tg-panel-heading" role="tab" id="headingFour">
                                              <h3 class="panel-title" style="border-bottom: 1px solid rgba(0,0,0,0.3)">
-                                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="/#collapseFour" aria-expanded="false" aria-controls="collapseThree" style="color:rgba(0,180,0,0.6); font-size: 18px;">Payment & Wallet</a>
+                                                <i class="fa fa-money" style="color:#fff;font-size: 32px"></i>
+                                                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="/#collapseFour" aria-expanded="false" aria-controls="collapseThree" style="color:#fff ;font-size: 21px"> &nbsp;PAYMENT & WALLET</a>
                                             </h3>
                                         </div>
                                         <div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
-                                            <div class="panel-body">
-                                                {{convertToDollar('<%= userInfo.ewallet.available_amount %>')}}
-                                                <p>Avalaible amount | <strong>{{amount | currency}}</strong></p>
-                                                <p><a href="#/wallet">Fund wallet</a></p>
-                                                <p><a href="#/wallet">View all Transactions</a></p>
+                                            <div class="panel-body">                                                
+                                                <p><a href="#/wallet" style="text-indent:20px;color:#d2ed88">Fund wallet</a></p>
+                                                <p><a href="#/transfer" style="text-indent:20px;color:#d2ed88">Transfer fund</a></p>
+                                                <p><a href="#/transactions" style="text-indent:20px;color:#d2ed88">View Transactions</a></p>
                                             </div>
                                         </div>
                                     </li>
-                                    <li class="panel panel-default">
-                                        <h3 class="panel-title"><a href="/user/logout">Signout</a></h3>
-                                    </li>
+                                   
                                 </ul>
                             </div>
                         </aside>
                     </div>
                 </div>
-            </div>
+            </div><!-- main content -->
+            
         </main>
+        
+
+
+        
         <!--************************************
                 Main End
         *************************************-->
@@ -214,109 +263,6 @@
                 Footer Start
         *************************************-->
         <footer id="footer" class="tg-haslayout">
-            <div class="tg-threecolumn">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div class="tg-footercol">
-                                <strong class="logo">
-                                    <a href="#">
-                                        <img src="/assets/images/logo2.png" alt="image description">
-                                    </a>
-                                </strong>
-                                <div class="tg-description">
-                                    <p>We specialize in offering help to find your best medical solution.</p>
-                                </div>
-                                <ul class="tg-info">
-                                    <li>
-                                        <i class="fa fa-home"></i>
-                                        <address>1 Nwodo street GRA Enugu, Enugu State</address>
-                                    </li>
-                                    <li>
-                                        <i class="fa fa-envelope"></i>
-                                        <em><a href="#">info@domain.com</a></em>
-                                    </li>
-                                    <li>
-                                        <i class="fa fa-phone"></i>
-                                        <em><a href="#">+234 8064245256</a></em>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="tg-footercol">
-                                <div class="tg-heading-border tg-small">
-                                    <h4>featured doctors</h4>
-                                </div>
-                                <div class="tg-widget tg-featured-doctore">
-                                    <ul>
-                                        <li>
-                                            <figure class="tg-imgdoc">
-                                                <img src="/assets/images/img-02.jpg" alt="image description">
-                                                <div class="tg-img-hover">
-                                                    <a href="#"><i class="icon-zoom"></i></a>
-                                                </div>
-                                            </figure>
-                                            <div class="tg-docinfo">
-                                                <span class="tg-docname"><a href="#">Dr. Jennifer Bada-Ellzey, MD, MPH</a></span>
-                                                <span class="tg-stars">
-                                                    <em>Ranking:</em>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                </span>
-                                                <div class="tg-designation">
-                                                    <p><a href="#">Family &amp; Community Medicine</a></p>
-                                                </div>
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <figure class="tg-imgdoc">
-                                                <img src="/assets/images/img-03.jpg" alt="image description">
-                                                <div class="tg-img-hover">
-                                                    <a href="#"><i class="icon-zoom"></i></a>
-                                                </div>
-                                            </figure>
-                                            <div class="tg-docinfo">
-                                                <span class="tg-docname"><a href="#">Dr. Curtis O. Ballard, MD</a></span>
-                                                <span class="tg-stars">
-                                                    <em>Ranking:</em>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star"></i>
-                                                    <i class="fa fa-star-o"></i>
-                                                    <i class="fa fa-star-o"></i>
-                                                </span>
-                                                <div class="tg-designation">
-                                                    <p><a href="#">Orthopaedic Surgery &amp; Sports Medicine</a></p>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="tg-footercol">
-                                <div class="tg-heading-border tg-small">
-                                    <h4>Useful links</h4>
-                                </div>
-                                <div class="tg-widget tg-usefullinks">
-                                    <ul>
-                                        <li><a href="#">About Us</a></li>
-                                        <li><a href="#">Latest Blog</a></li>
-                                        <li><a href="#">Terms and Conditions</a></li>
-                                        <li><a href="#">Privacy Policy</a></li>
-                                        <li><a href="#">Contact Us</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="tg-footerbar tg-haslayout">
                 <div class="tg-copyrights">
                     <p>2015 All Rights Reserved © DocDirect</p>
@@ -562,7 +508,7 @@
         <script src="/assets/js/moment.min.js"></script>
         <script src="/assets/js/angular-moment.min.js"></script>
         <script src="/assets/js/ui-bootstrap-tpls.js"></script>
-        
+
    <!--<script src="http://angular-ui.github.com/bootstrap/ui-bootstrap-tpls-0.2.0.js"></script>-->
 
        <!--<link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css" rel="stylesheet">-->

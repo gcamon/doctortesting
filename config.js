@@ -49,12 +49,7 @@ var configuration = function (app,model) {
 	app.use(bodyParser.json());
 	app.use(multer({dest: './uploads'}).any());
 	
-	var options = {
-    debug: true
-  }
-
-	app.use('/peerjs',ExpressPeerServer(app,options))
-
+	
 	app.use(function(req,res,next){
 		console.log(req.url);
 		console.log(req.session);

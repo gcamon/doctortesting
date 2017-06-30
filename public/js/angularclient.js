@@ -44,6 +44,11 @@ app.config(function($routeProvider){
     controller: 'signupController'
   })
 
+  .when("/phone-verification",{
+    templateUrl: "/assets/pages/signups/verify-number.html",
+    controller: 'verifyPhoneController'
+  })
+
   .when("/appointment",{
     templateUrl: '/assets/pages/in-patient-dashboard.html',
     controller: 'appointmentController'
@@ -99,6 +104,11 @@ app.config(function($routeProvider){
  .when("/user-otp",{
   templateUrl:"/assets/pages/finance/one-time-pin.html",
   controller: 'walletController'
+ })
+
+ .when("/billing-otp",{
+  templateUrl: "/assets/pages/finance/billing.html",
+  controller: 'billingController'
  })
 
  //end of wallet route
@@ -1292,7 +1302,7 @@ app.controller('signupController',["$scope","$http","$location","$window","templ
   $scope.submit = function(type){
         $scope.user.typeOfUser = type || $scope.user.typeOfUser;
         if($scope.user.city && $scope.user.city !== "") {
-          var capitalize = $scope.user.city.charAt(0).toUpperCase() + $scope.user.city.slice(1);
+          var capitalize = $scope.user.city.charAt(0).toUpperCase() + $scope.user.city.slice(1); //capitalize the letter that starts a sentence
           $scope.user.city = capitalize;
         }
         if(templateService.singleForm)
@@ -1311,7 +1321,7 @@ app.controller('signupController',["$scope","$http","$location","$window","templ
             case 'Patient':
               if(objLen < patient.length){
                 alert(msg);
-                break;;
+                break;
               } else {
                 validate($scope.user);
               }
@@ -1359,13 +1369,29 @@ app.controller('signupController',["$scope","$http","$location","$window","templ
       }
     }
 
+    if(data.username.length < 6){
+      alert("username not more than six letters in length");
+      return;
+    } 
+
+    if($scope.usernameError !== "") {
+      alert("Username already taken by another user.");
+      return;
+    }
+
     if(data.password !== data.password2){
       alert("Passwords does not match!");
       $scope.misMatch = true;
       return;
     } else {
       if(data.agree === true) {
-        sendForm(data)
+        $rootScope.formData = data;
+        var sendPin = $resource("/user/verify-phone-number",null,{go:{method:"PUT"}});
+        sendPin.go({phone:$scope.user.phone},function(data){
+          alert(data.message);
+          $location.path("/phone-verification");
+        });        
+        
       } else {
         alert("You have to agree to our terms and conditions");
         return;
@@ -1376,11 +1402,10 @@ app.controller('signupController',["$scope","$http","$location","$window","templ
   }
   var toStr;
 
-  $scope.user.phone = 080
   $scope.$watch("user.phone",function(newVal,oldVal){
-    str = newVal.toString();
+    str = "" + newVal;
     if(str.length >= 10) { // note this could be modified to accomodate foreign numbers
-      signUp.get($scope.user,function(res){
+      signUp.get({phone:$scope.user.phone},function(res){
         if(res.error === true){
           $scope.showErr = res.errorMsg;
         } else {
@@ -1392,9 +1417,37 @@ app.controller('signupController',["$scope","$http","$location","$window","templ
     }
   });
 
-  function sendForm(data){    
-    signUp.userSignup(data,function(response){
-      if (!response.error &&  $scope.numErr === false) {              
+  $scope.$watch("user.username",function(newVal,oldVal){
+    str = "" + newVal
+   $scope.info = "Username must be more than six letters. Must be something you can remember."
+    if(str.length >= 6){
+      $scope.info = "";
+      signUp.get({username:$scope.user.username},function(res){
+        if(res.error === true){
+          $scope.usernameError = res.errorMsg;
+        } else {
+          $scope.usernameError = "";
+        }
+      })
+    }
+  })
+
+
+  //password must be checked lastly. Very important.
+
+}]);
+
+
+app.controller("verifyPhoneController",["$rootScope","$scope","$resource","$window",function($rootScope,$scope,$resource,$window){
+  $scope.verify = {};
+  $scope.sendForm = function (){
+    $rootScope.formData.v_pin = $scope.verify.pin;
+    var signUp = $resource("/user/signup",null,{userSignup:{method: "POST"}})    
+    signUp.userSignup($rootScope.formData,function(response){
+      console.log(response)
+      alert(response.message);
+      $scope.success = response.message;
+      if(response.error === false) {              
         $window.location.href = '/login';                           
       } else {       
         $scope.error = response.errorMsg;       
@@ -1403,6 +1456,8 @@ app.controller('signupController',["$scope","$http","$location","$window","templ
   }
 
 }]);
+
+
 
 app.directive("fileModel",["$parse",function($parse){
   return {
@@ -2155,7 +2210,7 @@ Meet In-Person',docInfo)"><i class="fa fa-user"> </i> &nbsp;Meet IN-PERSON</li>
 
     ModalService.showModal({
         templateUrl: 'calender-template.html',
-        controller: "appointmentModalController"
+        controller: 'appointmentModalController'
     }).then(function(modal) {
         modal.element.modal();
         modal.close.then(function(result) {
@@ -2486,7 +2541,7 @@ app.controller("inTreatmentController",["$scope","$http","localManager","$locati
  $scope.bookAppointment = function(){
     ModalService.showModal({
         templateUrl: 'calender-template.html',
-        controller: "appointmentModalController"
+        controller: 'appointmentModalController'
     }).then(function(modal) {
         modal.element.modal();
         modal.close.then(function(result) {
@@ -4380,7 +4435,6 @@ app.controller("walletController",["$scope","$http","$rootScope","$location","Mo
  /** transfer fund logic ***/
 
   $scope.$watch("pay.amount",function(newVal,oldVal){
-    console.log(newVal)
     if(oldVal && newVal !== null) {   
       $scope.str = "N" + $scope.pay.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     } else {
@@ -4410,7 +4464,7 @@ app.controller("walletController",["$scope","$http","$rootScope","$location","Mo
         sendParam = {userId: $scope.pay.userId}
       }
       var creditor = $resource("/user/verify");
-      var response = creditor.get(sendParam,function(data){
+      creditor.get(sendParam,function(data){
         if(data.error){
           alert(data.error)
         } else if(data.user_id && data.user_id !== user.user_id){          
@@ -4489,7 +4543,7 @@ app.controller("walletController",["$scope","$http","$rootScope","$location","Mo
         userId: $scope.pay.beneficiaryId
       }
       var Debitor = walletService.resource("/user/tranfer/confirmation",{userId: null},{confirmed:{method:'POST'}});
-      var confirmed = Debitor.confirmed(payObj,function(data){
+      Debitor.confirmed(payObj,function(data){
         alert(data.message);
         if(data.balance) {
           $rootScope.balance = "N" + data.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -4587,8 +4641,7 @@ app.controller("walletController",["$scope","$http","$rootScope","$location","Mo
     });*/
   }
 
-  $scope.$watch("pay.acceptanceOtp",function(newVal,oldVal){
-    
+  $scope.$watch("pay.acceptanceOtp",function(newVal,oldVal){    
     if(newVal > oldVal && $scope.pay.acceptanceOtp.length === 6){
       var date = + new Date();
       var pin = $scope.pay.acceptanceOtp;
@@ -4630,9 +4683,7 @@ app.controller("walletController",["$scope","$http","$rootScope","$location","Mo
         }
       });
     }
-  });
-
-  
+  });  
 
  $scope.invoice = function(){
   $scope.viewInvoice = true;
@@ -4646,6 +4697,104 @@ app.controller("walletController",["$scope","$http","$rootScope","$location","Mo
   $scope.viewInvoice = false;
   $scope.viewTransactions = true;
  }
+}]);
+
+//just like wallet coontroller above. Takes care of patients billing.iru
+app.controller("billingController",["$scope","$http","$rootScope","$location","ModalService","requestManager","templateService","localManager","$resource","walletService",
+  function($scope,$http,$rootScope,$location,ModalService,requestManager,templateService,localManager,$resource,walletService){
+    $scope.pay = {};
+    console.log($rootScope.refData);
+    $scope.$watch("pay.otp",function(newVal,oldVal){
+      if(newVal > oldVal && $scope.pay.otp.length === 6){
+        var date = + new Date();
+        var pin = $scope.pay.otp;
+        var str = "";
+        var count = 0;
+        for(var i = 0; i < pin.length; i++){
+          count++;      
+          if(count % 3 === 0) {
+            str += pin[i];
+            str += " ";
+          } else {
+            str += pin[i];
+          } 
+        }
+
+        var newStr = str.replace(/\s*$/,"");
+        var payObj = {
+          otp: newStr,
+          date: date,
+          message: "Billing",
+          total: $rootScope.refData.rawAmount,// this value is set from the connroller that brought about this on
+          patientId: $rootScope.refData.pharmacy.patient_id,
+          doctorId: $rootScope.refData.pharmacy.doctor_id,
+          patient_firstname: $rootScope.refData.pharmacy.patient_firstname,
+          patient_lastname: $rootScope.refData.pharmacy.patient_lastname,
+          prescriptionId: $rootScope.refData.pharmacy.prescriptionId,
+          refId: $rootScope.refData.ref_id,
+          doctorPhone: $rootScope.refData.pharmacy.doctor_phone
+        }
+        console.log(payObj);
+        var bill = $resource("/user/payment/patient-billing",null,{sendBill:{method: "POST"}});
+        bill.sendBill(payObj,function(data){         
+          console.log(data)
+          templateService.playAudio(2);          
+          $rootScope.balance = "N" + data.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+          if(data.balance)
+            $scope.isPaid = true;          
+          alert(data.message);
+        });
+      }
+    });
+    /*
+    var sendObj = {
+      user_id: "6763463734",
+      amount: 4000,
+      otp: "11stytty",
+      time: + new Date()
+    }
+    var bill = $resource("/user/payment/patient-billing",{patientId:patientId},{sendBill:{method: "POST"}});
+    bill.sendBill(sendObj,function(data){
+      console.log(data.success);
+    });
+
+
+    if(newVal > oldVal && $scope.pay.otp.length === 6){
+      var date = + new Date();
+      var pin = $scope.pay.otp;
+      var str = "";
+      var count = 0;
+      for(var i = 0; i < pin.length; i++){
+        count++;      
+        if(count % 3 === 0) {
+          str += pin[i];
+          str += " ";
+        } else {
+          str += pin[i];
+        }
+      }
+      var newStr = str.replace(/\s*$/,"");
+      var payObj = {
+        amount: $scope.pay.amount,
+        otp: newStr,
+        date: date,
+        message: "Fund transfer",
+        userId: $scope.pay.beneficiaryId
+      }
+      var Debitor = walletService.resource("/user/tranfer/confirmation",{userId: null},{confirmed:{method:'POST'}});
+      Debitor.confirmed(payObj,function(data){
+        alert(data.message);
+        if(data.balance) {
+          $rootScope.balance = "N" + data.balance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+          $scope.isTransfer = true;
+          $scope.isOTP = false;
+          $scope.isPhone = true;
+          $scope.isUserId = false;
+          console.log(data);
+        }
+      });
+    }
+    */
 }]);
 
 
@@ -6241,7 +6390,7 @@ app.controller("myPatientController",["$scope","$http","$location","$window","$r
       //make sure templateSevice is always iniatialize elsewhere.
       ModalService.showModal({
           templateUrl: 'calender-template.html',
-          controller: "appointmentModalController"
+          controller: 'appointmentModalController'
       }).then(function(modal) {
           modal.element.modal();
           modal.close.then(function(result) {             
@@ -6259,6 +6408,12 @@ app.controller("myPatientController",["$scope","$http","$location","$window","$r
         $scope.isToViewOldPrescription = false;
         viewed = false;
       }
+      $scope.isToSeeRecord = false;
+      $scope.isToPrescribe = false;
+       $scope.isToViewLabPrescriptionReq = false;
+      $scope.isToViewRadPrescriptionReq = false;
+      $scope.isToViewSession = false;
+      $scope.isChat = false;
     }
 
     $scope.viewMedicalHistory = function(){
@@ -6268,7 +6423,7 @@ app.controller("myPatientController",["$scope","$http","$location","$window","$r
       $scope.isToViewRadPrescriptionReq = false;
       $scope.isToViewSession = false;
       $scope.isChat = false;
-      //getPatientMedication("/doctor/get-patient/medical-record")
+      getMedicalHistory("/user/doctor/get-patient/medical-record")
     }
 
     $scope.writeNew = function(){
@@ -6292,8 +6447,18 @@ app.controller("myPatientController",["$scope","$http","$location","$window","$r
             $scope.wroteByThisDoctor = myFoundPrescriptions;
           }
         }        
-      })
+      });
       
+    }
+
+
+    //doctor views patient medical records. 
+    var getMedicalHistory = function(url) {
+      var getMedication = $resource(url);
+      var sendObj = {id:patient.id}
+      getMedication.get(sendObj,function(data){ 
+        $scope.medicalRecordHistory = data;
+      });
     }
 
     //creates drug object for the ng-repeat on the view.
@@ -6677,14 +6842,14 @@ app.controller("appointmentModalController",["$scope","$http","moment","template
         $scope.treatment.summary = data.diagnosis.summary;
 
         $scope.treatment.provisional_diagnosis = data.diagnosis.provisional_diagnosis;
-        sendData($scope.treatment,"/doctor/session-update/save-changes","PUT");
+        sendData($scope.treatment,"/user/doctor/session-update/save-changes","PUT");
 
       } else {
         templateService.holdBriefForSpecificPatient = null;
         $scope.treatment.appointment.firstname = data.firstname; 
         $scope.treatment.appointment.lastname = data.lastname;        
         $scope.treatment.appointment.profilePic = data.profile_pic_url;
-        sendData($scope.treatment,"/doctor/patient-session","POST");
+        sendData($scope.treatment,"/user/doctor/patient-session","POST");
       }
 
 
@@ -7308,98 +7473,100 @@ app.controller("callController",["$scope",function($scope){
 
 
 //for phamarcists
-app.controller("pharmacyCenterDashboardController",["$scope","$location","templateService","localManager",
-  function($scope,$location,templateService,localManager){
+app.controller("pharmacyCenterDashboardController",["$scope","$location","templateService","localManager","$rootScope",
+  function($scope,$location,templateService,localManager,$rootScope){
     var currPage = localManager.getValue("currPageForPharmacy");
     if(currPage) {
      $location.path(localManager.getValue("currPageForPharmacy"));
     } else {
       $location.path("/referred-patients");
     }
-    $scope.attendanceList = templateService.holdList; 
+    $rootScope.attendanceList = localManager.getValue("holdPrescriptionForAttendance") || []; //display patients in attendace list when added
+
+    
 }]);
 
-app.controller("pharmacyCenterNotificationController",["$scope","$location","$http","$window","templateService","localManager",function($scope,$location,$http,
-  $window,templateService,localManager){
+app.controller("pharmacyCenterNotificationController",["$scope","$location","$resource","$window","templateService","localManager",
+  "$rootScope","mySocket",function($scope,$location,$resource,$window,templateService,localManager,$rootScope,mySocket){
 
-  $http({
-      method  : 'GET',
-      url     : "/user/pharmacy/get-referral",      
-      headers : {'Content-Type': 'application/json'} 
-      })
-    .success(function(data) {
-      templateService.holdPharmacyReferralData = data.referral;
-      localManager.setValue("pharmacyData",data.referral);
-  }); 
+  var notification = $resource("/user/center/get-notification");
+  notification.get(null,function(data){
+    $rootScope.allNote = data.diagnostic_center_notification || [];
+    console.log(data.diagnostic_center_notification);
+    $rootScope.noteLen = $rootScope.allNote.length || 0;
+  });
 
-  $scope.logout = function () {
-    localManager.removeItem("userInfo");
-    localManager.removeItem("currentPage");
-    localManager.removeItem("currentPageForPatients");
-    localManager.removeItem("currPageForPharmacy");
-    localManager.removeItem("pharmacyData");
-    localManager.removeItem("resolveUser");
-     $http({
-        method  : 'GET',
-        url     : "/user/logout",
-        headers : {'Content-Type': 'application/json'} 
-        })
-      .success(function(data) {
-        $scope.userData = data;
-        $window.location.href = '/';
-     });
-  }
+  mySocket.on("center notification",function(data){
+    templateService.playAudio(3);
+    $rootScope.allNote.unshift(data);
+    $rootScope.noteLen++;
+  });
 
-  $scope.viewNote = function(id){
+
+  
+
+  
+
+  $rootScope.viewNote = function(id){
     templateService.holdId = id;
-    var pageUrl = "/user/pharmacy/view-prescription/" + id;
-    $location.path(pageUrl);
-    localManager.setValue("currPageForPharmacy",pageUrl);
+    console.log(id);
+    var prescription = $resource("/user/pharmacy/get-referral/:refId",{refId: id});
+    prescription.get(function(data){
+      console.log(data)
+      localManager.setValue("pharmacyData",data); //pharmacyData refers to patients prescription
+      var pageUrl = "/pharmacy/view-prescription/" + id;
+      $location.path(pageUrl);
+      localManager.setValue("currPageForPharmacy",pageUrl);
+    });    
   }
 
 
   //this fn gets all notification from the back end and adds to the attendance list. this is similar to toList fn jst that instead of 
   //adding patients to the list one by one you simply all add all together.
-  $scope.addAllNote = function(){     
-    templateService.holdPharmacyReferralData.forEach(function(data){     
-      var listObj = {};
-      listObj.firstname = data.pharmacy.patient_firstname;
-      listObj.lastname = data.pharmacy.patient_lastname;
-      listObj.profile_pic_url = data.pharmacy.patient_profile_pic_url;
-      listObj.ref = data.ref_id;
-      listObj.date = data.date;
-      console.log(typeof data.ref_id)
-      var toStr = data.ref_id.toString();
-      if(!templateService.checkInTheList.hasOwnProperty(toStr)) {      
-        templateService.checkInTheList[toStr] = true;
-        templateService.holdList.push(listObj);
-      }
-    });
+  $scope.addAllNote = function(){
+    if($rootScope.allNote.length > 0) {
+      var prescriptions = $resource("/user/pharmacy/get-referral",null,{sendObj:{method:"PUT"}});
+      prescriptions.sendObj($rootScope.allNote,function(res){
+        var data = res.prescriptions; 
+        if($rootScope.attendanceList.length === 0){   
+          //templateService.holdList = data;          
+          localManager.setValue("holdPrescriptionForAttendance",data);
+          $rootScope.attendanceList = data;
+        } else {
+          for(var i = 0; i < data.length; i++){
+            $rootScope.attendanceList.push(data[i]);
+          }
+        } 
+
+        $rootScope.allNote.splice(0);
+        $rootScope.noteLen = 0;
+        //note delete from the backend 
+      });
+
+    }
   }
 
 }]);
 
-app.controller("pharmacyViewPrescriptionController",["$scope","$location","templateService","localManager",
-  function($scope,$location,templateService,localManager){ 
-  var pharmacyData = templateService.holdPharmacyReferralData = localManager.getValue("pharmacyData");  
+app.controller("pharmacyViewPrescriptionController",["$scope","$location","templateService","localManager","$rootScope","$resource",
+  function($scope,$location,templateService,localManager,$rootScope,$resource){ 
+  //var pharmacyData = templateService.holdPharmacyReferralData = localManager.getValue("pharmacyData");  
   var getCurrentPage = localManager.getValue("currPageForPharmacy");
   var getIdOfCurrentPage = getCurrentPage.split("/");
   var getLastItem = getIdOfCurrentPage[getIdOfCurrentPage.length-1];
   var convertToInt = parseInt(getLastItem);
   var refId = templateService.holdId || convertToInt;
 
-  console.log(pharmacyData)
+  
 
-  pharmacyData.forEach(function(data){      
-    if(refId === data.ref_id) {
-      $scope.refData = data;       
-      return;
-    }
-  });
+  //this $rootScope.refData will be used by all diagnostic centers to hold the refdata for a particular 
+  //patient which will be used for billingcontroller
+  $rootScope.refData = localManager.getValue("pharmacyData");
+  console.log($rootScope.refData)
 
   $scope.toAnotherPharmacy = function(){      
     var unavailableDrugArr = [];
-    $scope.refData.pharmacy.prescription_body.forEach(function(drug){   
+    $rootScope.refData.pharmacy.prescription_body.forEach(function(drug){   
       if(!drug.picked || drug.picked !== true) {
         var filter = {};
         filter.sn = drug.sn;
@@ -7411,50 +7578,160 @@ app.controller("pharmacyViewPrescriptionController",["$scope","$location","templ
       }
     });
    
-    templateService.holdPharmacyReferralData.forEach(function(data){      
-      if(refId === data.ref_id) {
-        $location.path("/search/pharmacy"); 
-        data.pharmacy.prescription_body = unavailableDrugArr;
-        templateService.holdPrescriptionToBeForwarded = data;
-        templateService.holdPrescriptionToBeForwarded.sender = "Pharmacy";     
-        return;
-      }
-    });    
-                          
+    $location.path("/search/pharmacy"); 
+    $rootScope.refData.pharmacy.prescription_body = unavailableDrugArr;
+    templateService.holdPrescriptionToBeForwarded = $rootScope.refData;
+    templateService.holdPrescriptionToBeForwarded.sender = "Pharmacy";                          
   }
 
   $scope.toList = function(firstname,lastname,profilePicUrl,ref_id,date){
     var listObj = {};
-    listObj.firstname = firstname;
-    listObj.lastname = lastname;
-    listObj.profile_pic_url = profilePicUrl;
-    listObj.ref = ref_id;
-    listObj.date = date;
-    var toStr = ref_id.toString();
-    if(!templateService.checkInTheList.hasOwnProperty(toStr)) {      
-      templateService.checkInTheList[toStr] = true;
-      templateService.holdList.push(listObj);
+    listObj.pharmacy = {}
+    listObj.pharmacy.patient_firstname = firstname;
+    listObj.pharmacy.patient_lastname = lastname;
+    listObj.pharmacy.patient_profile_pic_url = profilePicUrl;
+    listObj.ref_id = ref_id;
+    listObj.date = date;   
+    if($rootScope.attendanceList.length > 0){
+      var elemPos = $rootScope.attendanceList.map(function(x){return x.ref_id}).indexOf(ref_id)
+      if(elemPos === -1){
+        $rootScope.attendanceList.push(listObj);
+      }
+    } else {
+      $rootScope.attendanceList.push(listObj);
     }
+
+    var index = $rootScope.allNote.map(function(x){return x.ref_id}).indexOf(ref_id);
+    var found = $rootScope.allNote[index];
+    $rootScope.noteLen--;
+
   }
 
   $scope.done = function(){
 
+  }
+  // this logic is good for adding amount of picked drug to the total of all picked drugs. It may be good logic for shopping cart
+  var drugForPay = {};
+  drugForPay.pickedDrugs = [];
+  
+  var totalCost = {};
+  totalCost.sum = 0;
+  //$scope.totalCostOfDrugs = 0;
+  $scope.str = "";
+ 
+
+  $scope.$watch("refData.pharmacy.prescription_body",function(newVal,oldVal){
+    if(newVal){
+      for(var i = 0; i < newVal.length; i++){
+        if(newVal[i].picked && newVal[i].picked === true && !newVal[i].added){
+          var selectedDrug = {
+            name: newVal[i].drug_name,
+            amount: 0,
+            id: newVal[i].sn,
+            added: true
+          }
+          drugForPay.pickedDrugs.push(selectedDrug);
+          newVal[i].added = true;
+          totalCost.sum = 0;
+          updateTotal();
+         
+        } else if(newVal[i].picked === false){          
+          for(var j = 0; j < drugForPay.pickedDrugs.length; j++){                  
+            if(drugForPay.pickedDrugs[j].id === newVal[i].sn){                                                      
+              var remove = drugForPay.pickedDrugs.splice(j,1);                     
+              delete newVal[i].added;
+              break;                                         
+            }
+          } 
+          totalCost.sum = 0;
+          updateTotal();
+        }
+      }
+    }
+  },true);
+
+  $scope.drugsForSurchage = drugForPay.pickedDrugs;
+  count = 0;
+
+  $scope.$watch("drugsForSurchage",function(newVal,oldVal){
+    count++;
+    console.log(count);
+    if (newVal !== null) {
+      for(var k = 0; k < newVal.length; k++) {        
+       if(oldVal.length > 0 && newVal[k].added) {
+        totalCost.sum -= oldVal[k].amount;
+        totalCost.sum += newVal[k].amount;
+        toNaira(totalCost.sum);
+       } 
+
+      }        
+    }
+  },true); 
+
+  function updateTotal() {
+    if(drugForPay.pickedDrugs.length > 0){
+      var drugs = drugForPay.pickedDrugs;
+      for(var l = 0; l < drugs.length; l++){
+        drugs[l].added = true;
+        totalCost.sum += drugs[l].amount;
+        toNaira(totalCost.sum);
+      }
+      $scope.isFilled = true;
+    } else {
+      totalCost.sum = 0;
+      toNaira(totalCost.sum);
+      $scope.isFilled = false;
+    }
+  }
+
+  function toNaira(val){
+     $scope.str = "N" + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  // sending billing to patient which otp will be send to patient informing the patient the toal cost of the bill.
+  $rootScope.sendBill = function(patientId,oldTime) {
+    var center = localManager.getValue('resolveUser');
+    var time = + new Date();
+    $rootScope.resend = time; //sets th old time in case otp  is resend to delete the formal otp sent by thsame user.
+    $rootScope.resendPatientId = patientId;
+    var sendObj = {
+      amount : totalCost.sum,
+      userId: patientId,
+      time: time,
+      old_time: oldTime
+    }
+
+    var otp = $resource("/user/payment/verification",{userId: null},{verify:{method:'POST'}});  
+    otp.verify(sendObj,function(data){
+      if(data.success){
+        alert(data.message);
+        $rootScope.refData.amount = $scope.str; // holds the amount to pay for the otp template that will come next 
+        $rootScope.refData.rawAmount = totalCost.sum;
+        $location.path("/billing-otp");
+      } else {
+        alert(data.message);
+      }
+      
+    });
+    
   }
  
 }]);
 
 app.controller("checkingOutPatientController",["$scope","$location","templateService","localManager",
   function($scope,$location,templateService,localManager){
-  $scope.patientPrescription = function(id){
-    templateService.holdList.forEach(function(item){
-      if(item.ref === id){
+
+  /*$scope.patientPrescription = function(id){
+    var holdList = localManager.getValue("holdPrescriptionForAttendance")
+    holdList.forEach(function(item){
+      if(item.ref_id === id){
         templateService.holdId = id;
         var pageUrl = "/pharmacy/view-prescription/" + id;
         localManager.setValue("currPageForPharmacy",pageUrl); 
         $location.path(pageUrl);
       } 
     }); 
-  }
+  }*/
 
   $scope.viewLabTest = function(id){ 
     templateService.holdId = id;
@@ -7470,7 +7747,7 @@ app.controller("checkingOutPatientController",["$scope","$location","templateSer
     $location.path(pageUrl);
   }
 
-  $scope.pendingList = templateService.holdList;
+  $scope.pendingList = localManager.getValue("holdPrescriptionForAttendance");
 
 }]);
 
@@ -10217,7 +10494,6 @@ app.controller("topHeaderController",["$scope","$window","$location","$resource"
     localManager.removeItem("resolveUser")
     localManager.removeItem("userInfo");
     localManager.removeItem("heldSessionData");
-    localManager.removeItem("userInfo");
     localManager.removeItem("currentPage");
     localManager.removeItem("currentPageForPatients");
     localManager.removeItem("receiver");
@@ -10233,11 +10509,14 @@ app.controller("topHeaderController",["$scope","$window","$location","$resource"
     localManager.removeItem("holdPrescriptions");
     localManager.removeItem("hasChat");
     localManager.removeItem("videoCallerList");
-    localManager.removeItem("audioCallerList"); 
+    localManager.removeItem("audioCallerList");
+    localManager.removeItem("currPageForPharmacy");
+    localManager.removeItem("pharmacyData");
+    localManager.removeItem("holdPrescriptionForAttendance") 
   }
  
    
-}])
+}]);
 
 app.controller("displayController",["$scope","$location",function($scope,$location){
   $location.path("/specialists")
@@ -10305,6 +10584,8 @@ app.controller("patientWaitingRoomController",["$scope","$resource","$location",
 
 
 }]);
+
+
 
 
 //Drug,lab,scan factory

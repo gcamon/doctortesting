@@ -126,7 +126,9 @@ var myModel = function () {
 		patient_country: String,
 		prescription_body: [prescriptionBodySchema],
 		ref_id: Number,
-		eligible:Boolean
+		eligible:Boolean,
+		payment_acknowledgement: Boolean // use to check if patient have actually paid for a prescription through our app.
+		//if false, prescription will be deleted after one month it was created.
 	});
 
 	var transactionSchema = Schema({
@@ -296,7 +298,7 @@ var myModel = function () {
 		sender_firstname: String,
 		sender_lastname: String,
 		sender_title : String,
-		sent_date: Date,
+		sent_date: String,
 		ref_id: Number,
 		note_id: Number,
 		sender_profile_pic_url: String,
@@ -357,19 +359,20 @@ var myModel = function () {
 		sender_id: String,
 		conclusion: String,
 		type_of_test: String,
-    center_name: String,
-    center_address: String,
-    cente_city: String,
-    center_country: String,
-    test_result: Array,
-    files: Array,
-    date_sent: String,
-    ref_id: Number
+	    center_name: String,
+	    center_address: String,
+	    cente_city: String,
+	    center_country: String,
+	    test_result: Array,
+	    files: Array,
+	    date_sent: String,
+	    ref_id: Number
 	});
 
 //end for session
 	var userSchema = Schema({	  
 		firstname: String,
+		username: String,
 		lastname: String,
 		user_id: String,
 		password: String,
@@ -441,7 +444,8 @@ var myModel = function () {
 			general: Boolean,
 			particular: Array // sets the presence of the user and controls who sends messages to the user.
 		},
-		watch_list: Array		
+		city_grade: Number,
+		watch_list: Array
 	},{
 		collections: "userinfos"
 	})
@@ -466,9 +470,38 @@ var myModel = function () {
 		collections: "helpinfos"
 	});
 
-	var DocRequestSchema = Schema({
+	var otpSchema = Schema({
+		expirationDate: {
+			type: Date,
+			expires: 3600
+		},		
+		createdAt: {
+			type: Date,
+			expires: Number
+		},		
+		user_id: String,
+		time: Number,
+		amount: Number,
+		otp: String,
+		senderId: String
+	},{
+		collections:"otpinfos"
+	});
 
-	})
+	var phoneVerificationSchema = Schema({
+		expirationDate: {
+			type: Date,
+			expires: 3600
+		},		
+		createdAt: {
+			type: Date,
+			expires: Number
+		},		
+		phone: Number,
+		pin: String
+	},{
+		collections: "phoneVerify"
+	});
 
 	var pinSchema = Schema({
 		voucher: Array,
@@ -513,6 +546,8 @@ var myModel = function () {
 	models.pins = mongoose.model("pininfo",pinSchema);
 	models.communication = mongoose.model("callinfo",inConversationSchema);
 	models.chats = mongoose.model("chatinfos",chatSchema);
+	models.otpSchema = mongoose.model("otpinfos",otpSchema);
+	models.verifyPhone = mongoose.model("phoneVerify",phoneVerificationSchema);
 	//models.requests = mongoose.model("requestinfos",chatSchema);
 	/*models.award = mongoose.model('awardinfo', AwardSchema);
 	models.education = mongoose.model('educationinfo', EducationSchema);

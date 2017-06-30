@@ -18,7 +18,7 @@ var express = require('express'),
   placement = require("./placement"),
   mySocket = require("./socket"),
   port = process.env.PORT || 8080;
-  
+
   var ExpressPeerServer = require('peer').ExpressPeerServer;
 
     
@@ -44,5 +44,11 @@ payments(model,sms,io);
 placement(model,sms);
 mySocket(model,io)
 
+getA(function(val){
+  console.log(val);
+})
 
-
+function getA(cb){
+  var me = "obinna"
+  cb(me)
+}

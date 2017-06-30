@@ -781,17 +781,18 @@
 
         <div class="modal fade tg-user-modal" tabindex="-1" role="dialog">
             <div class="tg-modal-content">
-                <ul class="tg-modaltabs-nav" role="tablist">
+                <!--<ul class="tg-modaltabs-nav" role="tablist">
                     <li role="presentation" class="active"><a href="#tg-signin-formarea" aria-controls="tg-signin-formarea" role="tab" data-toggle="tab">sign in</a></li>
                     <li role="presentation"><a href="#tg-signup-formarea" aria-controls="tg-signup-formarea" role="tab" data-toggle="tab">sign up</a></li>
-                </ul>
+                </ul>-->
                 <div class="tab-content tg-haslayout">
+                    <h4 style="text-align:center">sign in</h4>
                     <div role="tabpanel" class="tab-pane tg-haslayout active" id="tg-signin-formarea" ng-controller="loginController">
                         <form class="tg-form-modal tg-form-signin"> <!--action='/user/login' method="POST" enctype="application/x-www-form-urlencoded"-->
                         <span style="color:red" ng-cloak>{{error}}</span>
                             <fieldset>
                                 <div class="form-group">
-                                    <input type="email" class="form-control" placeholder="Email Address" name="email" ng-model="login.email">
+                                    <input type="text" class="form-control" placeholder="Username" name="username" ng-model="login.username">
                                 </div>
                                 <div class="form-group">
                                     <input type="password" class="form-control" placeholder="Password" name="password" ng-model="login.password">

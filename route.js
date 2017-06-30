@@ -70,8 +70,6 @@ var basicRoute = function (model,sms,io) {
     }
   });
 
-  
-
   router.get("/user/view",function(req,res){
     if(req.user){
       //getSocketInstance(req)
@@ -786,20 +784,87 @@ var basicRoute = function (model,sms,io) {
     });
 
     
-
-    //this route gets all referral for a pharmacy.
-    router.get("/pharmacy/get-referral",function(req,res){
+    router.get("/user/center/get-notification",function(req,res){
       if(req.user){
-        model.user.findOne({user_id:req.user.user_id},{referral:1},function(err,referral){
-          if(referral) {
-            res.send(referral);
+        model.user.findOne({user_id:req.user.user_id},{diagnostic_center_notification:1,_id:0},function(err,data){
+          if(err) throw err;
+          res.send(data);
+        });
+      } else {
+        res.redirect("/login");
+      }
+
+    });
+
+    //this route gets the individual prescription for a patient 
+    router.get("/user/pharmacy/get-referral/:refId",function(req,res){
+      if(req.user){
+        var toNum = parseInt(req.params.refId)
+        model.user.findOne({user_id:req.user.user_id},{referral:1,_id:0},function(err,data){
+          if(err) throw err;          
+          var elemPos = data.referral.map(function(x){return x.ref_id}).indexOf(toNum);
+          var found = data.referral[elemPos]
+          res.send(found);
+          console.log(found)
+        });
+      } else {
+        res.redirect("/login")
+      }
+    })
+    //this route gets all referral for a pharmacy.
+    router.put("/user/pharmacy/get-referral",function(req,res){
+      if(req.user){
+        model.user.findOne({user_id:req.user.user_id},{referral:1,_id:0},function(err,data){
+          if(err) throw err;
+          if(data) {
+            var list = [];
+            var filter = {};
+            var toStr;
+            for(var i = 0; i < req.body.length; i++){
+              toStr = req.body[i].ref_id.toString();
+              if(!filter.hasOwnProperty(toStr)){
+                var elemPos = data.referral.map(function(x){return x.ref_id}).indexOf(req.body[i].ref_id);
+                var found = data.referral[elemPos];
+                list.push(found);
+                filter[toStr] = "";
+              }
+            }
+
+            res.send({prescriptions:list});
           } else {
-            res.send([]);
+            res.send({});
           }
         });        
       } else {
         res.end("Unauthorized access!! Please log in")
       }
+    });
+
+
+    //this route takes care of pharmacy billing patients for purchased drugs
+    router.post("/user/patient-billing/:patientId",function(req,res){
+
+      var time = + new Date();
+      var otp = new model.otpSchema({
+        user_id: req.body.user_id,
+        time: time,
+        otp: req.body.otp,
+        amount: req.body.amount
+      });
+      
+
+      //sets the expiration time for each otp sent.
+      var date = new Date();
+      otp.expirationDate = new Date(date.getTime() + 120000);
+      otp.expirationDate.expires = 300;
+      console.log(otp);
+
+      otp.save(function(err,info){
+        if(err) throw err;
+        console.log("otp saved");
+        res.send({success:""});
+      });        
+      
     });
 
     //this route gets a notifications for the fn getAllNotification for pharmacy on the client.
@@ -974,7 +1039,7 @@ var basicRoute = function (model,sms,io) {
       //this route handle patients sending his prescription to a pharmacy by himself.Therefore the prescription obj already exist. justs to
       //add the prescription object to the chosen pharmacy.
       if(req.user){
-        console.log(req.body)
+        
         model.user.findOne(
           {
             user_id: req.body.user_id
@@ -984,7 +1049,8 @@ var basicRoute = function (model,sms,io) {
             diagnostic_center_notification:1,
             city:1,
             name:1,
-            country:1
+            country:1,
+            presence:1
 
           }).exec(function(err,pharmacy){
             var date = new Date();
@@ -1035,8 +1101,12 @@ var basicRoute = function (model,sms,io) {
             pharmacy.referral.push(refObj);
             pharmacy.diagnostic_center_notification.push(pharmacyNotification);
 
+            if(pharmacy.presence === true){
+              io.sockets.to(req.body.user_id).emit("center notification",pharmacyNotification);
+            }
+
             pharmacy.save(function(err,info){
-              if(err) throw err;
+              if(err) throw err;              
             });
 
            res.send({success:true,ref_id: ref_id}); 
@@ -1133,11 +1203,12 @@ var basicRoute = function (model,sms,io) {
             address:1,
             diagnostic_center_notification:1,
             city:1,
-            country:1
+            country:1,
+            presence:1
 
           }).exec(function(err,pharmacy){           
             if(err) throw err;            
-            var date = new Date();
+            var date = + new Date();
             var ref_id;
             if(req.body.ref_id) {
               ref_id = req.body.ref_id;
@@ -1203,13 +1274,15 @@ var basicRoute = function (model,sms,io) {
             pharmacy.referral.push(refObj);
             pharmacy.diagnostic_center_notification.push(pharmacyNotification);
 
+            if(pharmacy.presence === true){
+              io.sockets.to(req.body.user_id).emit("center notification",pharmacyNotification);
+            }
+
             model.user.findOne(
               {user_id: req.body.patient_id},{patient_notification:1,firstname:1,lastname:1,prescription_tracking:1,medications:1}
               ).exec(function(err,data){
-              if(err) throw err;
+              if(err) throw err;             
               
-              var date = + new Date();
-               
               data.patient_notification.unshift({
                 type:"pharmacy",
                 date: date,
