@@ -42,13 +42,16 @@ loginRoute(model);
 route(model,sms,io); 
 payments(model,sms,io);
 placement(model,sms);
-mySocket(model,io)
+mySocket(model,io);
 
-getA(function(val){
-  console.log(val);
-})
+var a = 1000
 
-function getA(cb){
-  var me = "obinna"
-  cb(me)
-}
+var b = 50 / 100
+
+var c = 200 * 0.5
+var d = 200 * 0.25
+
+console.log(c)
+console.log(d)
+
+

@@ -1165,6 +1165,10 @@ span.dates {
 	overflow-y:auto;
 }
 
+.disabled {
+	border: none!important;
+}
+
 .profile-drp {
 	position: relative;
 	display: inline-block;
@@ -1172,7 +1176,7 @@ span.dates {
 
 .profile-drp ul{
 	position: absolute;
-	right: -32px;
+	/*right: -32px;*/
 	top: 35px;
 	visibility: hidden;
 }
@@ -1350,6 +1354,36 @@ span.dates {
 	background-color: #7dbb30;
 }
 
+/**
+move later
+**/
+
+
+.center-noti1 {
+	width:80%;
+	text-align:right;
+	display:inline-block
+}
+
+.center-noti {
+	font-size:20px
+}
+
+.center-noti2 {
+	display:inline-block;
+	background-color:#996b88;
+	border-radius:14px;
+	padding:7px;
+	left: 14px;
+	top:-14px;
+	position:absolute;
+	color:#fff;
+	font-size:12px;
+	border:none
+}
+
+
+
 @media (max-width: 1200px) { 
 	.complain-list {
 		border: none;
@@ -1370,6 +1404,35 @@ span.dates {
 	}
 
 }
+
+
+@media (max-width:480px) {
+	.mobile-header {
+		font-size: 12px
+	}
+
+	.center-noti1 {
+		width:100%;
+		font-size: 12px
+	}
+
+	.center-noti {
+		font-size: 14px	
+	}
+
+	.center-noti2 {
+		padding: 4px!important;
+		font-size: 8px!important;
+	}
+
+	.menu-drp {
+		width: 5%;
+	}
+}
+
+
+
+
 
 .patient-complain {
 	margin-top: 30px;

@@ -17,7 +17,7 @@ var loginRoute = function(model) {
 
       // find a user whose email is the same as the forms email
       // we are checking to see if the user trying to login already exists
-      model.user.findOne({ username :  username }, function(err, user) {
+      model.user.findOne({ email :  username }, function(err, user) {
           
           // if there are any errors, return the error before anything else
           if (err) {
@@ -64,7 +64,8 @@ router.get('/user/dashboard',function(req,res){
     title: req.user.title,
     user_id: req.user.user_id,
     balance: req.user.ewallet.available_amount,
-    profile_pic_url: req.user.profile_pic_url
+    profile_pic_url: req.user.profile_pic_url,
+    city: req.user.city
   });
   } else {
     res.redirect("/login");

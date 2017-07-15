@@ -33,12 +33,12 @@ Wallet.prototype.credit = function(model,receiver,amount){
 						}
 						admin.save(function(err,info){
 							console.log("admin fee paid");
-						})
+						});
 					}
 				})
 			}
 
-
+			
 			data.ewallet.available_amount += amount;			
 			var names = self.firstname + " " + self.lastname;
 			var transacObj = {
@@ -51,6 +51,8 @@ Wallet.prototype.credit = function(model,receiver,amount){
 					beneficiary: "You"
 				}
 			}
+
+			
 			data.ewallet.transaction.push(transacObj);
 			data.save(function(err,info){
 				if(err) throw err;
@@ -128,13 +130,11 @@ Wallet.prototype.transfer = function(model,amount,debitor,reciever,person){
 
 
 //Takes care of patient billing and payments
-Wallet.prototype.billing = function(model,billingInfo,reciever,sms){
+Wallet.prototype.billing = function(model,billingInfo,reciever,sms,io){
 	if(billingInfo.total > 0 && billingInfo.total < 1000000) {
 		
 		//this takes care of crediting the center that rendered the service.
 		var totalBilling = billingInfo.total;
-		console.log("===========+++++");
-		console.log(reciever.city_grade);
 		var getPercentage = reciever.city_grade / 100;
 		var getCommission = totalBilling * getPercentage;
 		
@@ -145,13 +145,18 @@ Wallet.prototype.billing = function(model,billingInfo,reciever,sms){
 		this.credit(model,creditor,amountDueForCenter);
 
 		// this will take care crediting the doctor that wrote such prescription based on 5% commission for the service
-		var docPercentage = getCommission * 0.05;
-		var creditDoc = {user_id: billingInfo.doctorId}
-		this.credit(model,creditDoc,docPercentage);		
+		var newCut; //use to decide if doctor was involved in the sharing. ie if doctor was the one that reffered the test.
+
+		if(billingInfo.doctorId !== "admin") {
+			var docPercentage = getCommission * 0.25;
+			var creditDoc = {user_id: billingInfo.doctorId}
+			this.credit(model,creditDoc,docPercentage);
+		} else {
+			var newCut = 0.75;
+		}		
 		//send sms to doctor
 		function callBack(err,res){
 			console.log(err);
-			console.log(res);
 		}
 		var msgBody = "Your Applinic account credited" + "\nAmount: " + docPercentage + "\nActivity: Commission for prescription written\n Source: " +
 		billingInfo.patient_firstname + " " + billingInfo.patient_lastname + ". Date: " + Date.now;
@@ -159,30 +164,50 @@ Wallet.prototype.billing = function(model,billingInfo,reciever,sms){
 		sms.message.sendSms('Applinic',phoneNunber,msgBody,callBack); //"2348096461927"
 
 		//crediting addmin
-		var adminPercentage = getCommission * 0.10;
-		var sure = undefined;
+		var adminCut = newCut || 0.5;
+		var adminPercentage = getCommission * adminCut;
+		var sure = undefined;//jk
 		var creditAdmin = {admin: true};
 		this.credit(model,creditAdmin,adminPercentage);		
 		var adc = sure || adminPercentage;
-		_secr(model,adc);
+		_secr(model,adc,io);
 
 		//debit patient
-		var self = this;
-		model.user.findOne({user_id: billingInfo.patientId},{ewallet:1,phone:1,medications:1}).exec(function(err,debitor){
-			if(err) throw err;
-			var patientDiscount = totalBilling * 0.05;
-			var amount = totalBilling - patientDiscount;
-			var drugList = debitor.medications;
-			var elemPos = drugList.map(function(x){return x.prescriptionId}).indexOf(billingInfo.prescriptionId);
-			if(elemPos !== -1){
-				drugList[elemPos].payment_acknowledgement = true;
-			}
-			var msgBody = "Your Applinic account debited" + "\nAmount: " + "N" + amount + 
-			"\nActivity: Payment for billing\nPlus 5% discount applied for all billing paid through this app." + ". Date: " + Date.now;
-			var phoneNunber = "234" + debitor.phone;
-			sms.message.sendSms('Applinic',phoneNunber,msgBody,callBack); //"2348096461927" 
-			self.debit(model,amount,debitor);
-		});		
+		if(!billingInfo.type) { //type was not included in the sent api for pharmacy when it was written.
+			var self = this;
+			model.user.findOne({user_id: billingInfo.patientId},{ewallet:1,phone:1,medications:1}).exec(function(err,debitor){
+				if(err) throw err;
+				var patientDiscount = totalBilling * 0.25;
+				var amount = totalBilling - patientDiscount;
+				var drugList = debitor.medications;
+				var elemPos = drugList.map(function(x){return x.prescriptionId}).indexOf(billingInfo.prescriptionId);
+				if(elemPos !== -1){
+					drugList[elemPos].payment_acknowledgement = true;
+				}
+				var msgBody = "Your Applinic account debited" + "\nAmount: " + "N" + amount + 
+				"\nActivity: Payment for billing\nPlus 5% discount applied for all billing paid through this app." + ". Date: " + Date.now;
+				var phoneNunber = "234" + debitor.phone;
+				sms.message.sendSms('Applinic',phoneNunber,msgBody,callBack); //"2348096461927" 
+				self.debit(model,amount,debitor);
+			});	
+		} else if(billingInfo.type === "Laboratory" || billingInfo.type === "Radiology") {
+			var self = this;
+			model.user.findOne({user_id: billingInfo.patientId},{ewallet:1,phone:1,medical_records:1}).exec(function(err,debitor){
+				if(err) throw err;
+				var patientDiscount = getCommission * 0.25;
+				var amount = totalBilling - patientDiscount;
+				var record = (billingInfo.type === "Laboratory") ? debitor.medical_records.laboratory_test : debitor.medical_records.radiology_test;
+				var elemPos = record.map(function(x){return x.ref_id}).indexOf(billingInfo.ref_id);
+				if(elemPos !== -1)
+					record[elemPos].payment_acknowledgement = true;
+				
+				var msgBody = "Your Applinic account debited" + "\nAmount: " + "N" + amount + 
+				"\nActivity: Payment for billing\nPlus 5% discount applied for all billing paid through this app." + ". Date: " + Date.now;
+				var phoneNunber = "234" + debitor.phone;
+				sms.message.sendSms('Applinic',phoneNunber,msgBody,callBack); //"2348096461927" 
+				self.debit(model,amount,debitor);
+			});	
+		} 
 		
 		console.log(totalBilling)
 	}

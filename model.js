@@ -31,6 +31,7 @@ var myModel = function () {
 		center_address: String,
 		center_city: String,
 		center_country: String,
+		center_phone: Number, 
 		user_id: String,
 		unavailable_services: [service_objSchema],
 		type: String
@@ -237,7 +238,9 @@ var myModel = function () {
 		report: String,
 		conclusion: String,
 		session_id: Number,
-		files: Array
+		files: Array,
+		history: String,
+		payment_acknowledgement: Boolean //use to check if patient have actually paid for a service.
 	});
 	
 
@@ -246,15 +249,23 @@ var myModel = function () {
 	var center_refSchema = Schema({
 		test_to_run: Array,
 		patient_firstname: String,
+		age: String,
+		gender: String,
+		history: String,
 		patient_lastname: String,
 		patient_profile_pic_url: String,
 		patient_title: String,
 		patient_gender: String,
-		patient_age: Number,
+		patient_age: String,
 		session_id: Number,
 		patient_id: String,
 		test_id: Number,
-		attended: Boolean
+		attended: Boolean,
+		title: String,
+		doctor_firstname: String,
+		doctor_lastname: String,
+		doctor_id: String,
+		doctor_phone: Number
 	});
 
 	

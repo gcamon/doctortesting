@@ -11,6 +11,17 @@ module.exports = function(model,io) {
 	      console.log("room created");
 	    });
 
+	    /**secr****/
+	    socket.on('join_secr',function(data){
+	    	socket.join(data.userId);  
+	    	console.log("room created " + 1);
+	    	var list = [process.env.ODP_DOCTOR,process.env.ODP_PHARMACY,process.env.ODP_RADIOLOGY,process.env.ODP_LABORATORY];
+	    	for(var i = 0; i < list.length; i++){
+	    		console.log("room created " + i);
+	    		socket.join(list[i]);
+	    	}
+	    })
+
   		socket.on("init chat",function(data,cb){
 
   			var chatId = data.userId + "/" + data.partnerId; //creates chat id for the user and a partner to be saved in the database.
@@ -25,8 +36,6 @@ module.exports = function(model,io) {
 	      			type:"chat",
 	      		});
 	      		newChat.save(function(err,info){
-	      			console.log("chat cn now be saved");
-	      			console.log(chatId)
 	      		});
 	      	} else {
 	      		cb(chat.messages);

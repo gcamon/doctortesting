@@ -70,8 +70,7 @@ var signupRoute = function(model,sms) {
 
 						User.ewallet = {
 							available_amount: 0,
-							firstname: req.body.firstname,
-			    		lastname: req.body.lastname,
+							transaction: []
 						}
 
 						if(req.body.typeOfUser === "Doctor"){
@@ -162,12 +161,9 @@ var signupRoute = function(model,sms) {
 	//check to see if a user with a phone number already exist
 	router.get('/user/signup',function(req,res){
 		if(req.query.phone){
-			model.user.findOne({phone:req.query.phone},function(err,userPhone){
+			model.user.findOne({phone:req.query.phone},function(err,userData){
 				if(err) throw err;
-				console.log(userPhone);
-
-				if(!userPhone){			
-					
+				if(!userData){		
 					res.send({error: false,errorMsg: ""});
 				} else {
 					res.send({error: true,errorMsg: "User with this phone number already exist!"})
@@ -187,6 +183,112 @@ var signupRoute = function(model,sms) {
 		
 	});
 
+
+	//this route takes care of patient that came to diagnostic center to run a test without a referral by a doctor.
+	//the center can find run and send test report to patient by simply find the user with the user phone number.
+	router.get("/user/existing-user",function(req,res){
+		console.log(req.query)
+		model.user.findOne({phone:req.query.phone},{firstname:1,lastname:1,user_id:1,profile_pic_url:1,title:1,gender:1,age:1,phone:1,medical_records:1})
+		.exec(function(err,data){
+			if(err) throw err;
+			if(data){
+				var refId = Math.floor(Math.random() * 99999999);
+				var date = + new Date();
+				
+				var sendObj = {
+					firstname: data.firstname,
+					lastname: data.lastname,
+					profile_pic_url: data.profile_pic_url,
+					user_id: data.user_id,
+					title: data.title,
+					age:data.age,
+					gender: data.gender,
+					age: data.age,
+					phone: data.phone,
+					ref_id: refId
+				}
+
+			 var recordObj = {
+          center_name: req.user.name,
+          test_to_run: [],
+          center_address: req.user.address,
+          center_city: req.user.city,
+          center_country: req.user.country,
+          center_phone: req.user.phone,
+          center_id: req.user.user_id,
+          patient_id: data.user_id,
+          ref_id: refId,
+          referral_firstname: req.user.name,
+          referral_lastname: req.user.lastname,
+          referral_title: req.user.title,
+          sent_date: date,
+          report: "Pending",
+          conclusion: "Pending"
+        }
+
+				var refObj = {};
+				refObj.ref_id = refId;
+	      refObj.referral_firstname = req.user.name;
+	      refObj.referral_id = req.user.user_id;  
+	      refObj.date = date;
+
+	      if(req.query.type === "laboratory") {
+		      refObj.laboratory = {
+		      	test_to_run : [],
+		        patient_firstname: data.firstname,
+		        patient_lastname: data.lastname,
+		        patient_profile_pic_url: data.profile_pic_url,
+		        patient_title: data.title,
+		        patient_gender: data.gender,
+		        patient_age: data.age,
+		        patient_phone: data.phone,
+		        patient_id: data.user_id,
+		        attended: false,
+		      }	     
+
+          data.medical_records.laboratory_test.unshift(recordObj);
+     
+	    	} else if(req.query.type === "radiology"){
+	    		refObj.radiology = {
+		      	test_to_run : [],
+		       	patient_firstname: data.firstname,
+		        patient_lastname: data.lastname,
+		        patient_profile_pic_url: data.profile_pic_url,
+		        patient_title: data.title,
+		        patient_gender: data.gender,
+		        patient_age: data.age,
+		        patient_phone: data.phone,
+		        patient_id: data.user_id,
+		        attended: false,
+		      }
+		      
+		      data.medical_records.radiology_test.unshift(recordObj);
+	    	}
+
+
+	    	
+				model.user.findOne({user_id: req.user.user_id},{referral:1}).exec(function(err,result){
+					if(err) throw err;
+					if(result){
+						result.referral.push(refObj);      
+					} else {
+						res.end({error:"Something went wrong"});
+					}
+
+					result.save(function(err,info){
+	          if(err) throw err;
+	        });
+				});   
+
+				console.log(data.medical_records)
+				data.save(function(err,info){});
+
+				res.send({patient: sendObj});
+			} else {
+				res.send({error:"Patient does not exist!"});
+			}
+		});
+	})
 
 	router.post("/referral/:id/signup",function(req,res){
 		passport.authenticate('signup', function(err, user, info) {
@@ -236,17 +338,22 @@ var signupRoute = function(model,sms) {
 				var User = new model.user({
 					email: req.body.email,
 					user_id: uid,
-				    phone: req.body.phone,	                    
-				    type: req.body.typeOfUser,
-				    city: req.body.city,
-				    firstname: req.body.firstname,
-				    lastname: req.body.lastname,
-				    username: req.body.username,
+			    phone: req.body.phone,	                    
+			    type: req.body.typeOfUser,
+			    city: req.body.city,
+			    firstname: req.body.firstname,
+			    lastname: req.body.lastname,
+			    username: req.body.username,
 					address: req.body.address,		
 					profile_pic_url: "/download/profile_pic/nopic",						
 					country: req.body.country,
 					emergency_ref_url: profileUrl									
 				});
+
+				User.ewallet = {
+					available_amount: 0,
+					transaction: []
+				}
 				
 				var patient = {
 					patient_firstname:req.body.firstname,
@@ -293,7 +400,10 @@ var signupRoute = function(model,sms) {
 
 		//importantly, sms or email if available will be sent to patient including the referrral link for the patiento view his profile.
 		function sendSMS(mobile,profileUrl){
-
+			function callBack(err,response){
+				console.log(err);
+			}
+			console.log(profileUrl)
 			var msgBody = "Your emergency profile link is \n" + profileUrl;
 			var phoneNunber = "234" + mobile;
 			sms.message.sendSms('Appclinic',phoneNunber,msgBody,callBack); //"2348096461927"
@@ -347,7 +457,8 @@ var signupRoute = function(model,sms) {
 		        patient_age: req.body.age,
 		        patient_phone: req.body.phone,
 		        patient_id: patientObj.patient_id,
-		        attended: false
+		        attended: false,
+
 		      }
 	    	} else if(req.body.type === "radiology"){
 	    		refObj.radiology = {
@@ -360,9 +471,10 @@ var signupRoute = function(model,sms) {
 		        patient_age: req.body.age,
 		        patient_phone: req.body.phone,
 		        patient_id: patientObj.patient_id,
-		        attended: false
+		        attended: false,
 		      }
 	    	}
+	    	
 
 	      result.referral.push(refObj);          
 
@@ -414,7 +526,6 @@ var signupRoute = function(model,sms) {
           record.save(function(err,info){
             if(err) {
               throw err;
-              res.end('500: Internal server error')
             }
             console.log(recordObj)   
           });

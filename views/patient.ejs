@@ -62,7 +62,7 @@
                                         {{getPatientId(<%= userInfo.user_id %>, <%= userInfo.firstname %>, <%= userInfo.lastname %>)}}
                                         
                                         <li ng-repeat = "note in allNote" style="text-align: left" class="note-list-li">
-                                            <div ng-if="note.type === 'laboratory'" class="note-listings" ng-click="viewNoteLab()">
+                                            <div ng-if="note.type === 'laboratory'" class="note-listings" ng-click="viewNoteLab(note.ref_id)">
                                                 <div><em style="display:inline-block;padding-left:20px;font-size:12px">{{note.date | date: "mediumDate"}} &nbsp;&nbsp;{{note.date | date : "mediumTime"}}</em></div>
                                                 <i class="" style="font-weight:bold"> {{note.message}}</i>
                                             </div>
