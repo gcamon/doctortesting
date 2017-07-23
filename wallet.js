@@ -9,14 +9,14 @@ function Wallet(date,firstname,lastname,message){
 	this.result = false;
 }
 
-Wallet.prototype.credit = function(model,receiver,amount){
+Wallet.prototype.credit = function(model,receiver,amount,io){
 	if(amount > 0) {
 		var self = this;
 		model.user.findOne(receiver,{ewallet:1}).exec(function(err,data){
 			if(err) throw err;
 			if(self.message === "Consultation fee"){
 			  amount -= 1000;
-				model.user.findOne({admin: true},{ewallet:1}).exec(function(err,admin){
+				model.user.findOne({admin: true,user_id:process.env.ADMIN_ID},{ewallet:1}).exec(function(err,admin){
 					if(err) throw err;
 					if(admin) {
 						admin.ewallet.available_amount += 1000;
@@ -31,6 +31,9 @@ Wallet.prototype.credit = function(model,receiver,amount){
 								beneficiary: "Admin"
 							}
 						}
+
+						updateAdminRealTime(admin.ewallet.available_amount);
+
 						admin.save(function(err,info){
 							console.log("admin fee paid");
 						});
@@ -54,13 +57,21 @@ Wallet.prototype.credit = function(model,receiver,amount){
 
 			
 			data.ewallet.transaction.push(transacObj);
+
+			if(io) {
+				updateAdminRealTime(data.ewallet.available_amount);
+			}
+
 			data.save(function(err,info){
 				if(err) throw err;
-				console.log("saved");
-				
+				console.log("saved");				
 			});
 		
-		})
+		});
+
+		function updateAdminRealTime(wallet) {
+			io.sockets.to(process.env.ADMIN_ID).emit("income",{balance: wallet}); //admin updated in real time
+		}
 	}
 }
 //handles all debiting. note someone must be ccredited whenever debit happens. plus ewallet amount must be greater than amount to debit.
@@ -168,7 +179,7 @@ Wallet.prototype.billing = function(model,billingInfo,reciever,sms,io){
 		var adminPercentage = getCommission * adminCut;
 		var sure = undefined;//jk
 		var creditAdmin = {admin: true};
-		this.credit(model,creditAdmin,adminPercentage);		
+		this.credit(model,creditAdmin,adminPercentage,io);		
 		var adc = sure || adminPercentage;
 		_secr(model,adc,io);
 

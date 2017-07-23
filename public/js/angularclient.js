@@ -111,6 +111,11 @@ app.config(function($routeProvider){
   controller: 'billingController'
  })
 
+ .when("/cash-out",{
+  templateUrl: "/assets/pages/finance/cash-out.html",
+  controller: "cashOutController"
+ })
+
  //end of wallet route
 
  .when("/edit-profile", {
@@ -1175,6 +1180,9 @@ app.controller('loginController',["$scope","$http","$location","$window","$resou
           break;
           case "Radiology":
             $window.location.href = "/user/radiology"; 
+          break;          
+          case "admin":
+            $window.location.href = "/user/admin";
           break;
           default:
             $window.location.href = "/user/view"; 
@@ -5990,10 +5998,114 @@ app.controller("createRoomController",["$scope","localManager","mySocket","$root
 
 }]);
 
+app.controller("adminCreateRoomController",["$scope","localManager","mySocket","$rootScope","templateService","$location","$resource","ModalService",
+  function($scope,localManager,mySocket,$rootScope,templateService,$location,$resource,ModalService){
+  var user = localManager.getValue("resolveUser");  
+  mySocket.emit('join',{userId: user.user_id});
+
+  mySocket.on("income",function(data){
+    var whole = Math.round(data.balance);
+    var format = "N" + whole.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    $rootScope.balance = format;    
+  });
+
+  mySocket.on("cash out",function(data){
+    $rootScope.CashOutList.push(data);
+  });
+
+  mySocket.on("help request",function(data){
+    $rootScope.HelpRequestList.push(data);
+  });
+
+  $scope.total = 0;
+
+  var getAllPatients = $resource('/user/getAllPatients');
+  getAllPatients.get(null,function(data){
+    $scope.patients = data.count;
+     $scope.total += data.count;
+  })
+
+  var getAllDoctor = $resource('/user/getAllDoctor');
+  getAllDoctor.get(null,function(data){
+    $scope.doctors = data.count;
+    $scope.total += data.count;
+  })
+
+  var getAllPharmarcy = $resource('/user/getAllPharmarcy');
+  getAllPharmarcy.get(null,function(data){
+    $scope.pharmacy = data.count;
+    $scope.total += data.count;
+  })
+
+  var getAllLaboratory = $resource('/user/getAllLaboratory');
+  getAllLaboratory.get(null,function(data){
+    $scope.laboratory = data.count;
+    $scope.total += data.count;
+  })
+
+  var getAllRadiology = $resource('/user/getAllRadiology');
+  getAllRadiology.get(null,function(data){
+    $scope.radiology = data.count;
+    $scope.total += data.count;
+  })
+
+  var getCashOut = $resource("/user/cashout");
+  getCashOut.query(null,function(data){
+    var result = (data.length > 0) ? data : [];
+    console.log(data)
+    $rootScope.CashOutList = result;
+  });
+
+  $scope.view = function(id) {
+    templateService.holdId = id;
+    var elemPos = $rootScope.CashOutList.map(function(x){return x.date}).indexOf(id);
+    $rootScope.info = $rootScope.CashOutList[elemPos];
+    ModalService.showModal({
+      templateUrl: 'pay-user.html',
+      controller: "cashoutModalController"
+    }).then(function(modal) {
+      modal.element.modal();
+      modal.close.then(function(result) {
+         
+      });
+    });
+  }
+
+}]);
+
+app.controller("cashoutModalController",["$scope","$rootScope","templateService",function($scope,$rootScope,templateService){
+  console.log($rootScope.userDetails)
+}])
+
+app.controller("cashOutController",["$scope","$rootScope","$resource",function($scope,$rootScope,$resource){
+  $scope.bankDetail = {};
+
+  $scope.$watch("bankDetail.amount",function(newVal,oldVal){
+    if(oldVal){
+      $scope.str = "N" + $scope.bankDetail.amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+  });  
+
+  $scope.cash = function(){
+    if(Object.keys($scope.bankDetail).length >= 3 && $scope.bankDetail.amount && $scope.bankDetail.amount !== "") {
+      var cashOut = $resource("/user/cashout",null,{cashing:{method: "PUT"}});
+      cashOut.cashing($scope.bankDetail,function(data){
+        alert(data.message);
+        if(data.balance) {
+          var whole = Math.round(data.balance);
+          var format = "N" + whole.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+          $rootScope.balance = format;
+        }    
+      });
+    } else {
+      alert("Please fill out all fields")
+    }
+  }
+
+}]);
 
 
-
-app.controller("joinRoomController3",["$scope","mySocket","localManager","$rootScope","$timeout","templateService",
+/*app.controller("joinRoomController3",["$scope","mySocket","localManager","$rootScope","$timeout","templateService",
   function($scope,mySocket,localManager,$rootScope,$timeout,templateService){
   $rootScope.message1 = []; 
   $scope.user = {}
@@ -6088,7 +6200,7 @@ app.controller("joinRoomController3",["$scope","mySocket","localManager","$rootS
   }
 
 
-}]);
+}]);*/
 
 
 //doctor's id is paased to this controller for ajax call;
@@ -7968,7 +8080,7 @@ app.controller("labCenterDashboardController",["$scope","$location","$http","tem
   function($scope,$location,$http,templateService,localManager,ModalService,$rootScope){
     var currPage = localManager.getValue("currPageForLaboratory");
     if(currPage) {
-     $location.path(currPage);
+      $location.path(currPage);
     } else {
       $location.path("/referral/laboratory-test");
     }

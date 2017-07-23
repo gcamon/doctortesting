@@ -1,0 +1,23 @@
+<div style="width: 60%;margin:0 auto;padding:10px">
+	<h3 style='text-align:center'>Cash out</h3>
+	<form class="cash-out">
+		<div>
+			<label>Bank name: </label>
+			<input type="text" placeholder="write.." ng-model="bankDetail.bank_name">
+		</div>
+		<div>
+			<label>Bank account number: </label>
+			<input type="text" placeholder="write.." ng-model="bankDetail.account_number">
+		</div>
+		<div>
+			<label>Amount to cash out: </label>
+			<input type="number" placeholder="write.." ng-model="bankDetail.amount">
+		</div>
+		<div style="padding:20px">
+			<p><strong>Amount | {{str}}</strong></p>
+		</div>
+		<div style="text-align:center">
+			<button ng-click="cash()" class='btn btn-primary'> Submit </button>
+		</div>
+	</form>
+</div>

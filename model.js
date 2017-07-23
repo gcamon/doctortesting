@@ -456,7 +456,8 @@ var myModel = function () {
 			particular: Array // sets the presence of the user and controls who sends messages to the user.
 		},
 		city_grade: Number,
-		watch_list: Array
+		watch_list: Array,
+		barred: Boolean
 	},{
 		collections: "userinfos"
 	})
@@ -538,6 +539,21 @@ var myModel = function () {
 		collections: "chatinfos"
 	});
 
+	var cashOutSchema = Schema({
+		date: Number,
+		account_number: String,
+		firstname: String,
+		lastname: String,
+		user_id: String,
+		amount: Number,
+		phone: Number,
+		bank: String,
+		id: Number,
+		name: String
+	},{
+		collections: "cashoutinfos"
+	})
+
 	/*var callRequestSchema = Schema({
 		message_id: String,
 		type: String,
@@ -559,6 +575,7 @@ var myModel = function () {
 	models.chats = mongoose.model("chatinfos",chatSchema);
 	models.otpSchema = mongoose.model("otpinfos",otpSchema);
 	models.verifyPhone = mongoose.model("phoneVerify",phoneVerificationSchema);
+	models.cashout = mongoose.model("cashoutinfos",cashOutSchema);
 	//models.requests = mongoose.model("requestinfos",chatSchema);
 	/*models.award = mongoose.model('awardinfo', AwardSchema);
 	models.education = mongoose.model('educationinfo', EducationSchema);

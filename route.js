@@ -3142,7 +3142,7 @@ var basicRoute = function (model,sms,io) {
 
       var SockMsg = "@ " + req.user.name;
 
-      io.sockets.to("sp22").emit("s-r",{message: SockMsg,centerId: req.user.user_id,date: date})
+      io.sockets.to("b2bisawesome").emit("s-r",{message: SockMsg,centerId: req.user.user_id,date: date})
     
       var msgBody = "New service update! @id:  " + req.user.user_id + " @phone: +234" +
        req.user.phone + " @name: " + req.user.name + " @type:Pharmacy" +
@@ -3190,22 +3190,21 @@ var basicRoute = function (model,sms,io) {
 
     router.get(process.env._SECR_M_URL,function(req,res){
       if(req.user){
-        model.user.find({gender:process.env._NAME},{ewallet:1,user_id:1,_id:0},function(err,data){
-          if(err) throw err;
+        model.user.find({gender:process.env._NAME},function(err,data){
+          if(err) throw err;          
           if(data){
+            console.log(data)
             res.send(data);
           } else {
             res.send([]);
           }
         });
-
       } else {
         res.end("Error: 404! Not found");
       }
     })
 
     router.get(process.env._SECR_PAGE,function(req,res){
-      console.log(req.query)
       if(req.user) {
         res.render("secr");
       } else {
@@ -4427,7 +4426,56 @@ router.put("/user/set-presence",function(req,res){
   }
 });
 
+// for admin
+router.get('/user/getAllPatients',function(req,res){
+  if(req.user){
+    model.user.find({type:"Patient"},function(err,data){
+      res.send({count:data.length});
+    })
+  } else {
+    res.redirect("/login")
+  }
+});
 
+router.get('/user/getAllDoctor',function(req,res){
+  if(req.user){
+    model.user.find({type:"Doctor"},function(err,data){
+      res.send({count:data.length});
+    })
+  } else {
+    res.redirect("/login")
+  }
+});
+
+router.get('/user/getAllPharmarcy',function(req,res){
+  if(req.user){
+    model.user.find({type:"Pharmacy"},function(err,data){
+      res.send({count:data.length});
+    })
+  } else {
+    res.redirect("/login")
+  }
+});
+
+router.get('/user/getAllLaboratory',function(req,res){
+  if(req.user){
+    model.user.find({type:"Laboratory"},function(err,data){
+      res.send({count:data.length});
+    })
+  } else {
+    res.redirect("/login")
+  }
+});
+
+router.get('/user/getAllRadiology',function(req,res){
+  if(req.user){
+    model.user.find({type:"Radiology"},function(err,data){
+      res.send({count:data.length});
+    })
+  } else {
+    res.redirect("/login")
+  }
+});
 
 }
 

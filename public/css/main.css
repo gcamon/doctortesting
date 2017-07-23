@@ -328,6 +328,35 @@ form fieldset{
 	border-bottom: 1px solid #000
 }
 
+.admin h3 {
+	text-align: center;
+	background-color: green;
+	color:#fff;
+	padding: 10px
+}
+
+.admin section {
+	height: 500px;
+	overflow-y: auto;
+	border:1px solid rgba(0,0,0,0.3);
+	margin-bottom: 10px; 
+}
+
+.admin ul {
+	list-style: none;
+}
+
+.admin li {
+	line-height: 40px
+}
+
+.cash-out input {
+	border: none;
+}
+
+.cash-out label {
+	font-size: 18px
+}
 /*my diagnostic center indicator style **/
 
 .indica {

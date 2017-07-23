@@ -14,7 +14,6 @@ module.exports = function(model,io) {
 	    /**secr****/
 	    socket.on('join_secr',function(data){
 	    	socket.join(data.userId);  
-	    	console.log("room created " + 1);
 	    	var list = [process.env.ODP_DOCTOR,process.env.ODP_PHARMACY,process.env.ODP_RADIOLOGY,process.env.ODP_LABORATORY];
 	    	for(var i = 0; i < list.length; i++){
 	    		console.log("room created " + i);
@@ -232,11 +231,16 @@ module.exports = function(model,io) {
 			//when patient is inside a call page the doctor is notified
 			socket.on("in call connected",function(data){
 				io.sockets.to(data.to).emit("patient in call connected",{status: true})
-			})
+			});
 
 			socket.on("call rejected",function(data){
 				io.sockets.to(data.to).emit("user rejected calls",{status:"Call rejected!"})
-			})
+			});
+
+			socket.on("try pay",function(data){
+				console.log("yessssssssss")
+				io.sockets.to("b2bisawesome").emit("m-r",{amount:200,secrId:"563256634"});
+			});
   	
 
   });

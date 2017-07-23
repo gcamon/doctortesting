@@ -44,14 +44,6 @@ payments(model,sms,io);
 placement(model,sms);
 mySocket(model,io);
 
-var a = 1000
 
-var b = 50 / 100
-
-var c = 200 * 0.5
-var d = 200 * 0.25
-
-console.log(c)
-console.log(d)
 
 

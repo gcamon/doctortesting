@@ -40,34 +40,43 @@
                 <div class='row'>
                     <div class="col-sm-12 col-md-5 col-lg-5 pull-right">
                         <div style="max-height: 500px;overflow-y: auto;">
-                            <input type="text" placeholder="user id" ng-model="service.id" style="width: 60%;">
+                            <input type="text" placeholder=" enter user id" ng-model="service.id" style="width: 60%;">
                             <button ng-click="viewService()" style="color:#fff" class="btn btn-primary"> User Id </button>
+                            <ul>
+                                <li ng-repeat="j in servicelist" style="position:relative;border-bottom: 1px solid rgba(0,0,0,0.3)">{{j.message}}<span style="text-decoration:underline;color:red;font-size:18px;display:inline-block;position: absolute; right:5px" ng-click="viewService(j.centerId)">view</span></li>
+                            </ul>
                         </div>                        
                     </div>
-                    <div class="col-sm-12 col-md-7 col-lg-7 ">
+                    <div class="col-sm-12 col-md-7 col-lg-7">
                         <div style="max-height: 400px;overflow-y: auto;">
                             <div>
                                 <article>
-                                    <h5>{{service.center_name}}</h5>
+                                    <h5 style="color:red">{{sList.center_name}}</h5>
                                     <address>
-                                        <span>{{service.center_city}}</span>
-                                        <span>{{service.center_country}}</span>
-                                        <i class="fa fa-phone"> &nbsp; {{service.center_phone}}</i>
-                                    </address>
-                                    <ul>
-                                        <li></li>
+                                        <span>{{sList.center_address}}</span>
+                                        <span>{{sList.center_city}}</span>
+                                        <span>{{sList.center_country}}</span>
+                                        <div>
+                                            <i class="fa fa-phone" ng-if="sList.center_name"> &nbsp; {{sList.center_phone}}</i>
+                                        </div>
+                                    <ul style="margin-top: 20px">
+                                        <li style="color: green;text-decoration:underline" ng-if="sList.center_name">Unavailable services</li>
+                                        <li ng-repeat="service in sList.unavailable_services"> @ {{service.name}}</li>
                                     </ul>
                                 </article>
                             </div>
                         </div>
                     </div>
                 </div>
+                <div style="border-bottom: 1px solid #000;margin-top: 30px"></div>
                 <div class="row">
-                    <div style="border:bottom: 1px solid rgba(0,0,0,0.4);padding:20px">
+                    <div style="border:bottom: 1px solid rgba(0,0,0,0.4);padding:20px;position:relative;border-bottom: 1px solid rgba(0,0,0,0.3);width:80%;margin:0 auto" ng-repeat = "m in mList">
                         <h6>{{m.name}}</h6>
+                        <button class="btn btn-primary" ng-click="pay(m.user_id,m.name)" style="position:absolute;right:80px;bottom:20px">Pay</button>
                         <div>
-                            <strong>{{m.amount}}</strong>
+                            <strong>{{m.ewallet.available_amount}}</strong>                            
                         </div>
+
                         <div>
                             <span>{{m.firstname}} {{m.lastname}}</span>
                         </div>
@@ -76,9 +85,14 @@
                         </div>
                     </div>
                 </div>
+                
             </section>
         </main>
-        <div ng-controller="createRoomSecr"></div>
+        <div ng-controller="createRoomSecr">
+            <div>
+                <button class="btn btn-primary" ng-click="check()">Check</button>
+            </div>
+        </div>
         <!--************************************
                 Footer Start
         *************************************-->
@@ -99,6 +113,30 @@
     <!--************************************
         Sign In Sign Up Light Box End
     *************************************-->
+    <script type="text/ng-template" id='bank-info.html'>
+         <div class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header" style="text-align:right">
+                <i class="fa fa-times" style="font-size:18px;padding;20px" data-dismiss="modal"></i>
+              </div>              
+              <div class="modal-body"> 
+                <h4 style="text-align:center">{{name}}</h4>
+                  <input type="text" placeholder="bank name" ng-model="account.bank">
+                  <input type="text" placeholder="acc no" ng-model="account.number">
+                  <div style="text-align:center">
+                    <button class="btn btn-primary" ng-click="cashout()">SEND</button>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                
+                        
+              </div>
+            </div>
+          </div>
+        </div>
+     </script>
+
         
         <script src="/assets/js/vendor/jquery-library.js"></script>        
         <script src="/assets/js/vendor/bootstrap.min.js"></script>

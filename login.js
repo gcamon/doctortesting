@@ -47,29 +47,48 @@ router.post('/user/login', passport.authenticate('user-login', {
 
 router.get('/user/dashboard',function(req,res){
   if(req.user){ 
-    model.user.findOne({user_id: req.user.user_id},{presence:1,set_presence:1}).exec(function(err,data){
-    data.presence = true;
-    data.set_presence.general = true;
-    data.save(function(err,info){
-      console.log("presence is true");
+    model.user.findOne({user_id: req.user.user_id},{presence:1,set_presence:1,admin:1}).exec(function(err,data){
+      if(err) throw err;
+      if(data.admin === true && req.user.user_id === process.env.ADMIN_ID){
+        res.json({typeOfUser:"admin",isLoggedIn: true,balance: req.user.ewallet.available_amount,user_id:req.user.user_id});
+      } else {
+        data.presence = true;
+        data.set_presence.general = true;
+        data.save(function(err,info){
+          console.log("presence is true");
+        });
+        normalUser()
+      }
     });
-   });           
-   res.json({
-    isLoggedIn: true,
-    typeOfUser: req.user.type,
-    firstname: req.user.firstname,
-    lastname:req.user.lastname,
-    phone: req.user.phone,
-    email: req.user.email,
-    title: req.user.title,
-    user_id: req.user.user_id,
-    balance: req.user.ewallet.available_amount,
-    profile_pic_url: req.user.profile_pic_url,
-    city: req.user.city
-  });
+
+    function normalUser() {          
+      res.json({
+        isLoggedIn: true,
+        typeOfUser: req.user.type,
+        firstname: req.user.firstname,
+        lastname:req.user.lastname,
+        phone: req.user.phone,
+        email: req.user.email,
+        title: req.user.title,
+        user_id: req.user.user_id,
+        balance: req.user.ewallet.available_amount,
+        profile_pic_url: req.user.profile_pic_url,
+        city: req.user.city
+      });
+    }
   } else {
     res.redirect("/login");
   }  
+});
+
+//for admin loggin
+
+router.get("/user/admin",function(req,res){
+  if(req.user && req.user.user_id === process.env.ADMIN_ID && req.user.admin === true){
+    res.render("admin")
+  } else {
+    res.redirect("/login");
+  }
 });
 
 router.get('/failed',function(req,res){        

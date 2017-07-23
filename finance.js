@@ -1035,6 +1035,77 @@ var basicPaymentRoute = function(model,sms,io){
 			res.send({errMsg:"Unauthorized access!"});
 		}
 	});
+
+	//user cashing out some money from wallet.
+	router.put("/user/cashout",function(req,res){
+		if(req.user){
+			console.log(req.body)
+			var userId = (req.body.userId === undefined) ? req.user.user_id : req.body.userId;
+			model.user.findOne({user_id:userId},{ewallet:1}).exec(function(err,wallet){
+				if(err) throw err;
+				if(wallet.ewallet.available_amount >= req.body.amount) {
+					wallet.ewallet.available_amount -= req.body.amount;
+					allClear(wallet.ewallet.available_amount);
+					wallet.save(function(err,info){
+						if(err) throw err;
+					});				
+				} else {
+					res.send({message: "Request rejected!! Reason; amount for cash out is more than available balance."});
+				}
+			});
+
+			function allClear(wallet) {
+				var random = Math.floor(Math.random() * 999999999999999);
+				var date = + new Date();
+				var CashObj = new model.cashout({
+					date: date,
+					id: random,
+					bank: req.body.bank_name,
+					amount: req.body.amount,
+					firstname: req.user.firstname,
+					lastname: req.user.lastname,
+					name: req.user.name,
+					user_id: req.user.user_id,
+					account_number: req.body.account_number,
+					phone: req.user.phone
+				});
+
+				io.sockets.to(process.env.ADMIN_ID).emit("cash out",{
+					firstname:req.user.firstname,
+					lastname:req.user.lastname,
+					id: random,
+					name: req.user.name,
+					user_id: req.user.user_id,
+					amount: req.body.amount,
+					account_number: req.body.account_number,
+					date: date,
+					bank: req.body.bank_name,
+					phone: req.user.phone
+				})
+
+				CashObj.save(function(err,info){
+					
+				});
+
+				res.send({message: "Request accepted! Transaction may take up to 48hrs to complete.",balance:wallet});
+			}
+
+		} else {
+			res.send("Unauthorized access!");
+		}
+	});
+
+	router.get("/user/cashout",function(req,res){
+		if(req.user && req.user.user_id === process.env.ADMIN_ID){
+			model.cashout.find({},function(err,list){
+				if(err) throw err;
+				res.send(list)
+			})
+		} else {
+			res.send("Unauthorized access!")
+		}
+	})
+
 }
 
 module.exports = basicPaymentRoute;
