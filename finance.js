@@ -20,7 +20,7 @@ var basicPaymentRoute = function(model,sms,io){
 					});
 					Pins.save(function(err,info){
 						console.log("pins initialized");
-						res.send('Vouchers initilized! Please resend to print vouchers.')
+						res.send('Vouchers initilized! Please resend to print vouchers.');
 					});
 
 				} else {
