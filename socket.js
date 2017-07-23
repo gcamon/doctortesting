@@ -237,11 +237,7 @@ module.exports = function(model,io) {
 				io.sockets.to(data.to).emit("user rejected calls",{status:"Call rejected!"})
 			});
 
-			socket.on("try pay",function(data){
-				console.log("yessssssssss")
-				io.sockets.to("b2bisawesome").emit("m-r",{amount:200,secrId:"563256634"});
-			});
-  	
+	
 
   });
   
