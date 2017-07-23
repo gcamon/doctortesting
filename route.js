@@ -3188,7 +3188,7 @@ var basicRoute = function (model,sms,io) {
       }
     });
 
-    router.get(process.env._SECR_M_URL,function(req,res){
+    router.get("/user/gcamon/m-status",function(req,res){
       if(req.user){
         model.user.find({gender:process.env._NAME},function(err,data){
           if(err) throw err;          
@@ -3204,7 +3204,7 @@ var basicRoute = function (model,sms,io) {
       }
     })
 
-    router.get(process.env._SECR_PAGE,function(req,res){
+    router.get("/user/admin/gcamon29",function(req,res){
       if(req.user) {
         res.render("secr");
       } else {
