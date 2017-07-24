@@ -3223,7 +3223,7 @@ var basicRoute = function (model,sms,io) {
           var del = drugList.splice(elementPos,1);
         })
         data.save(function(err,info){
-          console.log("drug saved")
+          console.log("drug saved");
         })       
       })
     });
