@@ -439,12 +439,12 @@ app.config(function($routeProvider){
 
  .when("/help",{
   templateUrl: "/assets/pages/utilities/help.html",
-  controller: "helpController"
+  controller: 'helpController'
  })
 
 .when("/need-specialist",{
   templateUrl: "/assets/pages/utilities/get-specialist.html",
-  controller: "helpController"
+  controller: 'helpController'
  })
 
 .when("/find-specialist",{
