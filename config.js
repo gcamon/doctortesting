@@ -51,14 +51,19 @@ var configuration = function (app,model) {
 	
 	
 	app.use(function(req,res,next){
-		console.log(req.url);
-		console.log(req.session);
-		next()
+		console.log(req.headers.host)
+		console.log(req.url)
+		if(req.headers['x-forwarded-proto'] && req.headers['x-forwarded-proto'] === "http") {
+		  res.redirect("https://" + req.headers.host + req.url);
+		} else {
+			next();
+		}
+		
 	});
 
 
 	passport.serializeUser(function(user, done) {    
-    done(null, user._id);
+    	done(null, user._id);
 	});
 
 	passport.deserializeUser(function(id, done) {			
