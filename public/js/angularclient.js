@@ -1318,20 +1318,6 @@ app.controller('signupController',["$scope","$http","$location","$window","templ
     $rootScope.auser = type;
   }
 
-  $scope.addPic = function(){
-    var data = {
-      filename : "2d5383cfc31897aafbe6b4cdfbd30bf1",
-      path : "uploads/2d5383cfc31897aafbe6b4cdfbd30bf1",
-      file_id : "nopic",
-    }
-     var addfault = $resource("/admin/defaul-pic",null,{defaultPic: {method:"PUT"}})
-     addfault.defaultPic(data,function(res){
-      console.log(res)
-      alert("Pic added")
-     });
-  }
-
-
 
   $scope.submit = function(type){
         $scope.user.typeOfUser = type || $scope.user.typeOfUser;
@@ -3747,7 +3733,7 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
   function($scope,$location,$http, $window,$rootScope,$resource,templateService,localManager,deleteFactory,mySocket,$timeout,medicaRecordFactory){
   
   var filter = {};
-  $scope.getPatientId = function(id,firstname,lastname){
+  /*$scope.getPatientId = function(id,firstname,lastname){
     var tostr = id.toString();
 
     var comObj = {
@@ -3758,7 +3744,7 @@ app.controller("patientNotificationController",["$scope","$location","$http","$w
     
     templateService.holdPatientIdForCommunication = comObj;
     
-  }
+  }*/
   
   var getRecords = function(){
     var records = $resource("/user/get-medical-record");

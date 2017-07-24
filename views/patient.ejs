@@ -59,7 +59,7 @@
 
                                  <ul class="all-notify app-drp">
                                         <li> <h6 style="text-align: center">Notification(s)</h6> </li>
-                                        {{getPatientId(<%= userInfo.user_id %>, <%= userInfo.firstname %>, <%= userInfo.lastname %>)}}
+                                        <!--{{getPatientId(<%= userInfo.user_id %>, <%= userInfo.firstname %>, <%= userInfo.lastname %>)}}-->
                                         
                                         <li ng-repeat = "note in allNote" style="text-align: left" class="note-list-li">
                                             <div ng-if="note.type === 'laboratory'" class="note-listings" ng-click="viewNoteLab(note.ref_id)">
