@@ -136,12 +136,11 @@ var basicRoute = function (model,sms,io) {
   });
 
   router.get("/download/profile_pic/:pic_id", function(req,res){        
-    if(req.params.pic_id === "nopic") {
-      model.files.findOne({file_id:"nopic"},function(err,data){
-        if(err) throw err;               
-        var nopic = __dirname + "/uploads/" + data.filename;
-        res.download(nopic);
-      });
+    if(req.params.pic_id === "nopic") {    
+                    
+      var nopic = __dirname + "/uploads/2d5383cfc31897aafbe6b4cdfbd30bf1"
+      res.download(nopic);
+    
     } else {
         var file = __dirname + "/uploads/" + req.params.pic_id;
         res.download(file); // Set disposition and send it.
