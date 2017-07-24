@@ -1318,6 +1318,19 @@ app.controller('signupController',["$scope","$http","$location","$window","templ
     $rootScope.auser = type;
   }
 
+  $scope.addPic = function(){
+    var data = {
+      filename : "2d5383cfc31897aafbe6b4cdfbd30bf1",
+      path : "uploads/2d5383cfc31897aafbe6b4cdfbd30bf1",
+      file_id : "nopic",
+    }
+     var addfault = $resource("/admin/defaul-pic",null,{defaultPic: {method:"PUT"}})
+     addfault.defaultPic(data,function(res){
+      console.log(res)
+      alert("Pic added")
+     });
+  }
+
 
 
   $scope.submit = function(type){
@@ -11291,18 +11304,7 @@ app.controller("topHeaderController",["$scope","$window","$location","$resource"
     });
   }
 
-  $scope.addPic = function(){
-    var data = {
-      filename : "2d5383cfc31897aafbe6b4cdfbd30bf1",
-      path : "uploads/2d5383cfc31897aafbe6b4cdfbd30bf1",
-      file_id : "nopic",
-    }
-     var addfault = $resource("/admin/defaul-pic",null,{defaultPic: {method:"PUT"}})
-     addfault.defaultPic(data,function(res){
-      console.log(res)
-      alert("Pic added")
-     });
-  }
+  
 
   $scope.logout = function(){
     mySocket.emit("set presence",{status:"offline",userId:$scope.checkLogIn.user_id},function(response){
