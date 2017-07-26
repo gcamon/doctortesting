@@ -51,8 +51,6 @@ var configuration = function (app,model) {
 	
 	
 	app.use(function(req,res,next){
-		console.log(req.headers.host)
-		console.log(req.url)
 		if(req.headers['x-forwarded-proto'] && req.headers['x-forwarded-proto'] === "http") {
 		  res.redirect("https://" + req.headers.host + req.url);
 		} else {

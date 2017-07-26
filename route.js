@@ -3991,10 +3991,14 @@ router.delete("/user/delete-all-chat",function(req,res){
 /************ patient waiting room ************/
 
 router.get("/user/patients/waiting-room",function(req,res){
-  if(req.user.type === "Doctor"){
-    res.render("patient-waiting-room")
+  if(req.user) {
+    if(req.user.type === "Doctor"){
+      res.render("patient-waiting-room")
+    } else {
+      res.send('Opps! You are note allowed to view this page')
+    }
   } else {
-    res.send('Opps! You are note allowed to view this page')
+    res.redirect("/login")
   }
   
 });

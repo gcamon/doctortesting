@@ -276,6 +276,7 @@
                                 <ul>
                                     <li><a href="#/edit-picture"> Change profile picture </a></li>
                                     <li><a href="#/edit-profile">Edit profile</a></li>
+                                    <li><a href="<%= person.profile_url %>">View as people see</a></li>
                                     <li ng-click="logout()">Logout</li>
                                 </ul>
                             </div>                            
@@ -378,7 +379,7 @@
                                                         <label  ng-class="{'doc-presense':isOnline === true}" class="doc-presence-normal">ONLINE</label>
                                                         <input type="radio" ng-model="user.presence"  value="offline">
                                                         <label ng-class="{'doc-presense2':isOnline === false}" class="doc-presence-normal">BUSY</label>
-                                                        <a href="/user/patients/waiting-room" style="font-size: 18px;text-decoration:underline;color:#996b88;margin-right:20px"> <i class="fa fa-user"> &nbsp; </i>Invite new patient</a>                                    
+                                                        <a href="/user/patients/waiting-room" style="font-size: 18px;text-decoration:underline;color:#996b88;margin-right:20px"> <i class="fa fa-user"> &nbsp; </i>Patients Waiting Room</a>                                    
                                                         <span style="font-size: 18px;cursor:pointer;display:inline-block;color:#996b88" ng-click="newPatient()"><i class="fa fa-user-plus" style="border-bottom:1px solid #996b88;"> Add new patient</i></span>                                                       
                                                         
                                                         <span style="color:#000;font-size:14px;display:inline-block;position:absolute;right:200px">Available balance | <em style="font-size: 18px">{{balance}}</em></span>
@@ -480,6 +481,7 @@
                                                 <div class="panel-body">                                                
                                                     <p><a href="#/wallet">Fund wallet</a></p>
                                                     <p><a href="#/transfer">Transfer fund</a></p>
+                                                    <p><a href="#/cash-out">Cash out</a></p>
                                                     <p><a href="#/transactions">View Transactions</a></p>
                                                 </div>
                                             

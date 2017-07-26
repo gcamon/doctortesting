@@ -114,8 +114,7 @@ var signupRoute = function(model,sms) {
 	
 
 	router.post('/user/signup', function(req, res, next) {	
-	  passport.authenticate('signup', function(err, user, info) {
-	  	console.log(req.body.password)    
+	  passport.authenticate('signup', function(err, user, info) {   
 	    if (err) {
 	      return next(err); // will generate a 500 error
 	    }
@@ -124,10 +123,14 @@ var signupRoute = function(model,sms) {
 	      	res.send({error:true,message: "User phone number not active or wrong verification pin!"});
 	    } else {	    	
     		var msgBody = "Your Applinic login details" + " \nUsername: " + req.body.username + " \nPassword: " + req.body.password;
-				var phoneNunber = "234" + req.body.phone;
+				var phoneNunber = "234" + req.body.phone || "2348096461927";
+				console.log(phoneNunber);
+
 				function callBack(err,info){
 					console.log(err)
+					console.log(info)
 				}
+
 				sms.message.sendSms('Appclinic',phoneNunber,msgBody,callBack); //"2348096461927"	    	
     		res.send({error: false,message: "Success! Account created. Login credentials sent to your phone via sms."});	    	
 	    }
