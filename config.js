@@ -59,7 +59,6 @@ var configuration = function (app,model) {
 		
 	});
 
-
 	passport.serializeUser(function(user, done) {    
     	done(null, user._id);
 	});
