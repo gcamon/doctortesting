@@ -1,381 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
 
-<!doctype html>
-<!--[if lt IE 7]>		<html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
-<!--[if IE 7]>			<html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
-<!--[if IE 8]>			<html class="no-js lt-ie9" lang=""> <![endif]-->
-<!--[if gt IE 8]><!-->	<html class="no-js" lang=""> <!--<![endif]-->
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Doctor Directory</title>
-	<meta name="description" content="">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="apple-touch-icon" href="apple-touch-icon.png">
-	<link rel="stylesheet" href="/assets/css/bootstrap.min.css">
-	<link rel="stylesheet" href="/assets/css/normalize.css">
-	<link rel="stylesheet" href="/assets/css/font-awesome.min.css">
-	<link rel="stylesheet" href="/assets/css/icomoon.css">
-	<link rel="stylesheet" href="/assets/css/owl.theme.css">
-	<link rel="stylesheet" href="/assets/css/owl.carousel.css">
-	<link rel="stylesheet" href="/assets/css/prettyPhoto.css">
-	<link rel="stylesheet" href="/assets/css/main.css">
-	<link rel="stylesheet" href="/assets/css/transitions.css">
-	<link rel="stylesheet" href="/assets/css/color.css">
-	<link rel="stylesheet" href="/assets/css/responsive.css">
-	<script src="/assets/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
-</head>
-<body ng-app = "myApp" class="ng-cloak">
-	<!--[if lt IE 8]>
-		<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-	<![endif]-->
-	<!--************************************
-			Wrapper Start
-	*************************************-->
-	<div id="wrapper" class="tg-haslayout">
-		<!--************************************
-				Header Start
-		*************************************-->
-		<header id="header" class="tg-haslayout top-header"  ng-controller="topHeaderController">
-                <div  class="navbar-header top-navbar">
-                    <div style="width: 70%; padding-right: 30px;display:inline-block">
-                    	<a href="/home" style="color: #fff;padding:0 20px;margin-right:40px">Home</a>
-                    	<a href="/signup" style="color: #fff;padding:0 20px;margin-right:40px">Sign up</a>
-                        <!--<span data-toggle="modal" data-target=".tg-user-modal" title="login/signup" ng-if="!checkLogIn">Log in / Sign up</span>
-                        <span class="fa fa-sign-out" aria-hidden="true" ng-if="checkLogIn" ng-click="logout()"> Log out</span>
-                        <i class="fa fa-ellipsis-v" aria-hidden="true" style="color:#fff;font-size:23px;font-weight:100; cursor:pointer" title="Menu" ng-click="isClicked()"></i>
-                    </div>
-                    <ul ng-if="drop === true" class="drp-list">
-                        <li><a href="/user/find-specialist">Find A Doctor</a></li>
-                        <li><a href="/user/find-drug">Find Drug</a></li>
-                        <li><a href="/user/find-scan-test">Find Scan</a></li>
-                        <li><a href="/user/find-lab-test">Find Test</a></li>
-                        <li><a href="#">Find Special Center</a></li>                        
-                    </ul>-->
+    <meta charset="utf-8" />
+    <link rel="apple-touch-icon" sizes="76x76" href="assets/img/apple-icon.png">
+    <link rel="icon" type="image/png" href="assets/img/favicon.png">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title></title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
+    <!-- CSS Files -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="assets/css/now-ui-kit.css" rel="stylesheet" />
+    <style>
+        .card-title {
+            text-transform: uppercase;
+            text-align: center;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 1em;
+        }
 
-                </div>
-                <!--<div class="container">
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <strong class="logo">
-                                <a href="/"><img src="/assets/images/logo.png" alt="image description"></a>
-                            </strong>
-                            <nav id="tg-nav" class="tg-nav">
-                                <div class="navbar-header">
-                                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#tg-navigation" aria-expanded="false">
-                                        <span class="sr-only">Toggle navigation</span>
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
-                                    </button>
-                                </div>
-                                <div class="collapse navbar-collapse top-nav" id="tg-navigation">
-                                    <ul>
-                                        <li>
-                                            <a href="/">Home</a>                                           
-                                        </li>
-                                        <li><a href="/how-it-works">How it works</a></li>
-                                        <li>
-                                            <a href="#">Top Ranking</a>
-                                            <ul> 
-                                                <li><a href="/topview/doctors">Doctors</a></li>                                                     
-                                                <li><a href="/topview/hospitals">Hospitals</a></li>
-                                                <li><a href="/topview/clinics">Clinics</a></li>
-                                                <li><a href="/topview/pharmacy">Pharmacy</a></li>
-                                                <li><a href="/topview/laboratories">Laboratory Centers</a></li>
-                                                <li><a href="/topview/radiology">Radiology Centers</a></li>
-                                                <li><a href="/topview/fitness">fitness Centers</a></li>                                                                           
-                                                <li><a href="doctor-detail2.html">Doctor Detail 2</a></li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            <a href="#">Blog</a>
-                                            
-                                        </li>
-                                        <li><a href="packages.html">packages</a></li>
-                                        <li><a href="contactus.html">Contact</a></li>                                        
-                                        <li>                                            
-                                            <a href="#" data-toggle="modal" data-target=".tg-user-modal" title="login/signup"><i class="fa fa-user-plus"></i></a>
-                                            <span><a href="#" data-toggle="modal" data-target=".tg-user-modal">login/signup</a></span>
-                                        </li>                                                                                                                
-                                    </ul>
-                                </div>                                
-                            </nav>
-                        </div>
-                    </div>
-                </div>-->
-            </header>
-		<!--************************************
-				Header End
-		*************************************-->
-		<!--************************************
-				Home Slider Start
-		*************************************-->
-		
-		<!--************************************
-				Home Slider End
-		*************************************-->
-		<!--************************************
-				Main Start
-		*************************************-->
-		<main id="main" class="tg-main-section tg-haslayout" ng-controller = "loginController">
-			<div class="container">
-				<div class="row">
-					<div class="tg-404 tg-haslayout">
-						<div class="col-md-12 col-sm-12">
-						 	<h2>LOG IN</h2>				
-                            <div style="width: 400px; height: 400px; margin:0 auto;padding-top:100px">
-                            <span  style="color: red;display:block;text-align: center; font-size:16px;padding:10px 10px" ng-cloak>{{error}}</span>	
-							<form>
-								<input type="text" placeholder="Email" ng-model = "login.username" style="border: 1px solid rgba(0,255,0,0.8)">
-								<input type="password" placeholder="Password" ng-model = "login.password" style="border: 1px solid rgba(0,255,0,0.8);margin: 10px 0px">
-								<p style="text-align: center">
-								<button class="btn btn-login" ng-click="send()" style="color: #fff;">LOGIN</button>
-								</p>
-							</form>
-							<a href="#/forgot-password" style="font-size: 14px; color: green; text-decoration:underline">Forgot password?</a>
-							
-							</div>
-						</div>						
-				</div>
-			</div>
-		</main>
-		<!--************************************
-				Main End
-		*************************************-->
-		<!--************************************
-				Footer Start
-		*************************************-->
-		<!--<footer id="footer" class="tg-haslayout">
-			<div class="tg-threecolumn">
-				<div class="container">
-					<div class="row">
-						<div class="col-sm-4">
-							<div class="tg-footercol">
-								<strong class="logo">
-									<a href="#">
-										<img src="/assets/images/logo2.png" alt="image description">
-									</a>
-								</strong>
-								<div class="tg-description">
-									<p>We specialize in offering help to find your best medical solution.</p>
-								</div>
-								<ul class="tg-info">
-									<li>
-										<i class="fa fa-home"></i>
-										<address>1 Nwodo street GRA Enugu, Enugu State</address>
-									</li>
-									<li>
-										<i class="fa fa-envelope"></i>
-										<em><a href="#">info@domain.com</a></em>
-									</li>
-									<li>
-										<i class="fa fa-phone"></i>
-										<em><a href="#">+234 8064245256</a></em>
-									</li>
-								</ul>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="tg-footercol">
-								<div class="tg-heading-border tg-small">
-									<h4>featured doctors</h4>
-								</div>
-								<div class="tg-widget tg-featured-doctore">
-									<ul>
-										<li>
-											<figure class="tg-imgdoc">
-												<img src="/assets/images/img-02.jpg" alt="image description">
-												<div class="tg-img-hover">
-													<a href="#"><i class="icon-zoom"></i></a>
-												</div>
-											</figure>
-											<div class="tg-docinfo">
-												<span class="tg-docname"><a href="#">Dr. Jennifer Bada-Ellzey, MD, MPH</a></span>
-												<span class="tg-stars">
-													<em>Ranking:</em>
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-												</span>
-												<div class="tg-designation">
-													<p><a href="#">Family &amp; Community Medicine</a></p>
-												</div>
-											</div>
-										</li>
-										<li>
-											<figure class="tg-imgdoc">
-												<img src="/assets/images/img-03.jpg" alt="image description">
-												<div class="tg-img-hover">
-													<a href="#"><i class="icon-zoom"></i></a>
-												</div>
-											</figure>
-											<div class="tg-docinfo">
-												<span class="tg-docname"><a href="#">Dr. Curtis O. Ballard, MD</a></span>
-												<span class="tg-stars">
-													<em>Ranking:</em>
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star"></i>
-													<i class="fa fa-star-o"></i>
-													<i class="fa fa-star-o"></i>
-												</span>
-												<div class="tg-designation">
-													<p><a href="#">Orthopaedic Surgery &amp; Sports Medicine</a></p>
-												</div>
-											</div>
-										</li>
-									</ul>
-								</div>
-							</div>
-						</div>
-						<div class="col-sm-4">
-							<div class="tg-footercol">
-								<div class="tg-heading-border tg-small">
-									<h4>Useful links</h4>
-								</div>
-								<div class="tg-widget tg-usefullinks">
-									<ul>
-										<li><a href="#">About Us</a></li>
-										<li><a href="#">Latest Blog</a></li>
-										<li><a href="#">Terms and Conditions</a></li>
-										<li><a href="#">Privacy Policy</a></li>
-										<li><a href="#">Contact Us</a></li>
-									</ul>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="tg-footerbar tg-haslayout">
-				<div class="tg-copyrights">
-					<p>2015 All Rights Reserved © DocDirect</p>
-				</div>
-			</div>
-		</footer>-->
-		<!--************************************
-				Footer End
-		*************************************-->
-	</div>
-	<!--************************************
-			Wrapper End
-	*************************************-->
-	<!--************************************
-		Sign In Sign Up Light Box Start
-	*************************************-->
-		<div class="modal fade tg-user-modal" tabindex="-1" role="dialog">
-		<div class="tg-modal-content">
-			<ul class="tg-modaltabs-nav" role="tablist">
-				<li role="presentation" class="active"><a href="#tg-signin-formarea" aria-controls="tg-signin-formarea" role="tab" data-toggle="tab">sign in</a></li>
-				<li role="presentation"><a href="#tg-signup-formarea" aria-controls="tg-signup-formarea" role="tab" data-toggle="tab">sign up</a></li>
-			</ul>
-			<div class="tab-content tg-haslayout">
-				<div role="tabpanel" class="tab-pane tg-haslayout active" id="tg-signin-formarea">
-					<form class="tg-form-modal tg-form-signin">
-						<fieldset>
-							<div class="form-group">
-								<input type="email" class="form-control" placeholder="Email Address">
-							</div>
-							<div class="form-group">
-								<input type="password" class="form-control" placeholder="Password">
-							</div>
-							<div class="form-group tg-checkbox">
-								<label>
-									<input type="checkbox" class="form-control">
-									Remember Me
-								</label>
-								<a class="tg-forgot-password" href="#">
-									<i>Forgot Password</i>
-									<i class="fa fa-question-circle"></i>
-								</a>
-							</div>
-							<button class="tg-btn tg-btn-lg">LOGIN now</button>
-						</fieldset>
-					</form>
-				</div>
-				<div role="tabpanel" class="tab-pane tg-haslayout" id="tg-signup-formarea">
-					<form class="tg-form-modal tg-form-signup">
-						<fieldset>
-							<div class="form-group">
-								<span class="select">
-									<select>
-										<option>Doctor one</option>
-										<option>Doctor two</option>
-										<option>Doctor three</option>
-									</select>
-								</span>
-							</div>
-							<div class="form-group">
-								<span class="select">
-									<select>
-										<option>Specialty*</option>
-										<option>Specialty two</option>
-										<option>Specialty three</option>
-									</select>
-								</span>
-							</div>
-							<div class="form-group">
-								<input type="text" class="form-control" placeholder="First Name">
-							</div>
-							<div class="form-group">
-								<input type="text" class="form-control" placeholder="last Name">
-							</div>
-							<div class="form-group">
-								<input type="text" class="form-control" placeholder="Phone Number">
-							</div>
-							<div class="form-group">
-								<input type="email" class="form-control" placeholder="Email">
-							</div>
-							<div class="form-group">
-								<input type="text" class="form-control" placeholder="ZIP Code">
-							</div>
-							<div class="form-group tg-checkbox">
-								<label>
-									<input type="checkbox" class="form-control">
-									I agree with the terms and conditions
-								</label>
-							</div>
-							<button class="tg-btn tg-btn-lg">Create an Account</button>
-						</fieldset>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!--************************************
-		Sign In Sign Up Light Box End
-	*************************************-->
-	 	 <script src="/assets/js/vendor/jquery-library.js"></script>
-        <script src="/assets/js/vendor/bootstrap.min.js"></script>
-        <script src="/socket.io/socket.io.js"></script>         
-        <script type="text/javascript" src="/assets/js/source.js"></script>
-        <script type="text/javascript" src="/assets/js/angularclient.js"></script>
-        <script type="text/javascript" src="/assets/js/ngroute.js"></script>
-        <script src="/assets/js/angular-clipboard.js"></script>
-        <script src="/assets/js/ngresource.js"></script>        
-        <script src="/assets/js/socket.min.js"></script>        
-        <script src="/assets/js/jquery-ui.js"></script>
-        <script src="http://maps.google.com/maps/api/js?sensor=false"></script>
-        <script src="/assets/js/map/jquery.gomap.js"></script>
-        <script src="/assets/js/map/markerclusterer.min.js"></script>
-        <script src="/assets/js/countdown.js"></script>
-        <script src="/assets/js/jquery.nicescroll.js"></script>
-        <script src="/assets/js/parallax.js"></script>
-        <script src="/assets/js/owl.carousel.js"></script>
-        <script src="/assets/js/prettyPhoto.js"></script>
-        <script src="/assets/js/appear.js"></script>
-        <script src="/assets/js/countTo.js"></script>
-        <script src="/assets/js/map/map.js"></script>
-        <script src="/assets/js/angularAnimate.js"></script>
-        <script src="/assets/js/modalService.js"></script>
-        <script src="/assets/js/main.js"></script>
-        <script src="/assets/js/angular-touch.min.js"></script>
-        <script src="/assets/js/angular-carousel.js"></script>
-        <script src="/assets/js/moment.min.js"></script>
-        <script src="/assets/js/angular-moment.min.js"></script>
-        <script src="/assets/js/ui-bootstrap-tpls.js"></script>      
+       .list-group-item, .list-group-item:first-child, .list-group-item:last-child {
+            background: transparent;
+            border:0;
+        }
+
+        .input-group-addon{
+            border-radius:0;
+            padding:0;
+        }
+
+        .form-control::-webkit-input-placeholder { color: rgba(0,0,0,0.5); font-size: 16px}  /* WebKit, Blink, Edge */
+        .form-control:-moz-placeholder { color: rgba(0,0,0,0.5);font-size: 16px }  /* Mozilla Firefox 4 to 18 */
+        .form-control::-moz-placeholder { color:rgba(0,0,0,0.5);font-size: 16px }  /* Mozilla Firefox 19+ */
+        .form-control:-ms-input-placeholder { color: #000; font-size: 16px}  /* Internet Explorer 10-11 */
+        .form-control::-ms-input-placeholder { color: #000; font-size: 16px}  /* Microsoft Edge */
+
+        @media screen and (min-width: 768px) {
     
+          .col-md-4 {
+            max-width: 56.333333%;    
+          }
+        }
+    </style>
+</head>
+
+<body ng-app = "myApp" style="overflow-x:hidden;">
+    <!-- Navbar -->
+    <nav class="navbar navbar-toggleable-md  bg-primary fixed-top">
+        <div class="container">
+            <div class="navbar-translate">
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-bar bar1"></span>
+                    <span class="navbar-toggler-bar bar2"></span>
+                    <span class="navbar-toggler-bar bar3"></span>
+                </button>
+                <a class="navbar-brand" href="#">
+                    Applinic
+                </a>
+            </div>
+            <div class="collapse navbar-collapse justify-content-end" id="navigation" data-nav-image="assets/img/blurred-image-1.jpg">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">
+                            <p>Home</p>
+                           </a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link" href="/how-it-work">
+                            <p>How it works</p>
+                        </a>
+                    </li>
+                    <!--<li class="nav-item">
+                        <a class="nav-link" href="#pablo">
+                            <p>Top Ranking</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#pablo">
+                            <p>blog</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#pablo">
+                            <p>packages</p>
+                        </a>
+                    </li>-->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contact">
+                            <p>Contact</p>
+                        </a>
+                    </li>             </ul>
+                        <a href="/login" class="get-user" style="color:#f96332;background-color:#fff">
+                           Login
+                        </a>
+                
+                        <a href="/signup" class="get-user" style="background-color:#f96332">
+                           Sign up
+                        </a>
+                     </div>
+        </div>
+    </nav>
+    <!-- End Navbar -->
+
+    <div class="clearfix"></div>
+
+<div class="wrapper" style="height:60px;"></div>
+
+<div class="page-header content-center" filter-color="purple" ng-controller = "loginController">
+        <div class="page-header-image" style="background-image:url(assets/img/bg3.jpg)"></div>
+
+           <div class="container" style="padding-top:5em;">
+   
+               <div class="card col-md-4" style="padding:3em;">
+                               <p class="text-muted display-5">Login</p>
+                   <form class="input-lg">
+                       <div class="form-group input-lg">
+                              <span  style="color: red;display:block;text-align: center; font-size:16px;padding:10px 10px" ng-cloak>{{error}}</span>  
+                                <input type="text" class="form-control" placeholder="Email" ng-model = "login.username">
+                            </div>
+                   
+                      <div class="form-group input-lg">
+                                <input type="password" class="form-control" placeholder="Password" ng-model = "login.password">
+                                  <button type="submit" href="#" class="btn btn-info btn-block btn-lg" ng-click="send()"> Login</button>
+                            </div>
+                            <div class="text-bold text-center text-muted"><i>Or</i></div><br>
+                            <a href="/signup" class="btn btn-simple  text-lg btn-block" style="font-size:15px;">Create an Account</a>
+                   
+                     </form>
+               </div>
+           </div>
+
+        </div></div>
+
+<div class="clearfix"></div>
+
+
+
+
+
+<div class="clearfix"></div>
+        <footer class="footer">
+            <div class="container">
+                <nav>
+                    <ul>
+                        <li>
+                            <a href="#">
+                                APPPLINIC
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                About Us
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                Blog
+                            </a>
+                        </li>
+                       </ul>
+                </nav>
+                <div class="copyright">
+                    &copy;
+                    <script>
+                        document.write(new Date().getFullYear())
+                    </script>, Applinic
+                </div>
+            </div>
+        </footer>
+    </div>
 </body>
+<!--   Core JS Files   -->
+<script src="assets/js/core/jquery.3.2.1.min.js" type="text/javascript"></script>
+<script src="assets/js/core/tether.min.js" type="text/javascript"></script>
+<script src="assets/js/core/bootstrap.min.js" type="text/javascript"></script>
+<!--  Plugin for Switches, full documentation here: http://www.jque.re/plugins/version3/bootstrap.switch/ -->
+<script src="assets/js/plugins/bootstrap-switch.js"></script>
+<!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
+<script src="assets/js/plugins/nouislider.min.js" type="text/javascript"></script>
+<!--  Plugin for the DatePicker, full documentation here: https://github.com/uxsolutions/bootstrap-datepicker -->
+<script src="assets/js/plugins/bootstrap-datepicker.js" type="text/javascript"></script>
+<!-- Control Center for Now Ui Kit: parallax effects, scripts for the example pages etc -->
+<script src="assets/js/now-ui-kit.js" type="text/javascript"></script>
+<script type="text/javascript" src="/assets/js/source.js"></script>
+<script type="text/javascript" src="/assets/js/angularclient.js"></script>
+<script type="text/javascript" src="/assets/js/ngroute.js"></script>
+<script src="/socket.io/socket.io.js"></script>   
+<script src="/assets/js/socket.min.js"></script>
+<script src="/assets/js/jquery-ui.js"></script>
+<!--<script src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script src="/assets/js/map/jquery.gomap.js"></script>-->
+<script src="/assets/js/map/markerclusterer.min.js"></script>
+<script src="/assets/js/countdown.js"></script>
+<script src="/assets/js/jquery.nicescroll.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $(".drp-of-msg").niceScroll({cursorcolor:"#ccc",cursorwidth:"5px"});                
+        $(".view-animate-container").niceScroll({cursorcolor:"#ccc",cursorwidth:"3px"});
+        $("#my-doctors-list").niceScroll({cursorcolor:"#ccc",cursorwidth:"5px"})
+    })
+</script>
+<script src="/assets/js/jquery.nicescroll.js"></script>
+<script src="/assets/js/parallax.js"></script>
+<script src="/assets/js/owl.carousel.js"></script>
+<script src="/assets/js/prettyPhoto.js"></script>
+<script src="/assets/js/appear.js"></script>
+<script src="/assets/js/countTo.js"></script>
+<script src="/assets/js/map/map.js"></script>
+<script src="/assets/js/angularAnimate.js"></script>
+<script src="/assets/js/modalService.js"></script>
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/angular-touch.min.js"></script>
+<script src="/assets/js/angular-carousel.js"></script>
+<script src="/assets/js/moment.min.js"></script>     
+<script src="/assets/js/angular-moment.min.js"></script>
+<script src="/assets/js/angucomplete-alt.min.js"></script> 
+<script src="/assets/js/ui-bootstrap-tpls.js"></script>
+<script src="/assets/js/angular-clipboard.js"></script>
+<script src="/assets/js/ngresource.js"></script>       
+
+
 </html>

@@ -1409,7 +1409,8 @@ app.controller('signupController',["$scope","$http","$location","$window","templ
         var sendPin = $resource("/user/verify-phone-number",null,{go:{method:"PUT"}});
         sendPin.go({phone:$scope.user.phone},function(data){
           alert(data.message);
-          $location.path("/phone-verification");
+          $scope.isPhoneVerify = true;
+          //$location.path("/phone-verification");
         });        
         
       } else {
@@ -1420,8 +1421,8 @@ app.controller('signupController',["$scope","$http","$location","$window","templ
     }
     
   }
-  var toStr;
 
+  var toStr;
   $scope.$watch("user.phone",function(newVal,oldVal){
     str = "" + newVal;
     if(str.length >= 10) { // note this could be modified to accomodate foreign numbers
