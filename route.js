@@ -3914,7 +3914,7 @@ router.get("/user/logout",function(req,res){
     function completeAction(){
       console.log("finally i am logged out!!!")          
       req.logout();
-      res.redirect('/');
+      res.redirect('/login');
     }
 });
 

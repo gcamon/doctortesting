@@ -3703,7 +3703,11 @@ app.controller("joinRoomController2",["$scope","mySocket","localManager","$rootS
 app.controller("inPatientDashboardController",["$scope","$location","templateService","localManager",
   function($scope,$location,templateService,localManager){
 
-  $location.path(localManager.getValue("currentPageForPatients") || "/patient-dashboard");  
+  if(localManager.getValue("resolveUser")) {
+    $location.path(localManager.getValue("currentPageForPatients") || "/patient-dashboard");
+  } else {
+
+  } 
 
 }]);
 
@@ -11241,6 +11245,11 @@ app.controller("emScanTestController",["$scope","$location","$http","$window","t
 app.controller("topHeaderController",["$scope","$window","$location","$resource","localManager","mySocket",
   function($scope,$window,$location,$resource,localManager,mySocket){
 
+  if(!localManager.getValue("resolveUser")) {
+    $window.location.href = "/login"
+  } 
+
+
   $scope.isMenu = false;
 
   $scope.isClicked = function(){
@@ -11254,6 +11263,7 @@ app.controller("topHeaderController",["$scope","$window","$location","$resource"
     
   }
 
+  
   
   $scope.checkLogIn = localManager.getValue("resolveUser");
 
