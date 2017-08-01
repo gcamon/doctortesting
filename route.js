@@ -649,13 +649,13 @@ var basicRoute = function (model,sms,io) {
         
         model.user.findOne({user_id:req.body.receiverId},{doctor_notification:1,presence:1,set_presence:1,phone:1}).exec(function(err,data){
           if(err) throw err;
-          data.doctor_notification.push(requestData);
-          if(data.presence === true && data.set_presence.general === true){
-            console.log("did it happen bro !!!!");
-            io.sockets.to(req.body.receiverId).emit("receive consultation request",{status: "success"})
-          } else if(data.set_presence.general === false) {
 
-          } else {
+          data.doctor_notification.push(requestData);
+
+          if(data.presence === true && data.set_presence.general === true){           
+            io.sockets.to(req.body.receiverId).emit("receive consultation request",{status: "success"});
+            
+          } else if(data.set_presence.general === false || data.presence === false) {
             var msgBody = req.user.title + " " + req.user.firstname + " " + req.user.lastname + " sends consultation request! Visit http://applinic.com/login";
             var phoneNunber = "234" + data.phone;
             sms.message.sendSms('Applinic',phoneNunber,msgBody,function(err,responseData){})

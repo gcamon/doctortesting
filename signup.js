@@ -152,13 +152,16 @@ var signupRoute = function(model,sms) {
 
 		testPhone.save(function(err,info){});
 
-		function callBack(err,response){
-			console.log(err)
-		}
 		var msgBody = "Your SMS verification Pin is" + genPin + " \nUse to complete your registeration."
 		var phoneNunber = "234" + req.body.phone;
 		sms.message.sendSms('Appclinic',phoneNunber,msgBody,callBack); //"2348096461927"
-		res.send({message:"Phone verification pin sent to your phone"});
+
+		function callBack(err,response){
+			console.log(err);
+			console.log(response);
+			res.send({message:"Phone verification pin sent to your phone"});
+		}		
+		
 	})
 
 	//check to see if a user with a phone number already exist
