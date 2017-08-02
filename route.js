@@ -50,6 +50,10 @@ var basicRoute = function (model,sms,io) {
     res.render('index',{"message":""});
   });
 
+  router.get("/how-it-work",function(req,res){
+    res.render("how-it-work")
+  });
+
   router.get("/user/patient",function(req,res){ 
     if(req.user){
       //getSocketInstance(req)
@@ -654,7 +658,7 @@ var basicRoute = function (model,sms,io) {
 
           if(data.presence === true && data.set_presence.general === true){           
             io.sockets.to(req.body.receiverId).emit("receive consultation request",{status: "success"});
-            
+
           } else if(data.set_presence.general === false || data.presence === false) {
             var msgBody = req.user.title + " " + req.user.firstname + " " + req.user.lastname + " sends consultation request! Visit http://applinic.com/login";
             var phoneNunber = "234" + data.phone;

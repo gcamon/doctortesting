@@ -152,15 +152,20 @@ var signupRoute = function(model,sms) {
 
 		testPhone.save(function(err,info){});
 
-		var msgBody = "Your SMS verification Pin is" + genPin + " \nUse to complete your registeration."
+		var msgBody = "Your SMS verification Pin is " + genPin + "\nUse to complete your registeration."
 		var phoneNunber = "234" + req.body.phone;
-		sms.message.sendSms('Appclinic',phoneNunber,msgBody,callBack); //"2348096461927"
+		sms.message.sendSms('Appclinic',phoneNunber,msgBody,callBack); //"2348096461927" "2349092469137"
 
 		function callBack(err,response){
-			console.log(err);
+			if(!err) {
+				res.send({message:"Phone verification pin sent to your phone"});
+			} else {
+				res.send({message:"Error Occur please try again",error: true});
+			}
 			console.log(response);
-			res.send({message:"Phone verification pin sent to your phone"});
 		}		
+
+		
 		
 	})
 
