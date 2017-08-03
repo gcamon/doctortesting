@@ -44,6 +44,11 @@ payments(model,sms,io);
 placement(model,sms);
 mySocket(model,io);
 
+var a = "obinna"
+var reg = new RegExp(a.replace(/\s+/g,"\\s+"), "gi")
+console.log(reg)
+var g = "iyo"
+console.log(g.charAt(0).toUpperCase())
 
 
 

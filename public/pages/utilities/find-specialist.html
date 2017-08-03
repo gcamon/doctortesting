@@ -2,13 +2,14 @@
 <div>
 	<strong>Choose search creteria:</strong>
 	<select ng-model="user.creteria" style="width: 50%;border:none;border-bottom: 1px solid #000">
+        <option value="doctorname">Find by name</option>
 		<option value="specialty">City & Doctor's Specialty</option>
-		<option value="doctorId">Doctor's ID</option>
+		<option value="doctorId">Find by doctor's ID</option>
 	</select>
 </div>
 <form>
 <fieldset style="padding: 10px 10px;margin-bottom: 20px">
-	
+	 <input type="text" placeholder="e.g Dr Ede Obinna or Dr Ede" style="padding: 5px 10px;margin-top: 10px;width: 40%;border:none;border-bottom: 1px solid #000" ng-model="user.name" ng-if="isName === true">
 	<input type="text" placeholder="Enter city name" name="states" id="states"  uib-typeahead="city for city in cities | filter:$viewValue | limitTo:15" style="padding: 5px 10px;margin-top: 10px;width: 40%;border:none;border-bottom: 1px solid #000" ng-model="user.city" ng-if="isSpecialty === true">
 	{{getCity(city)}} 
     <select id="group1"  style="padding: 5px 10px;margin-top: 10px;width: 40%;border:none;border-bottom: 1px solid #000" ng-model="user.specialty" ng-if="isSpecialty === true">

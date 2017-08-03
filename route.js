@@ -501,10 +501,25 @@ var basicRoute = function (model,sms,io) {
         var str;
         if(req.query.city && !req.query.specialty){
           str = new RegExp(req.query.city);          
-          criteria = { city : { $regex: str, $options: 'i' }};
+          criteria = { city : { $regex: str, $options: 'i' },type:"Doctor"};
         } else if(req.query.city && req.query.specialty){
           str = new RegExp(req.query.city);
-          criteria = { city : { $regex: str, $options: 'i' },specialty: req.query.specialty}
+          criteria = { city : { $regex: str, $options: 'i' },specialty: req.query.specialty,type:"Doctor"}
+        } else if (req.query.name && !req.query.specialty) {
+          var splitEnd = req.query.name.split(" ");
+          var finalStr;
+          if(splitEnd.length > 2) {            
+            var last = splitEnd.length - 1;
+            var toCap = splitEnd[last].charAt(0).toUpperCase();
+            splitEnd[last] = toCap;
+            finalStr = splitEnd.join(" ");
+          } else {
+            finalStr = req.query.name;
+          }
+          console.log(finalStr);
+          str = new RegExp(finalStr.replace(/\s+/g,"\\s+"), "gi");
+          console.log(str);         
+          criteria = { name : { $regex: str, $options: 'i' },type:"Doctor"};
         } else {
           criteria = req.query;
         }
@@ -537,7 +552,7 @@ var basicRoute = function (model,sms,io) {
     });
 
     //common search for doctors route
-    router.post("/user/find-group",function(req,res){
+    /*router.post("/user/find-group",function(req,res){
      if(Object.keys(req.body).length > 0) {
       console.log(req.body);
         model.user.find(
@@ -563,7 +578,7 @@ var basicRoute = function (model,sms,io) {
             res.send(data)               
         }).limit(1000);
      } else {
-         res.end();
+        res.end();
      }                
     });
 
@@ -614,7 +629,7 @@ var basicRoute = function (model,sms,io) {
      } else {
          res.end();
      }                
-    });
+    });*/
     
     //route for displaying the selected doctor on the patient dashbord page
     router.put("/user/book",function(req,res){

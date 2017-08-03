@@ -1,5 +1,4 @@
 'use strict';
-
 var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 var dbURL = process.env.MONGODB_ADDON_URI || "mongodb://127.0.0.1:27017/medicalmull";

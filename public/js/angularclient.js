@@ -10,6 +10,7 @@ app.config(function($routeProvider){
     controller: 'resultController'
   })
 
+
   .when("/list",{
     templateUrl: '/assets/pages/list-doctors.html',
     controller: 'listController'
@@ -1649,7 +1650,7 @@ app.controller('resultController',["$scope","$http","$location","$resource","loc
   templateUrlFactory.setUrl();
   var data;
   $scope.find = function () {
-    if($scope.user.specialty || $scope.user.doctorId || $scope.user.city){
+    if($scope.user.specialty || $scope.user.doctorId || $scope.user.city || $scope.user.name){
       data = $resource("/user/patient/find-doctor");     
       switch($scope.user.creteria){
         case "doctorId":
@@ -1673,6 +1674,16 @@ app.controller('resultController',["$scope","$http","$location","$resource","loc
             console.log(data);
           });          
         break;
+        case "doctorname":
+          var sendObj = {};
+          sendObj.name = $scope.user.name;          
+          data.query(sendObj,function(data){
+             //localManager.setValue("userInfo",data);
+            localManager.setValue("userInfo",data);
+            $location.path("/list");
+            console.log(data);
+          });          
+        break;
         default:
         break;
       }
@@ -1683,7 +1694,7 @@ app.controller('resultController',["$scope","$http","$location","$resource","loc
   }
  
 
-  $scope.searchMore = function () {
+  /*$scope.searchMore = function () {
    search($scope.user,"/user/find-group");
   }
 
@@ -1695,8 +1706,8 @@ app.controller('resultController',["$scope","$http","$location","$resource","loc
   var search = function(data,url){
     if(Object.keys(data).length > 0){
       if(data.city !== undefined) {
-          var capitalize = data.city.charAt(0).toUpperCase() + data.city.slice(1);
-          data.city = capitalize;
+        var capitalize = data.city.charAt(0).toUpperCase() + data.city.slice(1);
+        data.city = capitalize;
       }
       var filterInput = {};
       for(var i in data){
@@ -1723,16 +1734,21 @@ app.controller('resultController',["$scope","$http","$location","$resource","loc
       });
       $location.path("/list");
    }                                     
-  }
-  $scope.user.creteria = "specialty";
+  }*/
+  $scope.user.creteria = "doctorname";
   $scope.$watch("user.creteria",function(newVal,oldVal){
-    console.log(newVal)
     if($scope.user.creteria === "specialty"){
       $scope.isSpecialty = true;
       $scope.isDoctorId = false;
+      $scope.isName = false;
+    } else if($scope.user.creteria === "doctorname"){
+      $scope.isDoctorId = false;
+      $scope.isSpecialty = false;
+      $scope.isName = true;
     } else {
       $scope.isDoctorId = true;
       $scope.isSpecialty = false;
+      $scope.isName = false;
     }
   })                              
 }]);
