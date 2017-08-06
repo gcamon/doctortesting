@@ -1319,6 +1319,10 @@ span.dates {
 	padding: 10px;
 }
 
+.nav-link a span {
+	color: red!important;
+}
+
 .complain-in-view {
 	width:500px;
 	height:580px!important;

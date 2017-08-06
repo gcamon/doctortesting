@@ -50,7 +50,7 @@ var basicRoute = function (model,sms,io) {
     res.render('index',{"message":""});
   });
 
-  router.get("/how-it-work",function(req,res){
+  router.get("/how-it-works",function(req,res){
     res.render("how-it-work")
   });
 
