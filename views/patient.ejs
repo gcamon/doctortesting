@@ -212,7 +212,7 @@
                                                     <div class="img" style="background-image: url({{call.profile_pic_url}})"></div>
                                                 </div>
                                                 <div class="body-col">
-                                                    <p> <span class="accent">Zack Alien</span> From :  {{call.title}} {{call.firstname}} {{call.lastname}} <span class="accent" style="display:block">Hi, you have {{call.type}} appointment with me by</span><em>{{call.time}} minutes</em> </p>
+                                                    <p> <span class="accent"></span> From :  {{call.title}} {{call.firstname}} {{call.lastname}} <span class="accent" style="display:block">Hi, you have {{call.type}} appointment with me by</span><em>{{call.time}} minutes</em> </p>
                                                 </div>
                                             </a>
                                         </li>                                       
@@ -329,7 +329,7 @@
 
 
             <div class="col-md-4">  <a href="#" class="btn btn-info btn-sm header-btn"><i class="fa fa-money" ng-controller="balanceController"></i>
-                <span>Available Balance |  N3200 </span>
+                <span>Available Balance |  {{balance}} </span>
             </a>  </div>
 
                      </header>
@@ -346,9 +346,9 @@
 
                                  <li class="no-show"> <a href="">
                         
-                                    <div class="img" style="background-image: url('https://avatars3.githubusercontent.com/u/3959008?v=3&s=40')"> </div> 
+                                    <div class="img" style="background-image: url(<%= userInfo.profile_pic_url %>)"> </div> 
                                     <span class="name">
-                      John Doe
+                      <%= userInfo.firstname %> <%= userInfo.lastname %>
                     </span>
                             <i class="fa arrow"></i>
                         </a>

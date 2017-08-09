@@ -80,7 +80,7 @@ app.config(function($routeProvider){
   controller: 'myDoctorController'
  })
 
- .when("/doctor-patient/treatment/:id",{
+ .when('/doctor-patient/treatment/:id',{
   templateUrl: '/assets/pages/specific-patient.html',
   controller: 'myPatientController'
  })  
@@ -2114,7 +2114,7 @@ app.controller("docNotificationController",["$scope","$location","$resource","$i
           localManager.setValue("receiver",id);
           localManager.setValue('caller',callerId);    
           templateService.holdIdForSpecificPatient = id;
-          var page = "/user/doctor-patient/treatment/" + id;
+          var page = "/doctor-patient/treatment/" + id;
           localManager.setValue("currentPage",page);
           $location.path(page);
         }
@@ -2435,7 +2435,7 @@ app.controller("newPatientModalController",["$scope","$http","ModalService","tem
   $scope.patient = {};
   
   var date = new Date();
-
+  $scope.isForm = true;
   $scope.existingP = function(){
     $scope.isExisting = true;
     $scope.isForm = false;
@@ -5965,9 +5965,10 @@ app.controller("presenceSocketController",["$rootScope","$scope","mySocket","loc
   }
 
   $scope.newPatient = function(){
+
     ModalService.showModal({
           templateUrl: 'patient-emergency-form.html',
-          controller: "newPatientModalController"
+          controller: 'newPatientModalController'
       }).then(function(modal) {
           modal.element.modal();
           modal.close.then(function(result) {
