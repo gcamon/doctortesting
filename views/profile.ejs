@@ -381,18 +381,20 @@
                             <i class="fa fa-home"></i>Doctor's Dashboard
                         </a> </li>
 
-                            <li class="bg-white" style="height:40px;"> 
-                        <form role="search" style="height:40px;">
-                            <div class="input-container"> <i class="fa fa-search"></i> <input type="search" placeholder="Filter Patients" style="border:0; width:90%; height:40px;" ng-model="patient.firstname">
-                                <div class="underline"></div>
-                            </div>
-                        </form></li>
-
+                            
                                 <li> <a href="">
                             <i class="fa fa-user-md"></i> My Patients
                             <i class="fa arrow"></i>
                         </a>
                                     <ul>
+                                        <li class="bg-white" style="height:40px;"> 
+                                            <form role="search" style="height:40px;">
+                                                <div class="input-container"> <i class="fa fa-search"></i> <input type="search" placeholder="Filter Patients" style="border:0; width:90%; height:40px;" ng-model="patient.firstname">
+                                                    <div class="underline"></div>
+                                                </div>
+                                            </form>
+                                        </li>
+
                                         <li ng-repeat="patient in patientList | filter : patient.firstname || patient.lastname">
                                             <div class="img" style='background-image:url({{patient.patient_profile_pic_url }})'>
                                             <a href="" ng-click="userPatient(patient.patient_id)">
