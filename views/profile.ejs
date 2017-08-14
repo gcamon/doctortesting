@@ -9,12 +9,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
         <!-- Place favicon.ico in the root directory -->
+
         <link rel="stylesheet" href="/assets/css/my-edit.css">
         <link rel="stylesheet" href="/assets/css/main.cs">
         <link rel="stylesheet" href="/assets/css/vendor.css">
          <link rel="stylesheet" href="/assets/css/app.css">
           <link rel="stylesheet" href="/assets/css/now-ui-kit2.css">
           <link rel="stylesheet" href="/assets/css/icomoon.css">
+          <link rel="stylesheet" href="/assets/css/responsive.css">
+          <script src="/assets/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
           <style>
               .title{
                   font-weight: 300;
@@ -306,7 +309,7 @@
     </nav>
     <!-- End Navbar -->
      <div class="clearfix"></div>
-            <div class="app" id="app" >
+            <div class="app">
                 <header class="container text-center" style="background:#fff; border-left:1px solid #f2f2f2; min-height:70px; line-height:70px; padding:5px;" ng-controller="presenceSocketController">
                             <div class="col-md-7 col-sm-12 col-xs-12">
 
@@ -323,14 +326,15 @@
   <div class="custom-control-indicator"></div>
   <div class="custom-control-description" style="margin-top:-20px; display:block;">Busy</div>
 </label></div>
-                                      <ul class="nav nav-tabs" role="tablist">
+                                      <ul class="nav nav-tabs">
    <li class="nav-item">
     <a class="nav-link" href="/user/patients/waiting-room" ><i class="fa fa-user"></i>
                 <span>   Patients Waiting Room</span></a>
   </li>
   <li class="nav-item">
     <a class="nav-link"  href="" ng-click="newPatient()"><i class="fa fa-user-plus" ></i>
-                <span> Add new patient</span></a>
+        <span> Add new patient</span>
+    </a>
   </li>
 </ul>
  </div>
@@ -364,12 +368,12 @@
                         </a>
                                     <ul>
                                   
-                                         <li> <a href="#"> <i class="fa fa-user icon"></i> Profile </a> </li>
+                                         <li> <a href=""> <i class="fa fa-user icon"></i> Profile </a> </li>
 
-                                  <li><a href="#"> <i class="fa fa-user icon"></i> ID gcamon4540</a> </li>
+                                  <li><a href=""> <i class="fa fa-user icon"></i> <%= person.user_id %> </a> </li>
 
                                   <li>
-                                     <a href="#"><i class="fa fa-gear icon"></i> Settings </a> </li>
+                                     <a href=""><i class="fa fa-gear icon"></i> Settings </a> </li>
 
  <li><a href="login.html"><i class="fa fa-power-off icon"></i> Logout </a>
                              </li>
@@ -462,7 +466,7 @@
 
 <!-- Tab panes -->
 <div class="tab-content" ng-controller="inDoctorDashboardController">
-  <div class="tab-pane active" id="home" role="tabpanel">
+  <div class="tab-pane active">
       <div class="container">
     <div class="row">
 
@@ -940,9 +944,11 @@
         <script src="/assets/js/moment.min.js"></script>     
         <script src="/assets/js/angular-moment.min.js"></script>
         <script src="/assets/js/angucomplete-alt.min.js"></script> 
+
         <script src="/assets/js/ui-bootstrap-tpls.js"></script>
         <script src="/assets/js/angular-clipboard.js"></script>
         <script src="/assets/js/ngresource.js"></script>
+
 
 
     </body>

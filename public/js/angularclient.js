@@ -1,6 +1,6 @@
 
-var app = angular.module('myApp',["ngRoute","ngAnimate","angularModalService",
-  'ui.bootstrap','angular-clipboard',"ngResource","btford.socket-io"]);
+var app = angular.module('myApp',["ngRoute","ngAnimate","angularModalService","angularMoment",
+  'ui.bootstrap','angular-clipboard',"ngResource","btford.socket-io","ngTouch"]);
 
 app.config(function($routeProvider){
   $routeProvider
@@ -2435,7 +2435,7 @@ app.controller("newPatientModalController",["$scope","$http","ModalService","tem
   $scope.patient = {};
   
   var date = new Date();
-  $scope.isForm = true;
+
   $scope.existingP = function(){
     $scope.isExisting = true;
     $scope.isForm = false;
