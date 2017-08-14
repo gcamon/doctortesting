@@ -30,6 +30,16 @@
                     border-right: 1px solid rgba(0,0,0,0.2);
                     border-bottom: 1px solid rgba(0,0,0,0.2);
                 }
+
+                .text-center a {
+                    margin-left: 50px;
+                }
+
+                @media screen and (max-width: 720px) {
+                    .text-center a {
+                        margin-left: 20px;
+                    }
+                }
           </style>
     </head>
 
@@ -309,44 +319,36 @@
     </nav>
     <!-- End Navbar -->
      <div class="clearfix"></div>
-            <div class="app">
+            <div class="app" id="app" >
                 <header class="container text-center" style="background:#fff; border-left:1px solid #f2f2f2; min-height:70px; line-height:70px; padding:5px;" ng-controller="presenceSocketController">
-                            <div class="col-md-7 col-sm-12 col-xs-12">
-
-                                  <div class="col-md-4"> 
+                            <div class="col-md-12 col-sm-12 col-xs-12" >
+                               
+                                  <div class="col-md-12"> 
                                   <label class="custom-control custom-radio">
-  <input id="radio2" name="radio" type="radio" value="online" ng-model="user.presence" class="custom-control-input" ng-class="{'doc-presense':isOnline === true}" class="doc-presence-normal">
-  <div class="custom-control-indicator"></div>
-  <div class="custom-control-description" style="margin-top:-20px; display:block;">Online</div>
-</label>
+                      <input id="radio2" name="radio" type="radio" value="online" ng-model="user.presence" class="custom-control-input" ng-class="{'doc-presense':isOnline === true}" class="doc-presence-normal">
+                      <div class="custom-control-indicator"></div>
+                      <div class="custom-control-description" style="margin-top:-20px; display:block;">Online</div>
+                    </label>
 
 
-<label class="custom-control custom-radio">
-  <input id="radio2" name="radio" type="radio" value="offline" ng-model="user.presence" class="custom-control-input" ng-class="{'doc-presense2':isOnline === false}" class="doc-presence-normal">
-  <div class="custom-control-indicator"></div>
-  <div class="custom-control-description" style="margin-top:-20px; display:block;">Busy</div>
-</label></div>
-                                      <ul class="nav nav-tabs">
-   <li class="nav-item">
-    <a class="nav-link" href="/user/patients/waiting-room" ><i class="fa fa-user"></i>
-                <span>   Patients Waiting Room</span></a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link"  href="" ng-click="newPatient()"><i class="fa fa-user-plus" ></i>
-        <span> Add new patient</span>
-    </a>
-  </li>
-</ul>
- </div>
+                    <label class="custom-control custom-radio">
+                      <input id="radio2" name="radio" type="radio" value="offline" ng-model="user.presence" class="custom-control-input" ng-class="{'doc-presense2':isOnline === false}" class="doc-presence-normal">
+                      <div class="custom-control-indicator"></div>
+                      <div class="custom-control-description" style="margin-top:-20px; display:block;">Busy</div>
+                    </label>
+                                                          
+                        <a class="nav-link" href="/user/patients/waiting-room" ><i class="fa fa-user"></i>
+                                    <span>   Patients Waiting Room</span></a>
+                     
+                        <a class="nav-link"  href="" ng-click="newPatient()"><i class="fa fa-user-plus" ></i>
+                                    <span> Add new patient</span></a>
+                      
+                        <a ng-controller="balanceController" href="" class="btn btn-info btn-sm header-btn" style="float-right"><i class="fa fa-money"></i>
+                            <span>Available Balance |  {{balance}}</span>
+                        </a>  
+                     </div>
+                </header>
 
-         
-
-
-            <div class="col-md-4" ng-controller="balanceController">  <a href="" class="btn btn-info btn-sm header-btn"><i class="fa fa-money"></i>
-                <span>Available Balance |  {{balance}}</span>
-            </a>  </div>
-
-                     </header>
                      <div class="clearfix"></div>
 
                 <aside class="sidebar" style="top:.4em;">
@@ -366,24 +368,48 @@
                     </span>
                             <i class="fa arrow"></i>
                         </a>
-                                    <ul>
-                                  
-                                         <li> <a href=""> <i class="fa fa-user icon"></i> Profile </a> </li>
+                                    <ul>                                  
+                                        <li> <a href="<%= person.profile_url %>"> <i class="fa fa-user icon"></i>View profile</a> </li>
 
-                                  <li><a href=""> <i class="fa fa-user icon"></i> <%= person.user_id %> </a> </li>
+                                  <li><a > <i class="fa fa-user icon"></i> ID <%= person.user_id %> </a> </li>
 
                                   <li>
-                                     <a href=""><i class="fa fa-gear icon"></i> Settings </a> </li>
+                                     <a href="#/edit-profile"><i class="fa fa-gear icon"></i> Edit profile</a> 
+                                 </li>
 
- <li><a href="login.html"><i class="fa fa-power-off icon"></i> Logout </a>
+                                 <li>
+                                     <a href="#/edit-picture"><i class="fa fa-gear icon"></i> Change Profile Picture</a> 
+                                 </li>
+
+ <li><a href="" ng-click="logout()"><i class="fa fa-power-off icon"></i> Logout </a>
                              </li>
+
+                             <li> <a href="">
+                            <i class="fa fa-tasks" aria-hidden="true"></i> Utilities
+                            <i class="fa arrow"></i>
+                        </a>
+                                    <ul>
+                                        <li> <a href="#/find-specialist">Find a doctor</a>
+                                </a> </li>
+
+                                 <li> <a href="#/drug">Find Drug
+                                </a> </li>
+
+                                 <li> <a href="#/scan-search">Find Scan
+                                </a> </li>
+
+                                <li><a href="#/search-test">Find Test
+                                </a> </li>
+                                       
+                                    </ul>
+                                </li>                      
                                     </ul>
                                 </li>
 
                                 
                                 <li class="active"> <a href="#/welcome">
                             <i class="fa fa-home"></i>Doctor's Dashboard
-                        </a> </li>
+                        </a> </li>                       
 
                             
                                 <li> <a href="">
@@ -429,10 +455,11 @@
                                          <% } %>
                                     </ul>
                                 </li>
-                                <li> <a href="">
+                                <li> 
+                                    <a href="">
                             <i class="fa fa-file-text-o"></i> PAYMENT & WALLET
                             <i class="fa arrow"></i>
-                        </a>
+                                    </a>
                                     <ul>
                                         <li> <a href="#/wallet">
                                     Fund Wallet
@@ -451,10 +478,7 @@
                                 </a> </li>
                                        
                                     </ul>
-                                </li>
-                                <li> <a href="/contact">
-                            <i class="fa fa-github-alt"></i> Contact Us
-                        </a> </li>
+                                </li>                               
                             </ul>
                         </nav>
                     </div>
@@ -466,7 +490,7 @@
 
 <!-- Tab panes -->
 <div class="tab-content" ng-controller="inDoctorDashboardController">
-  <div class="tab-pane active">
+  <div class="tab-pane active" id="home" role="tabpanel">
       <div class="container">
     <div class="row">
 

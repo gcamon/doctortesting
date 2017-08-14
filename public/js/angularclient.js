@@ -2435,7 +2435,7 @@ app.controller("newPatientModalController",["$scope","$http","ModalService","tem
   $scope.patient = {};
   
   var date = new Date();
-
+  $scope.isForm = true;
   $scope.existingP = function(){
     $scope.isExisting = true;
     $scope.isForm = false;
