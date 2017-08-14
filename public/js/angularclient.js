@@ -1,5 +1,5 @@
 
-var app = angular.module('myApp',["ngRoute","ngAnimate","angularModalService","angularMoment",
+var app = angular.module('myApp',["ngRoute","ngAnimate","angularModalService",
   'ui.bootstrap','angular-clipboard',"ngResource","btford.socket-io"]);
 
 app.config(function($routeProvider){

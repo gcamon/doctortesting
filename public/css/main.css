@@ -1345,12 +1345,12 @@ span.dates {
 }
 .complain-in-view .complaint-view-head {
 	padding: 10px;
-	background-color: green;
+	background-color: #d7dde4;
 }
 
 .complaint-times {
 	font-size: 22px;
-	color:#fff;
+	color:green;
 	padding:15px 20px;
 	cursor:pointer;
 	margin-left: 160px
@@ -1360,7 +1360,7 @@ span.dates {
 .complaint-user {
 	font-size: 24px;
 	padding-right: 30px;
-	color:#fff;
+	color:#000;
 }
 
 .complaint-view-charge {

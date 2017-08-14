@@ -1791,24 +1791,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased; }
 
-.main {
-  position: relative;
-  background: #FFFFFF; }
 
-/** my css **/
-.get-user {
-  border-width: 2px;
-  font-weight: 400;
-  font-size: 0.8571em;
-  line-height: 1.35em;
-  border: none;
-  border-radius: 0.1875rem;
-  padding: 11px 22px;
-  cursor: pointer;
-  background-color: #2CA8FF;
-  color: #FFFFFF;
-  text-decoration: none;
-}
 
 /* Animations */
 .nav-pills .nav-link, .navbar, .nav-tabs .nav-link {
