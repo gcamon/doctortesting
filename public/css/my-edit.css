@@ -12,10 +12,11 @@
 
 .view-animate-container {
   position:relative;  
-  background:white;
-  overflow-x:hidden;
-  height: 1000px;
+  background:white;  
+  max-height: 800px;
   overflow-y: auto;
+ 
+
 }
 
 .view-animate {

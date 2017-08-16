@@ -22,6 +22,7 @@
         <script src="/assets/js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
         <link href="https://fonts.googleapis.com/css?family=Ubuntu+Condensed" rel="stylesheet">
         <script src="/assets/js/vendor/jquery-library.js"></script>
+         <script type="text/javascript" src="/assets/js/source.js"></script>
         <script type="text/javascript" src="/assets/js/jquery.nicescroll.js"></script>
          <script type="text/javascript">
             $(document).ready(function(){
@@ -96,37 +97,37 @@
                                     <section class="patient-complain">
                                         <article ng-repeat="i in complaints">
                                             <i class="fa fa-user"> &nbsp; Patient</i>
-                                            <span>{{i.age}}</span>
-                                            <span>{{i.gender}}</span>
-                                            <span style="color:green">{{i.complaint_id}}</span>
-                                            <span>{{i.sent_date| date: "mediumDate"}}</span>
+                                            <span ng-cloak>{{i.age}}</span>
+                                            <span ng-cloak>{{i.gender}}</span>
+                                            <span style="color:green" ng-cloak>{{i.complaint_id}}</span>
+                                            <span ng-cloak>{{i.sent_date| date: "mediumDate"}}</span>
                                             <ul class="patient-symptoms" >
                                                 <li><strong>Symptoms | &nbsp;</strong></li>
-                                                <li ng-repeat="symptom in i.symptoms" class="description">{{symptom}}</li>
+                                                <li ng-repeat="symptom in i.symptoms" class="description" ng-cloak>{{symptom}}</li>
                                             </ul>
-                                            <p>"{{i.description}}" &nbsp; <span style="color:red;cursor:pointer;text-decoration:underline" ng-click="veiwDatail(i.complaint_id)">Respond!</span></p>
+                                            <p ng-cloak>"{{i.description}}" &nbsp; <span style="color:red;cursor:pointer;text-decoration:underline" ng-click="veiwDatail(i.complaint_id)">Respond!</span></p>
                                         </article>
                                     </section>
                                 </div>
                                 <div  class="complain-in-view" ng-class="{'no-view':isViewPatient !== true}" id="complain-in-view">
                                     <p class="complaint-view-head">
-                                        <i class="fa fa-user complaint-user"> &nbsp; Patient ({{patient.complaint_id}})</i>
+                                        <i class="fa fa-user complaint-user" ng-cloak> &nbsp; Patient ({{patient.complaint_id}})</i>
                                         <i class="fa fa-times complaint-times"  ng-click="close()" ng-if="isViewPatient === true"></i>                                     
                                     </p>
                                     <article style="padding:10px">                                        
                                         <aside>
-                                            <span><strong>Age</strong> | {{patient.age}}</span>
-                                            <span><strong>Gender </strong> | {{patient.gender}}</span>
+                                            <span><strong>Age</strong ng-cloak> | {{patient.age}}</span>
+                                            <span><strong>Gender </strong ng-cloak> | {{patient.gender}}</span>
 
                                         </aside>
                                         <aside>
-                                           <p style="color:red;font-size:18px;padding: 10px 0;border:1px dashed rgba(0,0,0,0.8);text-align:center;border-radius: 12px;margin: 15px 0">Patient resides in {{patient.preferred_city}}</p>
+                                           <p style="color:red;font-size:18px;padding: 10px 0;border:1px dashed rgba(0,0,0,0.8);text-align:center;border-radius: 12px;margin: 15px 0" ng-cloak>Patient resides in {{patient.preferred_city}}</p>
                                         </aside>
                                         <h6>History</h6>
                                         <ul class="patient-symptoms">                                            
-                                            <li ng-repeat="symptom in patient.symptoms" class="description"><strong>{{symptom}}</strong></li>
+                                            <li ng-repeat="symptom in patient.symptoms" class="description"><strong ng-cloak>{{symptom}}</strong></li>
                                         </ul>
-                                        <p>"{{patient.description}}"</p>
+                                        <p ng-cloak>"{{patient.description}}"</p>
                                         <h6>Attached file(s)<h6>
                                         <div ng-if="patient.files.length > 0" ng-repeat="file in patient.files" >
                                             <div  ng-if="file.type === 'image'" style="width: 480px;height:auto;margin:5px auto">
@@ -157,7 +158,7 @@
                                                 <span>Your charge = </span> <input type="number" placeholder="Enter amount" ng-model="user.amount">         
                                             </div>
                                             <p>
-                                                <span>Total billed for patient = {{str}}</span>
+                                                <span ng-cloak>Total billed for patient = {{str}}</span>
                                             </p>
                                             <p style="text-align:center">
                                                 <input type="button" value="Submit" ng-click="sendRequest()" class="btn btn-primary">
@@ -204,7 +205,7 @@
         
         <script src="/assets/js/vendor/jquery-library.js"></script>
         <script src="/assets/js/vendor/bootstrap.min.js"></script>
-        <script type="text/javascript" src="/assets/js/source.js"></script>
+       
         <script type="text/javascript" src="/assets/js/angularclient.js"></script>
         <script type="text/javascript" src="/assets/js/ngroute.js"></script>
         <script src="/socket.io/socket.io.js"></script>   
