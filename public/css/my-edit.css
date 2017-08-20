@@ -13,7 +13,7 @@
 .view-animate-container {
   position:relative;  
   background:white;  
-  max-height: 800px;
+  max-height:1000px;
   overflow-y: auto;
  
 
@@ -62,4 +62,10 @@
   background-color: #2CA8FF;
   color: #FFFFFF;
   text-decoration: none;
+}
+
+@media screen and (min-height: 960px) {
+  .view-animate-container {
+    max-height: 800px
+  }
 }

@@ -6496,8 +6496,7 @@ app.controller("myPatientController",["$scope","$http","$location","$window","$r
   var user = localManager.getValue("resolveUser");
 
   var getPatientData = $resource("/user/doctor/specific-patient")
-  getPatientData.get(patient,function(data){
-    console.log(data)        
+  getPatientData.get(patient,function(data){  
     $scope.patientInfo = data;        
     patient.prescriptionId = random;
     patient.patient_id = patient.id;    
@@ -6565,31 +6564,39 @@ app.controller("myPatientController",["$scope","$http","$location","$window","$r
     $rootScope.message1 = messages || [];
   });
 
-  
+  $scope.getkeys = function (event) {
+    //$scope.keyval = event.keyCode;
+    if(event.keyCode === 13) 
+      $scope.sendChat2();
+  }
+
   $scope.sendChat2 = function(){ 
-    $scope.user.isSent = true;   
-    mySocket.emit("send message",{to: patient.id,message:$scope.user.text2,from: user.user_id},function(data){ 
-      var date = + new Date();
-      var msg = {};
-      msg.time = date;
-      msg.sent = data.message;
-      msg.isSent = false;
-      msg.isReceived = false;
-      $rootScope.message1.push(msg);
-      var getIndex = $rootScope.message1.length - 1;
-      msg.userId = user.user_id;
-      msg.partnerId = patient.id;     
-      mySocket.emit("isSent",msg,function(status){
-        $rootScope.message1[getIndex].isSent = status;
+    $scope.user.isSent = true;
+    if($scope.user.text2 !== "" || $scope.user.text2 !== undefined) {   
+        mySocket.emit("send message",{to: patient.id,message:$scope.user.text2,from: user.user_id},function(data){ 
+        var date = + new Date();
+        var msg = {};
+        msg.time = date;
+        msg.sent = data.message;
+        msg.isSent = false;
+        msg.isReceived = false;
+        $rootScope.message1.push(msg);
+        var getIndex = $rootScope.message1.length - 1;
+        msg.userId = user.user_id;
+        msg.partnerId = patient.id;     
+        mySocket.emit("isSent",msg,function(status){
+          $rootScope.message1[getIndex].isSent = status;
+          mySocket.emit("save message",msg);
+        });
         mySocket.emit("save message",msg);
+        mySocket.on("isReceived",function(status){
+          alert(status)
+          $rootScope.message1[getIndex].isReceived = status;
+          mySocket.emit("save message",msg);
+        });
       });
-      mySocket.emit("save message",msg);
-      mySocket.on("isReceived",function(status){
-        $rootScope.message1[getIndex].isReceived = status;
-        mySocket.emit("save message",msg);
-      });
-    });
-    $scope.user.text2 = "";
+      $scope.user.text2 = "";
+    }
   }
 
   mySocket.on("new_msg", function(data) {
@@ -6604,8 +6611,10 @@ app.controller("myPatientController",["$scope","$http","$location","$window","$r
       mySocket.emit("save message",msg);
       templateService.playAudio(3);;
     } else {
-      alert("You have new message");
+      //alert("You have new message");
       var elemPos = $rootScope.patientList.map(function(x){return x.patient_id}).indexOf(data.from);
+      console.log($rootScope.patientList)
+      console.log(data.from)
       var found = $rootScope.patientList[elemPos];
       if(!found.queueLen) {
         found.queueLen = 1;
@@ -6632,7 +6641,7 @@ app.controller("myPatientController",["$scope","$http","$location","$window","$r
   });
 
   mySocket.on("typing", function(data) {
-    console.log(data)
+    
     $scope.typing = data;
   });
 
@@ -6859,7 +6868,6 @@ app.controller("myPatientController",["$scope","$http","$location","$window","$r
       $scope.isToViewRadPrescriptionReq = true;
       $scope.isToViewSession = false;
       $scope.isChat = false;
-      $scope.isChat = false;
     }
 
     var sessionList = [];
@@ -6889,26 +6897,33 @@ app.controller("myPatientController",["$scope","$http","$location","$window","$r
     var theReqList = templateService.holdPrescriptionRequestData || localManager.getValue("prescriptionRequestData");
     var index = 0;
     //this will check to make sure n two thsame request is addedto the list.
+   
     for(var i = 0; i < theReqList.length; i++){
       if(patient.id === theReqList[i].sender_id) {
-
+       
         if(i > 0) {
           var getId = theReqList[index].ref_id;
           index++;
-        }     
+        }   
+       
+
         switch(theReqList[i].type_of_test) {
-          case "laboratory":
+          case "laboratory:":
             if(theReqList[i].ref_id !== getId)
               templateService.labPrescriptionReq.push(theReqList[i]);
-            break;
+          break;
           case "radiology":
             if(theReqList[i].ref_id !== getId)
               templateService.radioPrescriptionReq.push(theReqList[i]);
+          break;
           default:
           break;
         }
       }
     }
+
+     
+    console.log(templateService.labPrescriptionReq)
 
     $scope.labPrescriptionReq = templateService.labPrescriptionReq;
     $scope.radioPrescriptionReq = templateService.radioPrescriptionReq;
@@ -11362,7 +11377,9 @@ app.controller("topHeaderController",["$scope","$window","$location","$resource"
     localManager.removeItem("laboratoryData");
     localManager.removeItem("radiologyData");
     localManager.removeItem('currPageForLaboratory');
-    localManager.removeItem('currPageForRadiology'); 
+    localManager.removeItem('currPageForRadiology');
+    localManager.removeItem('prescriptionRequestData')    
+
   }
  
    
