@@ -18,6 +18,13 @@ var myModel = function () {
 		collections: "fileinfo"
 	});
 
+	var skillSchema = Schema({
+		skill_id: Number,
+		Skill_name: String,
+		description: String,
+		files: [fileSchema]
+	})
+
 	var service_objSchema = Schema({
 		name: String,
 		val: Boolean,
@@ -165,10 +172,7 @@ var myModel = function () {
 		sub_specialty: String
 	});
 
-	var procedureSchema = Schema({
-		id: Number,
-		procedure_description: String
-	});
+	
 
 	var accessSchema = Schema({
 		patient_id: String,
@@ -418,7 +422,7 @@ var myModel = function () {
 		rating: Number,
 		profile_pic_url: String,
 		sub_specialty: [subspecialtySchema],
-		procedure: [procedureSchema],
+		skills: [skillSchema],
 		introductory: String,
 		awards: [AwardSchema],
 		education: [EducationSchema],

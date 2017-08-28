@@ -30,7 +30,7 @@ app.use('/call',ExpressPeerServer(http,options));
 
 
 http.listen(port,function(){
-    console.log('listening on *:8080')
+    console.log('listening on *:8080');
 });
 
 
@@ -44,12 +44,10 @@ payments(model,sms,io);
 placement(model,sms);
 mySocket(model,io);
 
-var a = "obinna"
-var reg = new RegExp(a.replace(/\s+/g,"\\s+"), "gi")
-console.log(reg)
-var g = "iyo"
-console.log(g.charAt(0).toUpperCase())
+var a = "emeka nwanaeke is awseome boiy!"
 
+var str = new RegExp(a.replace(/\s+/g,"\\s+"), "gi");
+      console.log(str);         
 
 
 

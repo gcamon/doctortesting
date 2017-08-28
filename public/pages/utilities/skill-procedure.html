@@ -1,0 +1,9 @@
+<div>
+	<h2>Search for Skills and Procedure</h2>
+	<form>
+		<div class="col-md-5 form-group">        
+        <input type="text" class="form-control" placeholder="Skill or Procedure"   uib-typeahead="skill for skill in skills | filter:$viewValue | limitTo:15" ng-model="user.skill">
+      	</div>
+		<button class="btn btn-info" ng-click = "find('skill')">Find</button>
+	</form>
+</div>

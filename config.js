@@ -15,8 +15,8 @@ var ExpressPeerServer = require('peer').ExpressPeerServer;
 
 
 var configuration = function (app,model) {
-	//config
-	var storeDB = process.env.MONGODB_ADDON_URI || "mongodb://127.0.0.1:27017/medicalmull";
+  //config
+  var storeDB = process.env.MONGODB_ADDON_URI || "mongodb://127.0.0.1:27017/medicalmull";
   var store = new MongoDBStore(
     {
       uri: storeDB,
@@ -37,7 +37,7 @@ var configuration = function (app,model) {
 	  saveUninitialized: true,
 	  cookie: {
 	  	httpOnly: true, 
-	  	maxAge: 3600000 * 24,
+	  	maxAge: 3600000 * 48,
 	  	path: "/user"
 	  } //secure: true will be set on the cookie when i this site is on https
 	}));
@@ -55,8 +55,7 @@ var configuration = function (app,model) {
 		  res.redirect("https://" + req.headers.host + req.url);
 		} else {
 			next();
-		}
-		
+		}		
 	});
 
 	passport.serializeUser(function(user, done) {    

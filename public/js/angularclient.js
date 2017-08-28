@@ -119,6 +119,11 @@ app.config(function($routeProvider){
 
  //end of wallet route
 
+ .when("/doc-edit-profile", {
+  templateUrl: '/assets/pages/doctor/doctor-edit-profile.html',
+  controller: 'docProfileEditController'
+ })
+
  .when("/edit-profile", {
   templateUrl: '/assets/pages/patient-edit-profile.html',
   controller: 'patientProfileEditController'
@@ -318,6 +323,8 @@ app.config(function($routeProvider){
   controller: 'findRadioController'
  })
 
+
+
  .when("/selected-laboratory/:id",{
   templateUrl: "/assets/pages/selected-laboratory.html",
   controller: 'selectedLabController'
@@ -425,7 +432,7 @@ app.config(function($routeProvider){
  /**** for utilities ****/
  .when("/drug",{
   templateUrl: "/assets/pages/utilities/search-drug.html",
-  controller: "drugController"
+  controller: 'drugController'
  })
 
  .when("/search-test",{
@@ -436,6 +443,11 @@ app.config(function($routeProvider){
  .when("/scan-search",{
   templateUrl: "/assets/pages/utilities/search-test.html",
   controller: 'searchScanController'
+ })
+
+ .when("/procedure",{
+  templateUrl:"/assets/pages/utilities/skill-procedure.html",
+  controller: 'resultController'
  })
 
  .when("/help",{
@@ -1520,7 +1532,8 @@ app.controller('pictureController',["$scope","$http","$location","multiData",fun
     } 
 }]);
 
-app.controller('formController',["$scope","$http","$location","multiData","$window",function($scope,$http,$location,multiData,$window) {  
+app.controller('docProfileEditController',["$scope","$http","$location","multiData","$window","localManager",
+  function($scope,$http,$location,multiData,$window,localManager) {  
   $scope.user = {};
   $scope.user.type = "form"; 
   $scope.user.education = [{"id":1,"type":"edu"}];
@@ -1535,7 +1548,20 @@ app.controller('formController',["$scope","$http","$location","multiData","$wind
      arr[arr.length-1].id = random;
      arr[arr.length-1].type = arr[0].type;
      $scope.check(arr);
-   };
+  };
+
+  $http({
+    method  : 'GET',
+    url     : "/user/doctor/update",
+    headers : {'Content-Type': 'application/json'} 
+    })
+  .success(function(data) {              
+    if (data) {
+      $scope.docInfo = data;                         
+    } 
+  });                            
+
+   
 
    $scope.check = function(arr){
      switch(arr[0].type) {
@@ -1586,18 +1612,18 @@ app.controller('formController',["$scope","$http","$location","multiData","$wind
      }
    };
 
-   $scope.update = function(){      
-      $http({
-        method  : 'PUT',
-        url     : '/user/update',
-        data    : $scope.user, //forms user object
-        headers : {'Content-Type': 'application/json'} 
-        })
-      .success(function(data) {              
-        if (data) {
-          $window.location.href = '/user/doctor/update';                           
-        } 
-      });                                    
+  $scope.update = function(){      
+    $http({
+      method  : 'PUT',
+      url     : '/user/update',
+      data    : $scope.user, //forms user object
+      headers : {'Content-Type': 'application/json'} 
+      })
+    .success(function(data) {              
+      if (data) {
+       // $window.location.href = '/user/doctor/update';                           
+      } 
+    });                                    
   }
 
 }]);
@@ -1642,43 +1668,56 @@ app.controller('resultController',["$scope","$http","$location","$resource","loc
   $scope.user.type = "Doctor";
   $scope.refineUser = {};
   var theCity;
+  var theSkill;
   $scope.getCity = function(city){
     theCity = city;
   }
 
+
+
   $scope.cities = cities;
   templateUrlFactory.setUrl();
   var data;
-  $scope.find = function () {
-    if($scope.user.specialty || $scope.user.doctorId || $scope.user.city || $scope.user.name){
-      data = $resource("/user/patient/find-doctor");     
+  $scope.find = function (skill) {
+    if($scope.user.specialty || $scope.user.doctorId || $scope.user.city || $scope.user.name || $scope.user.skill){
+      data = $resource("/user/patient/find-doctor"); 
+      if(skill !== undefined) {
+        $scope.user.creteria = "skill";
+      }    
       switch($scope.user.creteria){
         case "doctorId":
           var sendObj = {};
           sendObj.user_id = $scope.user.doctorId;
-          data.query(sendObj,function(data){
-             //localManager.setValue("userInfo",data);
+          data.query(sendObj,function(data){           
             localManager.setValue("userInfo",data);
             $location.path("/list");
             console.log(data);
           });  
         break;
-        case "specialty":
+        case "specialty":        
           var sendObj = {};
           sendObj.specialty = $scope.user.specialty;
           sendObj.city = $scope.user.city;
           data.query(sendObj,function(data){
-             //localManager.setValue("userInfo",data);
             localManager.setValue("userInfo",data);
             $location.path("/list");
             console.log(data);
           });          
         break;
-        case "doctorname":
+        case "doctorname":         
           var sendObj = {};
           sendObj.name = $scope.user.name;          
           data.query(sendObj,function(data){
-             //localManager.setValue("userInfo",data);
+            localManager.setValue("userInfo",data);
+            $location.path("/list");
+            console.log(data);
+          });          
+        break;
+        case "skill":
+          alert($scope.user.skill)
+          var sendObj = {};         
+          sendObj.skill = $scope.user.skill;          
+          data.query(sendObj,function(data){
             localManager.setValue("userInfo",data);
             $location.path("/list");
             console.log(data);
@@ -1692,6 +1731,12 @@ app.controller('resultController',["$scope","$http","$location","$resource","loc
     }
    //search($scope.user,"/user/find-group");
   }
+
+  var source = $resource("/user/get-skills-procedures");
+  source.query(function(data){
+    $scope.skills = data;
+    console.log(data)
+  });  
  
 
   /*$scope.searchMore = function () {
@@ -10470,6 +10515,8 @@ function($scope,$location,$window,templateService,localManager,labTests,searchte
   }
 
 }]);
+
+
 
 app.controller("testSearchResultController",["$scope","$location","templateService","localManager","ModalService",
   function($scope,$location,templateService,localManager,ModalService){

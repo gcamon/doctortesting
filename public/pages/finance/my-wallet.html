@@ -1,3 +1,100 @@
+
+<div class="col-md-4 col-sm-6"><b style="font-size:2em; font-weight:300;">Fund Wallet</b>  <br><br>
+<select class="col-sm-6 custom-select form-control">
+  <option selected>Pay with ATM card / Interswitch</option>
+  <option value="1">Pay with Ussd</option>
+  <option value="2">Pay through Bank Deposit</option>
+  <option value="3">Voucher</option>
+</select>
+
+</div><br><br>
+
+ <div class="card col-sm-4 row p-1 ml-1">
+  <div class="col-md-12 form-group">
+    <label for="text">Pay with Atm Card / Interswitch</label>
+    <input type="text" class="form-control input-lg" id="text" placeholder="Enter Amount"><br>
+    <b>Depositing: N0.00</b>  <button class="btn btn-info">Confirm</button>
+  </div>
+  </div>
+
+
+<!--pay with ussd-->
+ <div> <b  style="font-size:1.3em; font-weight:300;">Pay with USSD</b> <br>
+
+Please use the following USSD code to purchase a voucher pin<br><br>
+<b>
+UBA - *229*2*35# &nbsp;&nbsp;&nbsp;&nbsp;
+Zenith - *229*2*34#<br>
+Diamond Bank - *229*2*45#</b>
+
+ <div class="card col-sm-4 row p-1 ml-1">
+  <div class="col-md-12 form-group">
+    <label for="text">Enter Voucher Pin Below</label>
+    <input type="text" class="form-control input-lg" id="text" placeholder="Enter Amount">
+     <sub><b>System will auto submit when the 16 digits pin is completed</b></sub>
+  </div>
+  </div></div>
+
+
+  <!--pay with bank-->
+ <div> <b  style="font-size:1.3em; font-weight:300;">Pay Through Bank Deposit </b> <br>
+
+ <div class=" col-sm-4 row p-1 ml-1">
+  <div class="col-md-12 form-group">
+     <button class="btn btn-primary btn-block">Generate Invoice</button>
+  </div>
+  </div></div>
+
+
+  <!--pay with voucher-->
+ <div> <b  style="font-size:1.3em; font-weight:300;">Pay with Voucher</b> <br>
+ <div class="card col-sm-4 row p-1 ml-1">
+  <div class="col-md-12 form-group">
+    <label for="text">Enter Voucher Pin Below</label>
+    <input type="text" class="form-control input-lg" id="text" placeholder="Enter Pin"> <sub><b>System will auto submit when the 16 digits pin is completed</b></sub>
+  </div>
+  </div></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div ng-controller = "walletController" style="text-align: left">
 	<h2 style="padding: 10px 1px; margin: 10px 0px">Fund wallet</h2>
 	{{date | date : "mediumDate"}}

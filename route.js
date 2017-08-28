@@ -113,12 +113,39 @@ var basicRoute = function (model,sms,io) {
 
   router.get("/user/doctor/update",function(req,res){
     if(req.user){            
-      res.render("profile-update",{"person":req.user});
+      model.user.findOne({user_id:req.user.user_id},{
+        _id:0,
+        profile_pic_url: 1,
+        sub_specialty: 1,
+        skills: 1,
+        introductory: 1,
+        awards:1,
+        education:1,
+        specialty: 1,
+        work_place: 1,
+        phone: 1,
+        experience: 1,
+        country: 1,
+        firstname: 1,
+        username: 1,
+        lastname: 1,
+        user_id: 1,
+        email: 1,
+        office_hour:1,
+        address: 1,
+        state: 1,
+        city: 1,
+        title: 1,
+        sub_specialty:1
+      },function(err,data){
+        res.send(data)
+      })
     } else {
       res.redirect("/login");
     }
   });
 
+ 
   //user requesting login page.
   router.get('/login',function(req,res){
     res.render("success",{"message":""})
@@ -220,7 +247,7 @@ var basicRoute = function (model,sms,io) {
         case "form":
             model.user.findOne(
                 {
-                    email: req.user.email
+                    user_id: req.user.user_id
                 }
             )
             .exec(
@@ -262,29 +289,29 @@ var basicRoute = function (model,sms,io) {
                         
                     }
                     function pushAll(arr){                        
-                            for(var i = 0; i < arr.length; i++){
-                                if(Object.keys(arr[i]).length > 2){
-                                switch(arr[i].type){
-                                case "edu":
-                                result.education.push(arr[i]);
-                                break;
-                                case "pro":
-                                result.procedure.push(arr[i]);
-                                break;
-                                case "ss":
-                                result.sub_specialty.push(arr[i]);
-                                break;
-                                case "ha":
-                                result.awards.push(arr[i]);
-                                break;
-                                case "of":
-                                result.office_hour.push(arr[i]);
-                                break;
-                                default:
-                                break;
-                                }
-                                }
-                            } 
+                      for(var i = 0; i < arr.length; i++){
+                          if(Object.keys(arr[i]).length > 2){
+                          switch(arr[i].type){
+                          case "edu":
+                          result.education.push(arr[i]);
+                          break;
+                          case "pro":
+                          result.procedure.push(arr[i]);
+                          break;
+                          case "ss":
+                          result.sub_specialty.push(arr[i]);
+                          break;
+                          case "ha":
+                          result.awards.push(arr[i]);
+                          break;
+                          case "of":
+                          result.office_hour.push(arr[i]);
+                          break;
+                          default:
+                          break;
+                          }
+                        }
+                      } 
                         
                     }
                     result.save(function(err){
@@ -302,7 +329,7 @@ var basicRoute = function (model,sms,io) {
         
         }     
     } else {
-      res.redirect("/");
+      res.send("Unauthorized access!");
     }
   });
 
@@ -520,6 +547,11 @@ var basicRoute = function (model,sms,io) {
           str = new RegExp(finalStr.replace(/\s+/g,"\\s+"), "gi");
           console.log(str);         
           criteria = { name : { $regex: str, $options: 'i' },type:"Doctor"};
+
+        } else if(req.query.skill){
+          str = new RegExp(req.query.skill.replace(/\s+/g,"\\s+"), "gi");         
+          criteria = { "skills.skill_name" : { $regex: str, $options: 'i' },type:"Doctor"};
+
         } else {
           criteria = req.query;
         }
@@ -550,6 +582,21 @@ var basicRoute = function (model,sms,io) {
     router.get("/user/find-specialist",function(req,res){
         res.render("list-doctors",{"userInfo":req.user})
     });
+
+
+    router.get("/user/get-skills-procedures",function(req,res){
+      if(req.user){
+        model.user.find({},{skills:1,_id:0},function(err,data){
+          if(err) throw err;
+          //res.send(data);
+          res.send(["episotomy: Performed with everyone in mind","Apendisiatis: Designed to score goals","Messi: born to be champion"])
+        }).limit(1000)
+      } else {
+        res.redirect([]);
+      }
+    });
+
+    
 
     //common search for doctors route
     /*router.post("/user/find-group",function(req,res){

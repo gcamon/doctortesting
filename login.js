@@ -73,7 +73,10 @@ router.get('/user/dashboard',function(req,res){
         user_id: req.user.user_id,
         balance: req.user.ewallet.available_amount,
         profile_pic_url: req.user.profile_pic_url,
-        city: req.user.city
+        city: req.user.city,
+        work_place: req.user.work_place,
+        address:req.user.address,
+        experience: req.user.experience
       });
     }
   } else {

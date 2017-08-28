@@ -1,20 +1,31 @@
-<h4>Find a doctor</h4>
-<div>
-	<strong>Choose search creteria:</strong>
-	<select ng-model="user.creteria" style="width: 50%;border:none;border-bottom: 1px solid #000">
-        <option value="doctorname">Find by name</option>
-		<option value="specialty">City & Doctor's Specialty</option>
-		<option value="doctorId">Find by doctor's ID</option>
-	</select>
-</div>
-<form>
-<fieldset style="padding: 10px 10px;margin-bottom: 20px">
-	 <input type="text" placeholder="e.g Dr Ede Obinna or Dr Ede" style="padding: 5px 10px;margin-top: 10px;width: 40%;border:none;border-bottom: 1px solid #000" ng-model="user.name" ng-if="isName === true">
-	<input type="text" placeholder="Enter city name" name="states" id="states"  uib-typeahead="city for city in cities | filter:$viewValue | limitTo:15" style="padding: 5px 10px;margin-top: 10px;width: 40%;border:none;border-bottom: 1px solid #000" ng-model="user.city" ng-if="isSpecialty === true">
-	{{getCity(city)}} 
-    <select id="group1"  style="padding: 5px 10px;margin-top: 10px;width: 40%;border:none;border-bottom: 1px solid #000" ng-model="user.specialty" ng-if="isSpecialty === true">
+<div class="display-4">Find a Doctor</div><br>
+<div class="row">
+  <div class="col-md-12 form-group">
+    <label for="lastname">Choose a Search Criteria</label>
+    <select class="custom-select form-control" ng-model="user.creteria">
+      <option selected value="doctorname">Find by Name</option>
+      <option value="specialty">City &amp; Doctor's Specialty</option>
+      <option value="doctorId">Find by Doctor's id</option>
+      <option value="procedure">Find by Skills &amp; Procedure</option>
+    </select>
+  </div>
+
+ </div>
+
+ <div class="row">
+      <div class="col-md-6 form-group">
+        <input type="text" class="form-control" placeholder="e.g Dr Ede Obinna or Dr Ede" ng-model="user.name" ng-if="isName === true">
+      </div>
+
+       <div class="col-md-5 form-group">
+        <input type="text" class="form-control" placeholder="Enter city name" name="states" id="states"  uib-typeahead="city for city in cities | filter:$viewValue | limitTo:15" ng-model="user.city" ng-if="isSpecialty === true">
+        {{getCity(city)}} 
+      </div>
+
+      <div class="col-md-5 form-group">
+        <select id="group1" ng-model="user.specialty" ng-if="isSpecialty === true">
         <option value="">_select specialty</option>
-		<option>Acupunture</option>
+        <option>Acupunture</option>
         <option>Addiction Medicine</option>
         <option>Adolescent Medicine</option>
         <option>Aerospace Medicine</option>
@@ -85,9 +96,16 @@
         <option>Pediatric Cardiology</option>
         <option>Pediatric Critical Care</option>
         <option>Padiatric Emergency Medicine</option>
-        <option>Other</option>	
-	</select>
-    <input type="text" placeholder="Enter Doctor's ID" style="padding: 5px 10px;margin-top: 10px;width: 40%;border:none;border-bottom: 1px solid #000" ng-model="user.doctorId" ng-if="isDoctorId === true">
-	<button style="background-color: rgba(20,255,0,0.7); color: #fff; padding: 10px 15px; border-radius:5px" ng-click = "find()">Find</button>
-</fieldset>
-</form>    
+        <option>Other</option>  
+        </select>
+      </div>
+
+      <div class="col-md-5 form-group">
+        <input type="text" class="form-control"  placeholder="Enter Doctor's ID" ng-model="user.doctorId" ng-if="isDoctorId === true">
+      </div>
+      
+      <div class="col-md-1 form-group">
+        <button class="btn btn-info" ng-click = "find()">Find</button>
+      </div>
+ </div>
+ <hr>    

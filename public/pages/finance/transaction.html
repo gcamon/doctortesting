@@ -1,39 +1,47 @@
-<div>
-	<form style="display:inline-block">
-		<div style="float:left;padding: 20px">
-			<label for="from">From</label>
-			<input type="date"  ng-model="period.from">
-		</div>
-		<div style="float:left;padding: 20px">
-			<label for="to">To</label>
-			<input type="date"  ng-model="period.to">
-		</div>
-		<div style="float:left">
-			<div>&nbsp;</div>			
-			<button ng-click="transactHistory()" class="btn btn-primary" style="margin-top: 40px">Submit</button>
-		</div>
-	</form>
-	<table>
-		<caption><strong>{{period.from | date: "mediumDate"}}&nbsp; - &nbsp;{{period.to | date: "mediumDate"}}<strong></caption>
-		<thead style="background-color:greeen;color:green;font-size: 14px">
-			<tr style="font-size: 13px">
-				<th>Date/time</th>
-				<th>Action</th>
-				<th>Amount</th>
-				<th>Source</th>
-				<th>Beneficiary</th>
-				<th>Activity</th>
-			</tr>
-		</thead>
-		<tbody ng-repeat="transact in transacts" >
-			<tr style="font-size: 13px">
-				<td >{{transact.date | date: "mediumDate"}}<span> &nbsp;&nbsp;{{transact.date | date: "mediumTime"}}</span></td>
-				<td>{{transact.activity}}</td>
-				<td>{{transact.body.amount}}</td>
-				<td>{{transact.source}}</td>
-				<td>{{transact.body.beneficiary}}</td>
-				<td>{{transact.message}}</td>
-			</tr>
-		</tbody>
-	</table>
+<div class="ml-1"><b style="font-size:2em; font-weight:300;">Cash out</b></div>
+<br>
+
+
+<div class="col-md-9 row">
+ <div class="col-md-6 form-group">
+    <label for="bank">From</label>
+   <input type="date"  class="form-control" id="bank" placeholder=" 01/01/017" ng-model="period.from">
+  </div>
+
+   <div class="col-md-5 form-group">
+    <label for="bnk_acc">To</label>
+   <input type="date"  ng-model="period.to" class="form-control" id="bnk_acc" placeholder="01/01/017"> 
+  </div>
+ <div class="col-md-1 form-group" style="margin-top:1.9em;">
+	<button class="btn btn-info"  ng-click="transactHistory()">Submit</button>
 </div>
+</div>
+
+<div class="col-sm-9">
+<table class="table">
+	<caption><strong>{{period.from | date: "mediumDate"}}&nbsp; - &nbsp;{{period.to | date: "mediumDate"}}<strong></caption>
+  <thead class="thead-default">
+    <tr>			
+      	<th>Date/time</th>
+		<th>Action</th>
+		<th>Amount</th>
+		<th>Source</th>
+		<th>Beneficiary</th>
+		<th>Activity</th>
+    </tr>
+  </thead>
+
+  <tbody ng-repeat="transact in transacts">
+    <tr>
+      <td>{{transact.date | date: "mediumDate"}} &nbsp;&nbsp;{{transact.date | date: "mediumTime"}}</td>
+      <td>{{transact.activity}}</td>
+      <td>{{transact.body.amount}}</td>
+      <td>{{transact.source}}</td>
+      <td>{{transact.body.beneficiary}}</td>
+      <td>{{transact.message}}</td>
+    </tr>
+   
+  </tbody>
+  
+</table>
+    </div>

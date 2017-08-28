@@ -1,42 +1,39 @@
-<div style="margin-top: 30px">
-	<h4>Enter criteria below</h4> 
-	<div style="text-align: right;padding: 0px 37px 10px">
-		<form style="width: 200px;display:inline-block">
-		<span><em>Use: {{search.category}}</em></span>
-		<select style="height:2px;border:none" value="search.category" ng-model="search.category">
-			<option>Drug name</option>
-			<option>Prescription ID</option>
-		</select>
-		</form>
-	</div>
-	<form class="row" >
-		<div class="col-sm-12 col-md-12 col-lg-12">
-			<div style="margin-bottom: 30px">
-			<input name="states" id="states" type="text" placeholder="Enter city name" ng-model="city" uib-typeahead="city for city in cities | filter:$viewValue | limitTo:15" class="form-control" style="width: 95%">		
-				{{getCity(city)}} 
-			</div>
-			
-			<div ng-repeat="i in drugList" ng-if="notRef">				
-				<input name="states" id="states" type="text" placeholder="Enter drug name" ng-model="drug.name" uib-typeahead="drug.name for drug in drugs | filter:$viewValue | limitTo:15" class="form-control" style="width: 95%">
-				{{getDrug(drug.name)}} 
-				<i class="fa fa-times" style="cursor: pointer;font-weight: 100; font-size: 16px;color:grey" ng-click="remove(i.sn)" ng-if="i.sn !== 'a'"></i>
-				
-			</div>
-			<div ng-if="isRef">
-				<input placeholder="Enter Prescription ID" ng-model="user.refId" class="form-control"  style="width: 95%">
-			</div>
-		</div>
-		<div style="text-align:right;padding: 20px" ng-if="notRef">
-			<i class="fa fa-plus btn" style="cursor: pointer" ng-click="add(drug.name)">&nbsp;Add</i> 
-		</div>
-		<div style="padding-left: 20px" ng-if="notRef">
-			<input type="button" value="Find" ng-click="findDrug(drug.name)" class="btn btn-primary" >
-		</div>
-		<div style="padding-left: 20px;margin-top:50px" ng-if="isRef">
-			<input type="button" value="Find" ng-click="findWithRef(user.refId)" class="btn btn-primary" >
-		</div>
-		
-		
-	</form>
+<div class="col-md-3 form-inline"><b style="font-size:2em; font-weight:300;">Search By:</b>  &nbsp <strong> {{search.category}}</strong>; 
+<select class="col-sm-6 custom-select form-control" value="search.category" ng-model="search.category">
+  <option>Drug Name</option>
+  <option>Prescription ID</option>
+</select>
+
 </div>
+
+<div class="row">
+  <div class="col-md-12 form-group">
+    <label for="City"></label>
+   <input type="text" class="form-control"  name="states" id="states" type="text" placeholder="Enter city name" ng-model="city" uib-typeahead="city for city in cities | filter:$viewValue | limitTo:15">
+   {{getCity(city)}}
+  </div>
+
+ </div>
+
+ <div class="row">
+   <div class="col-md-5 form-group" ng-repeat="i in drugList" ng-if="notRef">
+    <input type="text" class="form-control" id="age"  name="states" id="states" type="text" placeholder="Enter drug name" ng-model="drug.name" uib-typeahead="drug.name for drug in drugs | filter:$viewValue | limitTo:15" style="display:inline-block;width:90%">
+     {{getDrug(drug.name)}} 
+    <i class="fa fa-times" style="cursor: pointer;font-weight: 100; font-size: 16px;color:grey" ng-click="remove(i.sn)" ng-if="i.sn !== 'a'"></i>
+  </div>
+   <div ng-if="isRef" class="col-md-5 form-group">
+   	<input placeholder="Enter Prescription ID" ng-model="user.refId" class="form-control" style="width:80%">
+  </div>
+  <div style="text-align:right;padding: 20px" ng-if="notRef">
+	  <i class="fa fa-plus btn-simple" style="cursor: pointer" ng-click="add(drug.name)">&nbsp;Add drug</i> 
+ </div>
+<div class="col-md-1 form-group" ng-if="notRef">
+  <button class="btn btn-info" ng-click="findDrug(drug.name)">Find</button>
+  </div>
+
+<div class="col-md-1"  ng-if="isRef">
+  <button class="btn btn-info" ng-click="findWithRef(user.refId)">Find</button>
+  </div>
+ </div>
+ <hr style="margin-bottom:300px">
 
