@@ -34,9 +34,7 @@ http.listen(port,function(){
 });
 
 
-
-
-config.configuration(app,model)
+config.configuration(app,model);
 signupRoute(model,sms);
 loginRoute(model);
 route(model,sms,io); 
@@ -44,10 +42,11 @@ payments(model,sms,io);
 placement(model,sms);
 mySocket(model,io);
 
-var a = "emeka nwanaeke is awseome boiy!"
 
-var str = new RegExp(a.replace(/\s+/g,"\\s+"), "gi");
-      console.log(str);         
+
+
+
+
 
 
 

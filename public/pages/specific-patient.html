@@ -83,10 +83,9 @@
 
 
 		<!-- removable div-->
-<div ng-if="isChat || isChat === undefined">
+            <div ng-if="isChat || isChat === undefined">
                 <div class="panel-body msg_container_base bg-default">
                 	<div ng-repeat="u in message1">
-
                          <div class="talk-bubble tri-right left-top" ng-if="u.received">
 						  <div class="talktext">
 						   <div>                      
@@ -101,19 +100,20 @@
 
 
                     <div class="row msg_container base_sent" ng-if="u.sent">
-                  <div class="talk-bubble tri-right right-top bg-info">
-				  <div class="talktext">
-				      <div ng-class="{'msg_sent' : u.sent}">
-				    <p>{{u.sent}}
-                      </p>
-    				<!--<time datetime="{{u.time}}">{{u.time | date: "shortTime"}}</time>-->
-				</div>
+                      <div class="talk-bubble tri-right right-top bg-info">
+    				  <div class="talktext">
+    				      <div ng-class="{'msg_sent' : u.sent}">
+    				    <p>{{u.sent}}
+                          </p>
+        				<!--<time datetime="{{u.time}}">{{u.time | date: "shortTime"}}</time>-->
+    				</div>
 			      <time datetime="2009-11-13T20:00">&nbsp;{{u.time | date: "shortTime"}}</time>
 			     
-			     <i class="fa fa-check" style="font-size:10px" ng-class="{'msg-received': u.isReceived === true}"></i>
-			      <i class="fa fa-check" style="font-size:10px;margin-left:-10px;margin-top:8px" ng-class="{'msg-received': u.isReceived === true}" ng-if="u.isSent === true"></i>    
-  				</div>
-</div>  </div>
+    			     <i class="fa fa-check" style="font-size:10px" ng-class="{'msg-received': u.isReceived === true}"></i>
+    			      <i class="fa fa-check" style="font-size:10px;margin-left:-10px;margin-top:8px" ng-class="{'msg-received': u.isReceived === true}" ng-if="u.isSent === true"></i>    
+  				  </div>
+                </div>  
+            </div>
 
 
 	                    

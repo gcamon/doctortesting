@@ -131,7 +131,7 @@ app.config(function($routeProvider){
 
  .when("/edit-picture",{
   templateUrl: "/assets/pages/edit-picture.html",
-  controller: "changePictureController"
+  controller: 'changePictureController'
  })
 
  .when("/medical-record",{
@@ -705,7 +705,7 @@ app.service("multiData",["$http","$window","templateService",function($http,$win
     var fd = new FormData();
     for(var key in data){
       fd.append(key,data[key]);
-    };
+    }; 
 
     console.log(fd)
     
@@ -719,6 +719,35 @@ app.service("multiData",["$http","$window","templateService",function($http,$win
       templateService.holdScanImageList = response;
       console.log(response)
       alert("Updated successfuly!")
+    });
+  }
+}]);
+
+//user for docprofileedit controller, for sending skill description and images.
+app.service("multiData2",["$http","$window","templateService",function($http,$window,templateService){
+  this.sendSkill = function(url,data){
+    
+    var fd = new FormData();
+    if(data.files)
+      for(var key = 0; key < data.files.length; key++){
+          fd.append(key,data.files[key],data.files[key].name);
+      };
+
+    //for doctor adding procedural and skill update, the file attached will be sent with the form
+   
+    var form = data.form;
+
+    for(var key in form) {
+      fd.append(key,form[key]);
+    }
+    
+
+    $http.put(url,fd,{
+      transformRequest: angular.identity,
+      headers: {"Content-Type":undefined}
+    })
+    .success(function(response){
+      alert("Skill added to records");
     });
   }
 }]);
@@ -1506,16 +1535,18 @@ app.directive("fileModel",["$parse",function($parse){
           console.log("checking element")
           console.log(element[0].files)          
           angular.forEach(element[0].files, function (item) {              
-              values.push(item);
+            values.push(item);
           });
           scope.$apply(function () {
-              if (isMultiple) {
-                  console.log("values inside")
-                  console.log(values)
-                  modelSetter(scope, values);
-              } else {
-                  modelSetter(scope, values[0]);
-              }
+            if (isMultiple) {
+              console.log("values inside");
+              console.log(values);
+              modelSetter(scope.$parent, values);
+              console.log(scope)
+            } else {
+              modelSetter(scope.$parent, values[0]); //remember to check for help controller ie need a doctor
+              console.log(scope)
+            }
           });
       });
     }
@@ -1532,38 +1563,46 @@ app.controller('pictureController',["$scope","$http","$location","multiData",fun
     } 
 }]);
 
-app.controller('docProfileEditController',["$scope","$http","$location","multiData","$window","localManager",
-  function($scope,$http,$location,multiData,$window,localManager) {  
-  $scope.user = {};
-  $scope.user.type = "form"; 
-  $scope.user.education = [{"id":1,"type":"edu"}];
-  $scope.user.subSpecialty = [{"id":1,"type":"ss"}];
-  $scope.user.procedure = [{"id":1,"type":"pro"}];
-  $scope.user.award = [{"id":1,"type":"ha"}];
-  $scope.user.office = [{"id":1,"type":"of"}];
+app.controller('docProfileEditController',["$scope","$rootScope","$http","$location","multiData2","$window","localManager","mySocket",
+  function($scope,$rootScope,$http,$location,multiData2,$window,localManager,mySocket) {  
 
-  $scope.addNewField = function(arr) {
+  function initForm(){
+    $scope.user = {};
+    $scope.user.type = "form"; 
+    $scope.user.education = [{"id":1,"type":"edu"}];
+    $scope.user.subSpecialty = [{"id":1,"type":"ss"}];
+    $scope.user.procedure = [{"id":1,"type":"pro"}];
+    $scope.user.award = [{"id":1,"type":"ha"}];
+    $scope.user.office = [{"id":1,"type":"of"}];
+
+
+
+    $scope.addNewField = function(arr) {
      var random = Math.floor(Math.random() * 99965);
      arr.push({});
      arr[arr.length-1].id = random;
      arr[arr.length-1].type = arr[0].type;
      $scope.check(arr);
-  };
+    }; 
 
-  $http({
-    method  : 'GET',
-    url     : "/user/doctor/update",
-    headers : {'Content-Type': 'application/json'} 
-    })
-  .success(function(data) {              
-    if (data) {
-      $scope.docInfo = data;                         
-    } 
-  });                            
+    $scope.removeNewField = function(arr) {
+     if ( arr.length !== 1 ) {
+      arr.pop();
+      $scope.check(arr);
+     }
+    };
+  }
 
-   
+  
 
-   $scope.check = function(arr){
+
+  $scope.type = "personal";
+
+  $scope.view = function(type){
+    $scope.type = type;
+  }         
+
+  $scope.check = function(arr){
      switch(arr[0].type) {
         case "edu":
           if(arr.length > 1) {
@@ -1605,28 +1644,78 @@ app.controller('docProfileEditController',["$scope","$http","$location","multiDa
      }
    }
    
-   $scope.removeNewField = function(arr) {
-     if ( arr.length !== 0 ) {
-      arr.pop();
-      $scope.check(arr);
-     }
-   };
+   $scope.item = {};
 
-  $scope.update = function(){      
-    $http({
-      method  : 'PUT',
-      url     : '/user/update',
-      data    : $scope.user, //forms user object
-      headers : {'Content-Type': 'application/json'} 
-      })
-    .success(function(data) {              
-      if (data) {
-       // $window.location.href = '/user/doctor/update';                           
-      } 
-    });                                    
+   
+
+
+  $scope.update = function(arg){
+    if(arg){     
+      if(Object.keys($scope.item).length >= 3 && $scope.item.procedure_skill !== undefined && $scope.item.procedure_description !== undefined) {
+        uploadSkill();
+      } else {
+        alert("Please complete all fields!");
+      }
+    } else {
+      $http({
+        method  : 'PUT',
+        url     : '/user/update',
+        data    : $scope.user, //forms user object
+        headers : {'Content-Type': 'application/json'} 
+        })
+      .success(function(data) {              
+        if (data) {
+          console.log(data);
+          updateRecord();
+          initForm();
+          alert("Saved to records");
+         // $window.location.href = '/user/doctor/update';                           
+        } 
+      });                          
+    }    
+             
   }
 
+  var uploadSkill = function(){ 
+   $scope.skill = {
+    files: $scope.files,
+    form : {
+      type: "procedure",
+      disease: $scope.item.disease,
+      skill: $scope.item.procedure_skill,
+      description: $scope.item.procedure_description,
+    }
+   }
+
+   multiData2.sendSkill("/user/update",$scope.skill);
+
+   mySocket.on("uploaded skill",function(data){
+    updateRecord();
+    initForm();
+   })
+  }
+
+  function updateRecord(){
+    $http({
+      method  : 'GET',
+      url     : "/user/doctor/update",
+      headers : {'Content-Type': 'application/json'} 
+      })
+    .success(function(data) { 
+      console.log(data);             
+      if (data) {
+        $scope.docInfo = data;                         
+      } 
+    });
+  }
+
+  initForm();
+  updateRecord();
+
 }]);
+
+
+
 
 //controller for searches from  the home page Note this controller is abandoned for now
 app.controller('searchController',["$scope","$http","$location","$window","multiData","localManager","templateService",
@@ -5511,25 +5600,30 @@ app.controller("changePictureController",["$scope","$location","$http","$window"
   $scope.user = {};
 
   $scope.update = function(){
-    $scope.user.type = "picture";
-    var uploadUrl = "/user/update/profile-pic";     
-    var fd = new FormData();
-    for(var key in $scope.user){
-      if($scope.user.hasOwnProperty(key))
-        fd.append(key,$scope.user[key]);
-    };
-    $http.put(uploadUrl,fd,{
-      transformRequest: angular.identity,
-      headers: {"Content-Type":undefined}
-    })
-    .success(function(response){
-      if(response.error){
-        alert(response.error)
-      } else {
-        $scope.userData = response;
-      }
-      
-    });    
+    if($scope.files) {
+      var uploadUrl = "/user/update/profile-pic";     
+      var fd = new FormData();
+      console.log($scope.files)
+      for(var key in $scope.files){
+          if($scope.files[key].name)
+            fd.append(key,$scope.files);
+      };
+
+      $http.put(uploadUrl,fd,{
+        transformRequest: angular.identity,
+        headers: {"Content-Type":undefined}
+      })
+      .success(function(response){
+        if(response.error){
+          alert(response.error)
+        } else {
+          $scope.userData = response;
+        }
+        
+      }); 
+    } else {
+      alert("Choose file!");
+    }  
   }
 
 
@@ -10984,22 +11078,21 @@ function($scope,$location,$window,$http,templateService,localManager,templateUrl
     $scope.user.userId = patient.user_id;
     $scope.user.symptoms = list;
     $scope.user.city = thisCity;
-    var data = $scope.user
+    var data = $scope.user;
     console.log(data)
 
     var fd = new FormData();
+    
     for(var key in data){
-      if(key !== "symptoms" && data.hasOwnProperty(key)) 
+      if(key !== "symptoms" && data.hasOwnProperty(key))
         fd.append(key,data[key]);
     };
 
-   
     for(var i = 0; i < data.symptoms.length; i++){
       fd.append("symptoms", data.symptoms[i].name);
     }
 
-    
-  
+    //validate the files picked.
     var files = $scope.files;
     if($scope.files){
       if(files.length <= 5){
@@ -11013,7 +11106,7 @@ function($scope,$location,$window,$http,templateService,localManager,templateUrl
         };
         sizeOk();
       } else {
-        alert("Error: Complain NOT sent! Reason: maximum of 3 files is allowed.")
+        alert("Error: Complain NOT sent! Reason: maximum of 5 files is allowed.")
       }
 
     } else {

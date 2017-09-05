@@ -11,6 +11,7 @@ var Schema = mongoose.Schema;
 
 var myModel = function () {
 	var fileSchema = Schema({
+		type: String,
 		filename: String,
 		path: String,
 		file_id: String,
@@ -19,18 +20,19 @@ var myModel = function () {
 	});
 
 	var skillSchema = Schema({
-		skill_id: Number,
-		Skill_name: String,
-		description: String,
+		skill_id: String,
+		disease: String,
+		skill: String,
+		procedure_description: String,
 		files: [fileSchema]
-	})
+	});
 
 	var service_objSchema = Schema({
 		name: String,
 		val: Boolean,
 		id: Number,
 		price: Number
-	})
+	});
 
 	var serviceSchema = Schema({
 		center_name: String,
@@ -73,7 +75,7 @@ var myModel = function () {
 	var AwardSchema = Schema({
 		id: Number,
 		type_of_Award: String,
-		data: String,
+		date: String,
 		description: String
 	});
 
@@ -246,8 +248,6 @@ var myModel = function () {
 		payment_acknowledgement: Boolean //use to check if patient have actually paid for a service.
 	});
 	
-
-	
 	//this holds the sent test to ba ran by the laboratory center
 	var center_refSchema = Schema({
 		test_to_run: Array,
@@ -271,7 +271,6 @@ var myModel = function () {
 		doctor_phone: Number
 	});
 
-	
 	var drug_refSchema = Schema({
 		dosage: String,
 	    drugName: String,
@@ -291,7 +290,6 @@ var myModel = function () {
 		laboratory: center_refSchema,
 		radiology: center_refSchema,
 		pharmacy: prescriptionSchema
-
 	});
 
 	var appointment_schema = Schema({

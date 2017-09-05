@@ -136,7 +136,7 @@ var basicRoute = function (model,sms,io) {
         state: 1,
         city: 1,
         title: 1,
-        sub_specialty:1
+        sub_specialty:1,
       },function(err,data){
         res.send(data)
       })
@@ -188,10 +188,14 @@ var basicRoute = function (model,sms,io) {
     res.download(file); // Set disposition and send it.
   });
 
+  router.get("/download/skills/:filename",function(req,res){
+    var file = __dirname + "/uploads/" + req.params.filename;
+    res.download(file); // Set disposition and send it.
+  })
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //handles all change picture 
-  router.put("/user/update/profile-pic",function(req,res){
-   
+  router.put("/user/update/profile-pic",function(req,res){   
     if(req.user){
       if(req.files.length > 0 && req.files[0].mimetype === "image/jpg" || req.files[0].mimetype === "image/jpeg" && req.files[0].size < 2097152) {
           model.user.update({email: req.user.email},{$set : {
@@ -217,10 +221,167 @@ var basicRoute = function (model,sms,io) {
       res.end("Unauthorized access!")
     }
   });
+
   //doctors profile update route
   router.put("/user/update",function(req,res){
-
     if(req.user){
+      if(req.body.type == "procedure"){
+        model.user.findOne({user_id: req.user.user_id},{skills:1}).exec(function(err,data){
+          if(err) throw err;
+          var random = Math.floor(Math.random() * 99999999);
+          //add files associated with this skill.
+          var description = req.body.skill + ": ( " + req.body.disease + " ); "  + req.body.description;
+          var procedure = {
+            skill_id :random,
+            disease: req.body.disease,
+            skill: req.body.skill,
+            procedure_description: description,
+            files: []
+          }
+
+          if(req.files){
+            var fileUrl;
+            for(var i = 0; i < req.files.length; i++){
+              fileUrl = "/download/skills/" + req.files[i].filename; // this will be change to link dropbox;
+              var file = {
+                type: req.files[i].mimetype,
+                filename: req.files[i].filename,
+                path: fileUrl,
+                file_id: random,
+              }
+              procedure.files.push(file);
+            }
+          }
+
+          data.skills.push(procedure);
+          console.log(procedure);
+          data.save(function(err,info){
+            console.log("skill saved!");
+            io.sockets.to(req.user.user_id).emit("uploaded skill",{status:"success"});
+          });
+          res.send({status:"success"});
+        })        
+      }
+
+      if(req.body.type == "form"){
+        console.log(req.body)
+        model.user.findOne(
+                {
+                    user_id: req.user.user_id
+                },
+                {
+                  education:1,
+                  sub_specialty:1,
+                  awards:1,
+                  office_hour:1,
+                  lastname:1,
+                  firstname:1,
+                  address:1,
+                  experience:1,
+                  work_place:1,
+                  country:1,
+                  city:1
+                }
+            )
+            .exec(
+                function(err, result){
+                    if(req.body.introductory)
+                        result.introductory = req.body.introductory;
+                    if(req.body.firstname)
+                        result.firstname = req.body.firstname;
+                    if(req.body.lastname)
+                        result.lastname = req.body.lastname;
+                    if(req.body.address)
+                        result.address = req.body.address;
+                    if(req.body.city)
+                        result.city = req.body.city;
+                    if(req.body.country)
+                        result.country = req.body.country;
+                    if(req.body.experience)
+                        result.experience = req.body.experience;
+                    if(req.body.work_place)
+                        result.work_place= req.body.work_place;                         
+                    for(var i in req.body){                      
+                      if(req.body.hasOwnProperty(i) && Object.prototype.toString.call( req.body[i] ) === '[object Array]'){                            
+                         switch(i){
+                           case "education":
+                           pushAll(req.body.education);                                                               
+                           break;                               
+                           case "subSpecialty":
+                            pushAll(req.body.subSpecialty);                               
+                           break;
+                           case "award":
+                            pushAll(req.body.award);                               
+                           break;
+                           case "office":
+                            pushAll(req.body.office);                               
+                           break;
+                           default:                               
+                           break;
+                         }
+                      }
+                        
+                    }
+                    function pushAll(arr){                        
+                      for(var i = 0; i < arr.length; i++){
+                        if(Object.keys(arr[i]).length > 2){
+                          switch(arr[i].type){
+                            case "edu":
+                            result.education.push(arr[i]);
+                            break;                               
+                            case "ss":
+                            result.sub_specialty.push(arr[i]);
+                            break;
+                            case "ha":
+                            result.awards.push(arr[i]);
+                            break;
+                            case "of":
+                            result.office_hour.push(arr[i]);
+                            break;
+                            default:
+                            break;
+                          }
+                        }
+                      } 
+                        
+                    }
+                    result.save(function(err){
+                      if(err) throw err;                       
+                     res.send({status:"success",data:req.body})
+                    });
+                }
+            )
+      }
+
+      /*console.log(req.files);
+      console.log(req.body);      
+      res.send("success");*/
+      
+    } else {
+      res.send("Unauthorized access!");
+    }
+
+  });
+
+  /*var fileSchema = Schema({
+    type: 
+    filename: String,
+    path: String,
+    file_id: String,
+  },{
+    collections: "fileinfo"
+  });
+
+  var skillSchema = Schema({
+    skill_id: Number,
+    disease: String,
+    skill: String,
+    procedure_description: String,
+    files: [fileSchema]
+  });*/
+
+  /*
+   if(req.user){
         switch(req.body.type){
         case "picture":            
             if(req.files.length > 0 && req.files[0].mimetype === "image/jpg" || req.files[0].mimetype === "image/jpeg" && req.files[0].size < 2097152){
@@ -247,7 +408,7 @@ var basicRoute = function (model,sms,io) {
         case "form":
             model.user.findOne(
                 {
-                    user_id: req.user.user_id
+                    email: req.user.email
                 }
             )
             .exec(
@@ -289,29 +450,29 @@ var basicRoute = function (model,sms,io) {
                         
                     }
                     function pushAll(arr){                        
-                      for(var i = 0; i < arr.length; i++){
-                          if(Object.keys(arr[i]).length > 2){
-                          switch(arr[i].type){
-                          case "edu":
-                          result.education.push(arr[i]);
-                          break;
-                          case "pro":
-                          result.procedure.push(arr[i]);
-                          break;
-                          case "ss":
-                          result.sub_specialty.push(arr[i]);
-                          break;
-                          case "ha":
-                          result.awards.push(arr[i]);
-                          break;
-                          case "of":
-                          result.office_hour.push(arr[i]);
-                          break;
-                          default:
-                          break;
-                          }
-                        }
-                      } 
+                            for(var i = 0; i < arr.length; i++){
+                                if(Object.keys(arr[i]).length > 2){
+                                switch(arr[i].type){
+                                case "edu":
+                                result.education.push(arr[i]);
+                                break;
+                                case "pro":
+                                result.procedure.push(arr[i]);
+                                break;
+                                case "ss":
+                                result.sub_specialty.push(arr[i]);
+                                break;
+                                case "ha":
+                                result.awards.push(arr[i]);
+                                break;
+                                case "of":
+                                result.office_hour.push(arr[i]);
+                                break;
+                                default:
+                                break;
+                                }
+                                }
+                            } 
                         
                     }
                     result.save(function(err){
@@ -329,9 +490,11 @@ var basicRoute = function (model,sms,io) {
         
         }     
     } else {
-      res.send("Unauthorized access!");
+      res.redirect("/");
     }
-  });
+
+
+  */
 
   router.get("/user/doctor/schedule",function(req,res){
       if(req.user){
