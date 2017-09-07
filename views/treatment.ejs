@@ -58,8 +58,8 @@
 {{sessionData}}
 <div class="col-md-12  col-sm-12 col-xs-12 card p-1 mb-3">
 <div class="col-md-3 col-sm-12 text-center" style="text-align:center;">
-<img src="{{sessionData.patientInfo.profilePic}}" class="img-rounded mb-1" height="120"><br> 
-<span class="pt-3" style="font-size:1.4em; font-weight:300;" ng-cloak>{{sessionData.patientInfo.firstname}} {{sessionData.patientInfo.lastname}}</span></div>
+<img src="{{sessionData.profilePic}}" class="img-rounded mb-1" height="120"><br> 
+<span class="pt-3" style="font-size:1.4em; font-weight:300;" ng-cloak>{{sessionData.patient_firstname}} {{sessionData.patient_lastname}} {{sessionData.patient_lastname}}</span></div>
 <div class="col-md-5 col-sm-12" ng-cloak><b style="font-size:1.2em; font-weight:300;">This session was intiated on {{sessionData.patientInfo.last_meeting | date : "mediumDate"}}, <br>{{sessionData.typeOfSession}}</b></div>
 <div class="col-md-4 col-sm-12 pt-3"><button style="float:right;" class="btn btn-info" ng-click="bookAppointment()">Book Appointment</button></div>
 <div class="col-md-4 col-sm-12 pt-3">

@@ -2840,7 +2840,7 @@ app.controller("selectedAppointmentController",["$scope","$location","$http","$w
         if(data){
         data.patientInfo = templateService.holdAppointmentData;        
         localManager.setValue("heldSessionData",data);
-          //$window.location.href = "/user/treatment";
+          $window.location.href = "/user/treatment";
         } else {
           alert("error occurred while trying to get this session")
         }              
