@@ -357,6 +357,10 @@ var myModel = function () {
 		date: String,
 		session_id: Number,
 		patient_id: String,
+		profilePic: String,
+		patient_firstname: String,
+		patient_lastname: String,
+		patient_username: String,
 		prescription_id: Number,
 		typeOfSession: String,
 		conversations: conversationSchema,
@@ -516,6 +520,21 @@ var myModel = function () {
 		collections: "phoneVerify"
 	});
 
+	var authChangeSchema = Schema({
+		expirationDate: {
+			type: Date,
+			expires: 3600
+		},		
+		createdAt: {
+			type: Date,
+			expires: Number
+		},		
+		user_id: String,
+		pin: String
+	},{
+		collections: "authVerify"
+	});
+
 	var pinSchema = Schema({
 		voucher: Array,
 		voucher_two: Array,
@@ -576,6 +595,7 @@ var myModel = function () {
 	models.chats = mongoose.model("chatinfos",chatSchema);
 	models.otpSchema = mongoose.model("otpinfos",otpSchema);
 	models.verifyPhone = mongoose.model("phoneVerify",phoneVerificationSchema);
+	models.authCheck = mongoose.model("authVerify",authChangeSchema);
 	models.cashout = mongoose.model("cashoutinfos",cashOutSchema);
 	//models.requests = mongoose.model("requestinfos",chatSchema);
 	/*models.award = mongoose.model('awardinfo', AwardSchema);

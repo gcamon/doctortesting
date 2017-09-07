@@ -1566,6 +1566,9 @@ app.controller('pictureController',["$scope","$http","$location","multiData",fun
 app.controller('docProfileEditController',["$scope","$rootScope","$http","$location","multiData2","$window","localManager","mySocket",
   function($scope,$rootScope,$http,$location,multiData2,$window,localManager,mySocket) {  
 
+  var path = $location.path();
+  localManager.setValue("currentPage",path)
+
   function initForm(){
     $scope.user = {};
     $scope.user.type = "form"; 
@@ -1646,9 +1649,6 @@ app.controller('docProfileEditController',["$scope","$rootScope","$http","$locat
    
    $scope.item = {};
 
-   
-
-
   $scope.update = function(arg){
     if(arg){     
       if(Object.keys($scope.item).length >= 3 && $scope.item.procedure_skill !== undefined && $scope.item.procedure_description !== undefined) {
@@ -1676,6 +1676,40 @@ app.controller('docProfileEditController',["$scope","$rootScope","$http","$locat
              
   }
 
+  $scope.deleteRecord = function(arg,arg2){
+    if(arg == 'intro'){
+
+      $scope.user.introductory = $scope.docInfo.introductory;
+
+    } else if(arg == 'years'){
+
+      $scope.user.experience = $scope.docInfo.experience;
+
+    } else {
+      var verify = confirm("Do you want to delete one of " + arg2 + "?")
+      if(verify) {
+        var list = $scope.docInfo[arg2];
+        var elemPos = list.map(function(x){return x._id}).indexOf(arg);
+        var found = list[elemPos];
+        var removed = list.splice(elemPos,1);
+        var sendObj = {field: arg2,item_id: arg};
+        $http({
+        method  : 'DELETE',
+        url     : '/user/doctor/delete-record',
+        data    : sendObj, //forms user object
+        headers : {'Content-Type': 'application/json'} 
+        })
+        .success(function(data) {              
+          if (data) {
+            console.log(data)                           
+          } 
+        });                          
+      }
+      
+    }
+
+  }
+
   var uploadSkill = function(){ 
    $scope.skill = {
     files: $scope.files,
@@ -1686,13 +1720,13 @@ app.controller('docProfileEditController',["$scope","$rootScope","$http","$locat
       description: $scope.item.procedure_description,
     }
    }
-
+   //nitice skilll was uploaded differently from the rest.
    multiData2.sendSkill("/user/update",$scope.skill);
 
    mySocket.on("uploaded skill",function(data){
     updateRecord();
     initForm();
-   })
+   });
   }
 
   function updateRecord(){
@@ -1713,6 +1747,71 @@ app.controller('docProfileEditController',["$scope","$rootScope","$http","$locat
   updateRecord();
 
 }]);
+
+
+//use to change phone or email of a user.
+app.controller("authChangeController",["$scope","$rootScope","$http","$location","multiData2","$window","localManager","mySocket",
+  function($scope,$rootScope,$http,$location,multiData2,$window,localManager,mySocket) {
+  $scope.user = {};
+  $scope.email =  $rootScope.checkLogIn.email; 
+  $scope.phone =  $rootScope.checkLogIn.phone;
+  $rootScope.message = "";
+  $scope.update = function(arg){
+    if(arg == "phone"){
+      console.log(typeof $scope.user.phone)
+      if(typeof $scope.user.phone === 'number'){
+        sendForm();
+      } else {
+        alert("Invalid phone number")
+      }
+    }
+
+    function sendForm(){
+      $http({
+      method  : 'PUT',
+      url     : "/user/change-auth",
+      data    : $scope.user, //forms user object
+      headers : {'Content-Type': 'application/json'} 
+      })
+      .success(function(data) {              
+        if(data.status === "success"){
+          alert("yes oooo")
+          $rootScope.status = data.message;
+          $rootScope.message = data.message;
+          $rootScope.phone = $scope.user.phone         
+        } else if(data.status === "failed") {
+          $scope.error = data.message;
+        }
+
+        console.log(data)
+      });                 
+    }
+
+    $scope.tryAgain = function(){
+      $scope.message = "";
+      delete $scope.status;
+    }          
+  }     
+}]);
+
+app.controller("verifyPhoneForChangeController",["$rootScope","$scope","$resource","$window",function($rootScope,$scope,$resource,$window){
+  $scope.verify = {};
+  $scope.verify.phone = $rootScope.phone;
+  $rootScope.status = "success";
+  $scope.sendForm = function (){
+    var user = $resource("/user/new-phone-update",null,{userChangeNumber:{method: "PUT"}})    
+    user.userChangeNumber($scope.verify,function(response){
+      alert("Phone number changed!")
+      console.log(response)
+      $rootScope.message = response.message;
+      if(response.status === "updated"){
+        $scope.isUpdate = true;
+      }
+    });
+  }
+
+}]);
+
 
 
 
@@ -2741,7 +2840,7 @@ app.controller("selectedAppointmentController",["$scope","$location","$http","$w
         if(data){
         data.patientInfo = templateService.holdAppointmentData;        
         localManager.setValue("heldSessionData",data);
-          $window.location.href = "/user/treatment";
+          //$window.location.href = "/user/treatment";
         } else {
           alert("error occurred while trying to get this session")
         }              
@@ -2754,6 +2853,8 @@ app.controller("selectedAppointmentController",["$scope","$location","$http","$w
 app.controller("inTreatmentController",["$scope","$http","localManager","$location","templateService","ModalService","Drugs",
   function($scope,$http,localManager,$location,templateService,ModalService,Drugs){
   $scope.sessionData = localManager.getValue("heldSessionData");
+
+  console.log($scope.sessionData)
 
   
 
@@ -11414,8 +11515,8 @@ app.controller("emScanTestController",["$scope","$location","$http","$window","t
 
 }]);
 
-app.controller("topHeaderController",["$scope","$window","$location","$resource","localManager","mySocket",
-  function($scope,$window,$location,$resource,localManager,mySocket){
+app.controller("topHeaderController",["$scope","$rootScope","$window","$location","$resource","localManager","mySocket",
+  function($scope,$rootScope,$window,$location,$resource,localManager,mySocket){
 
   if(!localManager.getValue("resolveUser")) {
     $window.location.href = "/login"
@@ -11437,7 +11538,7 @@ app.controller("topHeaderController",["$scope","$window","$location","$resource"
 
   console.log(localManager.getValue("resolveUser"))
   
-  $scope.checkLogIn = localManager.getValue("resolveUser");
+  $rootScope.checkLogIn = localManager.getValue("resolveUser");
 
   if($scope.checkLogIn){
     switch($scope.checkLogIn.typeOfUser) {

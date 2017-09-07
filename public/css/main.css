@@ -1435,6 +1435,14 @@ move later
 	color: orange;
 }
 
+.bg-green {
+	background-color: green; 
+}
+
+.number-change {
+	color:#fff;text-align:center;background-color:#0275d8;padding:20px;font-size:18px;margin-bottom:30px
+}
+
 .rec div {
 	padding-top: 20px;
 }

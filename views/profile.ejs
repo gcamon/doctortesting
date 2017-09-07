@@ -10,7 +10,7 @@
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
         <!-- Place favicon.ico in the root directory -->
 
-       <link rel="stylesheet" href="/assets/css/main.css">
+       <link rel="stylesheet" href="/assets/css/main.cs">
         <link rel="stylesheet" href="/assets/css/vendor.css">
          <link rel="stylesheet" href="/assets/css/app.css">
           <link rel="stylesheet" href="/assets/css/my-edit.css">
@@ -455,15 +455,7 @@
                                         </i>
                                     </a>
                                     <ul>
-                                        <% for(var k = 0; k < person.appointment.length; k++) { %>
-                                        <li> 
-                                            <a href=""  ng-click="viewAppointment(<%= person.appointment[k].session_id %>)">
-                                            <p><%= person.appointment[k].firstname %> <%= person.appointment[k].lastname %>
-                                            <span style="display:block">{{"<%=person.appointment[k].date %>" | date : "mediumDate"}}</span> <span style="display:block">{{ "<%= person.appointment[k].time %>" | date: "mediumTime" }}</span> 
-                                            </p>
-                                            </a> 
-                                        </li>
-                                         <% } %>
+                                       
                                     </ul>
                                 </li>
                                 <li> 

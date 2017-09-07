@@ -363,138 +363,194 @@ var basicRoute = function (model,sms,io) {
 
   });
 
-  /*var fileSchema = Schema({
-    type: 
-    filename: String,
-    path: String,
-    file_id: String,
-  },{
-    collections: "fileinfo"
+  router.get("/user/change-number",function(req,res){
+    if(req.user){
+
+     
+      var genPin = pin();
+
+      var testPhone = new model.authCheck({
+        user_id: req.user.user_id,
+        pin: genPin
+      });
+
+      var date = new Date()
+      testPhone.expirationDate = new Date(date.getTime() + 300000);
+      testPhone.expirationDate.expires  = 60 * 60;
+
+      testPhone.save(function(err,info){});
+
+       //email will be sent;
+
+      //otp will be generated;
+      console.log(testPhone);
+
+      res.render("auth-change");
+
+      function pin() {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+          for( var i=0; i < 8; i++ )
+              text += possible.charAt(Math.floor(Math.random() * possible.length));
+          return text;  
+      }
+
+    } else {
+      res.redirect("/login")
+    }
   });
 
-  var skillSchema = Schema({
-    skill_id: Number,
-    disease: String,
-    skill: String,
-    procedure_description: String,
-    files: [fileSchema]
-  });*/
+  //checks to verify if the number to be changed belongs to the right user
+  router.put("/user/change-auth",function(req,res){
+    console.log(req.body);
+    if(req.user){
+        model.user.findOne({phone: req.body.phone},function(err,user){
+          if(err) throw err;
+          if(user){
+            var msg = "User with this phone number 0" + req.body.phone + " already exist! Process canceled.";
+            res.send({
+              status: "success",
+              message: msg});
+          } else {
+            phoneNotCompromised();
+          }
+        });
 
-  /*
-   if(req.user){
-        switch(req.body.type){
-        case "picture":            
-            if(req.files.length > 0 && req.files[0].mimetype === "image/jpg" || req.files[0].mimetype === "image/jpeg" && req.files[0].size < 2097152){
-                model.user.update({email: req.user.email},{$set : {
-                "profile_pic.filename": req.files[0].filename,
-                "profile_pic.path":  req.files[0].path,
-                "profile_pic.mimetype":  req.files[0].mimetype,
-                "profile_pic.encoding":  req.files[0].encoding,
-                "profile_pic.size":  req.files[0].size,
-                "profile_pic.destination":  req.files[0].destination,
-                "profile_pic.fieldname":  req.files[0].fieldname,
-                "profile_pic.originalname":  req.files[0].originalname,
-                profile_pic_url: "/download/profile_pic/" + req.files[0].filename
-                }},function(err,info){        
-                if(err) throw err;
-                console.log(info) 
-                var pic = "/download/profile_pic/"  + req.files[0].filename;      
-                res.send(pic);   //repalce with "success" as fallback               
-                });
+       function phoneNotCompromised() {
+        model.authCheck.findOne({pin:req.body.pin,user_id:req.user.user_id},function(err,record){
+            console.log("++++++++++")
+            console.log(record)
+            if(record) {
+              var genPin = Math.floor(Math.random() * 999999);
+              console.log("============")
+              console.log(err)
+              var testPhone = new model.verifyPhone({
+                phone: req.body.phone,
+                pin: genPin
+              });
+
+              console.log(testPhone);
+              var date = new Date()
+              testPhone.expirationDate = new Date(date.getTime() + 300000);
+              testPhone.expirationDate.expires  = 60 * 60;
+
+              testPhone.save(function(err,info){});
+
+              model.authCheck.remove({pin:req.body.pin},function(){})
+
+
+              var msgBody = "Your SMS verification Pin is " + genPin + "\nUse to complete your registeration."
+              var phoneNunber = "234" + req.body.phone;
+              sms.message.sendSms('Appclinic',phoneNunber,msgBody,callBack); //"2348096461927" "2349092469137"
             } else {
-                res.send({error: "Picture does not meet specifications"});
+              res.send({status:"failed",message:"Oops! Seems you entered incorrect verification pin or has been used."})
             }
-            break; 
-        case "form":
-            model.user.findOne(
-                {
-                    email: req.user.email
-                }
-            )
-            .exec(
-                function(err, result){
-                    if(req.body.introductory)
-                        result.introductory = req.body.introductory;
-                    if(req.body.firstname)
-                        result.firstname = req.body.firstname;
-                    if(req.body.lastname)
-                        result.lastname = req.body.lastname;
-                    if(req.body.address)
-                        result.address = req.body.address;
-                    if(req.body.phone)
-                        result.phone = req.body.phone;
-                    if(req.body.experience)
-                        result.experience = req.body.experience;                         
-                    for(var i in req.body){                      
-                        if(req.body.hasOwnProperty(i) && Object.prototype.toString.call( req.body[i] ) === '[object Array]'){                            
-                           switch(i){
-                               case "education":
-                               pushAll(req.body.education);                                                               
-                               break;
-                               case "procedure":
-                                pushAll(req.body.procedure);                               
-                               break;
-                               case "subSpecialty":
-                                pushAll(req.body.subSpecialty);                               
-                               break;
-                               case "award":
-                                pushAll(req.body.award);                               
-                               break;
-                               case "office":
-                                pushAll(req.body.office);                               
-                               break;
-                               default:                               
-                               break;
-                           }
-                        }
-                        
-                    }
-                    function pushAll(arr){                        
-                            for(var i = 0; i < arr.length; i++){
-                                if(Object.keys(arr[i]).length > 2){
-                                switch(arr[i].type){
-                                case "edu":
-                                result.education.push(arr[i]);
-                                break;
-                                case "pro":
-                                result.procedure.push(arr[i]);
-                                break;
-                                case "ss":
-                                result.sub_specialty.push(arr[i]);
-                                break;
-                                case "ha":
-                                result.awards.push(arr[i]);
-                                break;
-                                case "of":
-                                result.office_hour.push(arr[i]);
-                                break;
-                                default:
-                                break;
-                                }
-                                }
-                            } 
-                        
-                    }
-                    result.save(function(err){
-                        if(err) throw err;                       
-                        res.send("success");
-                    });
-                }
-            )
 
-            
-          break;
-          default:
-            res.end();
-          break;   
-        
-        }     
+            function callBack(err,response){              
+              console.log(response);
+              if(response) {
+                res.send({status: "success",message: 'Enter the OTP  sent to 0' + req.body.phone + " below"})
+              } 
+              if(err) {
+                res.send({status:"failed"})
+              }
+            }   
+        });
+      }
     } else {
-      res.redirect("/");
+      res.send("Unauthorized access!");
     }
+  });
 
 
-  */
+  router.put("/user/new-phone-update",function(req,res){
+    if(req.user){
+     
+      model.verifyPhone.findOne({pin:req.body.pin},function(err,data){
+       if(data){
+        model.user.update({user_id:req.user.user_id},{$set: {phone: req.body.phone}},function(err,data){          
+          res.send({status:"updated",message: "Phone number updated successfully!"})
+          model.verifyPhone.remove({pin:req.body.pin},function(){})
+        })
+
+       } else {
+        res.send({status:"failed",message: "User does not exist!"})
+       }
+      });
+    } else {
+      res.send("Unauthorized access")
+    }
+  })
+
+  router.get("/user/change-email",function(req,res){
+    if(req.user){
+
+      //sms will be sent;
+
+      //otp will be generated;
+
+
+      /*
+      var testPhone = new model.verifyPhone({
+      phone: req.body.phone,
+      pin: genPin
+    });
+
+    console.log(testPhone);
+    var date = new Date()
+    testPhone.expirationDate = new Date(date.getTime() + 300000);
+    testPhone.expirationDate.expires  = 60 * 60;
+
+    testPhone.save(function(err,info){});
+
+    var msgBody = "Your SMS verification Pin is " + genPin + "\nUse to complete your registeration."
+    var phoneNunber = "234" + req.body.phone;
+    sms.message.sendSms('Appclinic',phoneNunber,msgBody,callBack); //"2348096461927" "2349092469137"
+
+    function callBack(err,response){
+      if(!err) {
+        res.send({message:"Phone verification pin sent to your phone"});
+      } else {
+        res.send({message:"Error Occur please try again",error: true});
+      }
+      console.log(response);
+    }   
+      */
+      res.render("auth-change");
+      
+    } else {
+      res.redirect("/login")
+    }
+  })
+
+  router.delete('/user/doctor/delete-record',function(req,res){
+    if(req.user){
+        console.log(req.body)
+      var delObj = {};
+      var field = req.body.field;
+      delObj[req.body.field] = 1;
+
+      model.user.findOne({user_id:req.user.user_id},delObj).exec(function(err,data){
+        if(err) throw err;        
+        var record = data[req.body.field];
+        
+        var recPos = record.map(function(x){var tostr = x._id.toString(); return tostr}).indexOf(req.body.item_id);
+        if(recPos !== -1){
+          var removed = record.splice(recPos,1);
+        } else {
+          console.log("record not found");
+        }
+       
+        data.save(function(err,info){
+          res.send({status:"success"})
+        });
+        
+      })
+    } else {
+      res.send("Unauthorized access!")
+    }
+  });
 
   router.get("/user/doctor/schedule",function(req,res){
       if(req.user){
@@ -1987,7 +2043,7 @@ var basicRoute = function (model,sms,io) {
     router.post("/user/doctor/patient-session",function(req,res){
       if(req.user){        
         var session_id = Math.floor(Math.random() * 99999999999999922888);
-
+        console.log(req.body)
         var connectObj = {
           presenting_complain: req.body.complain,
           history_of_presenting_complain: req.body.historyOfComplain,
@@ -1999,6 +2055,20 @@ var basicRoute = function (model,sms,io) {
           provisional_diagnosis: req.body.provisionalDiagnosis,
         }
 
+        var getPatientInfo = {}
+
+         model.user.findOne({user_id:req.body.patient_id},{appointment:1,profile_pic_url:1,firstname:1,lastname:1,name:1},function(err,result){            
+            if(err) throw err;            
+            getPatientInfo.firstname = result.firstname;
+            getPatientInfo.lastname = result.lastname;
+            getPatientInfo.profilePic = result.profile_pic_url;
+            getPatientInfo.patient_username = result.name;
+
+            //create session
+            newSession();
+           
+          });
+
         /****************Note text messages or email will be sent to notify patients of the appointment ***********/
 
         // if there is appointment save appointment to the data base
@@ -2009,15 +2079,21 @@ var basicRoute = function (model,sms,io) {
             patient_id: req.body.patient_id
           }
 
+          
+
           var createAddress = req.user.address + "," + req.user.city + "," + req.user.country; 
           req.body.appointment.firstname = req.user.firstname;
           req.body.appointment.lastname = req.user.lastname;
           req.body.appointment.address = req.body.appointment.address || createAddress;
           req.body.appointment.title = "Dr";
           req.body.appointment.profilePic = req.user.profile_pic_url;   
-          model.user.findOne({user_id:req.body.patient_id},{appointment:1}).exec(function(err,result){            
+          model.user.findOne({user_id:req.body.patient_id},{appointment:1,profile_pic_url:1,firstname:1,lastname:1,name:1}).exec(function(err,result){            
             if(err) throw err;
             result.appointment.unshift(req.body.appointment);
+            getPatientInfo.firstname = result.firstname;
+            getPatientInfo.lastname = result.lastname;
+            getPatientInfo.profilePic = result.profile_pic_url;
+            getPatientInfo.patient_username = result.name;
             result.save(function(err,info){
               if(err) throw err;
               if(info)
@@ -2042,27 +2118,36 @@ var basicRoute = function (model,sms,io) {
           });
         }
 
-        //save the newly created session to he database.
-        var queryObj;
-        if(req.body.complaint){
-          queryObj = {user_id:req.body.user_id}
-        } else {
-          queryObj = {user_id:req.user.user_id};
-        }
-        model.user.findOne(queryObj,{doctor_patient_session:1}).exec(function(err,result){
-          if(err) throw err;          
-          req.body.session_id = session_id;       
-          result.doctor_patient_session.unshift(req.body);
-          result.doctor_patient_session[0].diagnosis = connectObj;
-          result.save(function(err,info){
-            if(err) throw err;
-            if(req.body.typeOfSession === "In-person meeting") {
-              res.json({success: "success",session_id:session_id})
-            } else {
-              res.send("success");
-            }            
+        function newSession(){
+          //save the newly created session to he database.
+          var queryObj;
+          if(req.body.complaint){
+            queryObj = {user_id:req.body.user_id}
+          } else {
+            queryObj = {user_id:req.user.user_id};
+          }
+          model.user.findOne(queryObj,{doctor_patient_session:1}).exec(function(err,result){
+            if(err) throw err;          
+            req.body.session_id = session_id; 
+
+            result.doctor_patient_session.unshift(req.body);
+            result.doctor_patient_session[0].diagnosis = connectObj;
+             result.doctor_patient_session[0].patient_firstname = getPatientInfo.firstname;
+             result.doctor_patient_session[0].patient_lastname = getPatientInfo.lastname;
+             result.doctor_patient_session[0].patient_username = getPatientInfo.username;
+             result.doctor_patient_session[0].profilePic = getPatientInfo.profilePic;
+             console.log("yesssssssssssssssssssssssssssss");
+             console.log(result.doctor_patient_session[0])
+            result.save(function(err,info){
+              if(err) throw err;
+              if(req.body.typeOfSession === "In-person meeting") {
+                res.json({success: "success",session_id:session_id})
+              } else {
+                res.send("success");
+              }            
+            });
           });
-        });
+        }
       } else {
         res.end("Unauthorized access!");
       }

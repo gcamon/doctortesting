@@ -9,9 +9,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="apple-touch-icon" href="apple-touch-icon.png">
         <!-- Place favicon.ico in the root directory -->
-        <link rel="stylesheet" href="/assets/css/vendor.css">
-         <link rel="stylesheet" href="/assets/css/app.css">
-          <link rel="stylesheet" href="/assets/css/now-ui-kit.css">
+         <link rel="stylesheet" href="/assets/css/vendor.css">
+        <link rel="stylesheet" href="/assets/css/app.css">
+        <link rel="stylesheet" href="/assets/css/my-edit.css">
+        <link rel="stylesheet" href="/assets/css/now-ui-kit2.css">
+        <link rel="stylesheet" href="/assets/css/icomoon.css">
+          <link rel="stylesheet" href="/assets/css/chat.css">
+        <script src="/assets/js/vendor2.js"></script>
+        <script type="text/javascript" src="/assets/js/source.js"></script>
           <style>
               .title{
                   font-weight: 300;
@@ -19,9 +24,8 @@
           </style>
     </head>
 
-    <body>
-
- <header id="header"   ng-controller="topHeaderController" style="background-color:#d7dde4">
+    <body ng-app = "myApp">
+      <header id="header"   ng-controller="topHeaderController" style="background-color:#d7dde4">
               
         <nav class="header" style="height:70px; margin-top:-.5em; z-index:1000;">
              <div class="header-block header-block-nav">
@@ -46,168 +50,201 @@
         </nav>
 </header>
 
-<div class="container" style="margin-top: 100px">
-<div style="font-size:2em; font-weight:300;">
-Treatment Sessions
+
+
+
+
+<div class="container p-0" style="box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.2);margin-top:100px" ng-controller="inTreatmentController">
+{{sessionData}}
+<div class="col-md-12  col-sm-12 col-xs-12 card p-1 mb-3">
+<div class="col-md-3 col-sm-12 text-center" style="text-align:center;">
+<img src="{{sessionData.patientInfo.profilePic}}" class="img-rounded mb-1" height="120"><br> 
+<span class="pt-3" style="font-size:1.4em; font-weight:300;" ng-cloak>{{sessionData.patientInfo.firstname}} {{sessionData.patientInfo.lastname}}</span></div>
+<div class="col-md-5 col-sm-12" ng-cloak><b style="font-size:1.2em; font-weight:300;">This session was intiated on {{sessionData.patientInfo.last_meeting | date : "mediumDate"}}, <br>{{sessionData.typeOfSession}}</b></div>
+<div class="col-md-4 col-sm-12 pt-3"><button style="float:right;" class="btn btn-info" ng-click="bookAppointment()">Book Appointment</button></div>
+<div class="col-md-4 col-sm-12 pt-3">
+    <label>Related sessions:</label>
+    <select ng-model="sessions" class="form-control" placeholder="Other sessions">
+      <options value="" selected>View related sessions</option>
+      <options>a</option>
+      <options>afdffddffdf</option>
+    </select>
+</div>
 </div>
 
-<div style="font-size:2em; font-weight:300;">
-<span class="pull-right">  
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModalLong">
-  Book Appointment
-</button>
-</span>
-</div>
-
-
-<!-- Modal -->
-<!--<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">
-        <i class="fa fa-user-o"></i> Complete The Treatment Sessions</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-
-        <form>
- <div class="row">
+      <form  class="pb-5 mb-5">
+ <div class="row p-2 igwe-text">
   
-  <div class="col-md-12  col-sm-12 col-xs-12 form-group">
-    <label for="firstname">Complaint</label>
-    <textarea class="form-control" placeholder="Complaint"></textarea>
+  <div class="col-md-6  col-sm-12 col-xs-12 form-group">
+    <label class="col-md-12 p-0" style="display:block;" for="firstname"><div class="col-sm-9 p-0 pull-left"  style="font-size:1.2em; font-weight:500;">Complaint </div> 
+
+    <div class="col-sm-3 text-right"><button class="btn btn-simple btn-sm  pull-right fa fa-pencil" type="button" data-toggle="collapse" 
+    data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+  </button></div></label>
+
+   <div class="card-block p-0 mb-0">
+    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+  </div>
+   <div class="collapse" id="collapseExample">
+        <textarea class="form-control" placeholder="Complaint"></textarea>
+  </div>
   </div>
 
-  <div class="col-md-12  col-sm-12 col-xs-12 form-group">
-    <label for="firstname">History of the Complain</label>
-    <textarea class="form-control" placeholder="History of the Complain"></textarea>
+  <div class="col-md-6 col-sm-12 col-xs-12 form-group mb-3" style="display:inline-block !important;">
+    <label class="col-md-12 p-0" style="display:block;" for="firstname">
+        <div class="col-sm-9 p-0 pull-left"  style="font-size:1.2em; font-weight:500;">History of the Complaint </div> 
+
+    <div class="col-sm-3 text-right"><button class="btn btn-simple btn-sm  pull-right fa fa-pencil" type="button" data-toggle="collapse" 
+    data-target="#historu" aria-expanded="false" aria-controls="collapseExample">
+  </button></div></label>
+
+   <div class="card-block p-0 mb-0">
+    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+  </div>
+   <div class="collapse" id="historu">
+        <textarea class="form-control" placeholder="Complaint"></textarea>
+  </div>
   </div>
 
-  <div class="col-md-12  col-sm-12 col-xs-12 form-group">
-    <label for="firstname">Past Medical History</label>
-    <textarea class="form-control" placeholder="Past Medical History"></textarea>
+ 
+  <div class="col-md-6 col-sm-12 col-xs-12 form-group mb-3">
+    <label class="col-md-12 p-0" style="display:block;" for="firstname">
+        <div class="col-sm-9 p-0 pull-left"  style="font-size:1.2em; font-weight:500;">Past Medical History </div> 
+
+    <div class="col-sm-3 text-right"><button class="btn btn-simple btn-sm  pull-right fa fa-pencil" type="button" data-toggle="collapse" 
+    data-target="#past" aria-expanded="false" aria-controls="collapseExample">
+  </button></div></label>
+
+   <div class="card-block p-0 mb-0">
+    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+  </div>
+   <div class="collapse" id="past">
+        <textarea class="form-control" placeholder="Complaint"></textarea>
+  </div>
   </div>
 
-  <div class="col-md-12  col-sm-12 col-xs-12 form-group">
-    <label for="firstname">Social History</label>
-    <textarea class="form-control" placeholder="Social History"></textarea>
+ 
+  <div class="col-md-6 col-sm-12 col-xs-12 form-group mb-3">
+    <label class="col-md-12 p-0" style="display:block;" for="firstname">
+        <div class="col-sm-9 p-0 pull-left"  style="font-size:1.2em; font-weight:500;">Social History </div> 
+
+    <div class="col-sm-3 text-right"><button class="btn btn-simple btn-sm  pull-right fa fa-pencil" type="button" data-toggle="collapse" 
+    data-target="#social" aria-expanded="false" aria-controls="collapseExample">
+  </button></div></label>
+
+   <div class="card-block p-0 mb-0">
+    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+  </div>
+   <div class="collapse" id="social">
+        <textarea class="form-control" placeholder="Complaint"></textarea>
+  </div>
   </div>
 
-  <div class="col-md-12  col-sm-12 col-xs-12 form-group">
-    <label for="firstname">Family History</label>
-    <textarea class="form-control" placeholder="Social History"></textarea>
+ 
+  <div class="col-md-6 col-sm-12 col-xs-12 form-group mb-3">
+    <label class="col-md-12 p-0" style="display:block;" for="firstname">
+        <div class="col-sm-9 p-0 pull-left"  style="font-size:1.2em; font-weight:500;">Past Medical History </div> 
+
+    <div class="col-sm-3 text-right"><button class="btn btn-simple btn-sm  pull-right fa fa-pencil" type="button" data-toggle="collapse" 
+    data-target="#family" aria-expanded="false" aria-controls="collapseExample">
+  </button></div></label>
+
+   <div class="card-block p-0 mb-0">
+    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+  </div>
+   <div class="collapse" id="family">
+        <textarea class="form-control" placeholder="Complaint"></textarea>
+  </div>
   </div>
 
-  <div class="col-md-12  col-sm-12 col-xs-12 form-group">
-    <label for="firstname">Drug History</label>
-    <textarea class="form-control" placeholder="Social History"></textarea>
+ 
+  <div class="col-md-6 col-sm-12 col-xs-12 form-group mb-3">
+    <label class="col-md-12 p-0" style="display:block;" for="firstname">
+        <div class="col-sm-9 p-0 pull-left"  style="font-size:1.2em; font-weight:500;">Drug History </div> 
+
+    <div class="col-sm-3 text-right"><button class="btn btn-simple btn-sm  pull-right fa fa-pencil" type="button" data-toggle="collapse" 
+    data-target="#drug" aria-expanded="false" aria-controls="collapseExample">
+  </button></div></label>
+
+   <div class="card-block p-0 mb-0">
+    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+  </div>
+   <div class="collapse" id="drug">
+        <textarea class="form-control" placeholder="Complaint"></textarea>
+  </div>
   </div>
 
-  <div class="col-md-12  col-sm-12 col-xs-12 form-group">
-    <label for="firstname">Summary</label>
-    <textarea class="form-control" placeholder="Summary"></textarea>
+  
+  <div class="col-md-6 col-sm-12 col-xs-12 form-group mb-3">
+    <label class="col-md-12 p-0" style="display:block;" for="firstname">
+        <div class="col-sm-9 p-0 pull-left"  style="font-size:1.2em; font-weight:500;">Past Medical History </div> 
+
+    <div class="col-sm-3 text-right"><button class="btn btn-simple btn-sm  pull-right fa fa-pencil" type="button" data-toggle="collapse" 
+    data-target="#summary" aria-expanded="false" aria-controls="collapseExample">
+  </button></div></label>
+
+   <div class="card-block p-0 mb-0">
+    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+  </div>
+   <div class="collapse" id="summary">
+        <textarea class="form-control" placeholder="Complaint"></textarea>
+  </div>
   </div>
 
-   <div class="col-md-12  col-sm-12 col-xs-12 form-group">
-    <label for="firstname">Provisional Diagnosis</label>
-    <textarea class="form-control" placeholder="Provisional Diagnosis"></textarea>
+   
+  <div class="col-md-6 col-sm-12 col-xs-12 form-group mb-3">
+    <label class="col-md-12 p-0" style="display:block;" for="firstname">
+        <div class="col-sm-9 p-0 pull-left"  style="font-size:1.2em; font-weight:500;">Past Medical History </div> 
+
+    <div class="col-sm-3 text-right"><button class="btn btn-simple btn-sm  pull-right fa fa-pencil" type="button" data-toggle="collapse" 
+    data-target="#provisional" aria-expanded="false" aria-controls="collapseExample">
+  </button></div></label>
+
+   <div class="card-block p-0 mb-0">
+    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+  </div>
+   <div class="collapse" id="provisional">
+        <textarea class="form-control" placeholder="Complaint"></textarea>
+  </div>
   </div>
  </div>
-</form>
 
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Add</button>
-      </div>
-    </div>
-  </div>
-</div>
-</div>-->
-
-<div class="container">
-
-<div class="col-md-12  col-sm-12 col-xs-12">
-<div class="col-md-4">picture</div>
-<div class="col-md-4"></div>
-
-</div>
-
-      <form>
- <div class="row">
-  
-  <div class="col-md-12  col-sm-12 col-xs-12 form-group">
-    <label for="firstname">Complaint</label>
-    <textarea class="form-control" placeholder="Complaint"></textarea>
-  </div>
-
-  <div class="col-md-12  col-sm-12 col-xs-12 form-group">
-    <label for="firstname">History of the Complain</label>
-    <textarea class="form-control" placeholder="History of the Complain"></textarea>
-  </div>
-
-  <div class="col-md-12  col-sm-12 col-xs-12 form-group">
-    <label for="firstname">Past Medical History</label>
-    <textarea class="form-control" placeholder="Past Medical History"></textarea>
-  </div>
-
-  <div class="col-md-12  col-sm-12 col-xs-12 form-group">
-    <label for="firstname">Social History</label>
-    <textarea class="form-control" placeholder="Social History"></textarea>
-  </div>
-
-  <div class="col-md-12  col-sm-12 col-xs-12 form-group">
-    <label for="firstname">Family History</label>
-    <textarea class="form-control" placeholder="Social History"></textarea>
-  </div>
-
-  <div class="col-md-12  col-sm-12 col-xs-12 form-group">
-    <label for="firstname">Drug History</label>
-    <textarea class="form-control" placeholder="Social History"></textarea>
-  </div>
-
-  <div class="col-md-12  col-sm-12 col-xs-12 form-group">
-    <label for="firstname">Summary</label>
-    <textarea class="form-control" placeholder="Summary"></textarea>
-  </div>
-
-   <div class="col-md-12  col-sm-12 col-xs-12 form-group">
-    <label for="firstname">Provisional Diagnosis</label>
-    <textarea class="form-control" placeholder="Provisional Diagnosis"></textarea>
-  </div>
- </div>
+<hr class="bg-warning">
 
 <!--physical examination-->
- <div class="mt-2" style="font-size:2em; font-weight:300;">Physical Examination</div>
-  <div class="col-md-12  col-sm-12 col-xs-12 form-group">
-    <label for="firstname">General Examination</label>
+ <div class="pl-2" style="font-size:2em; font-weight:300;">Physical Examination</div>
+<hr>
+  <div class="col-md-6  col-sm-12 col-xs-12 form-group">
+    <label for="firstname"> General Examination</label>
     <textarea class="form-control" placeholder="General Examination"></textarea>
   </div>
 
-  <div class="col-md-12  col-sm-12 col-xs-12 form-group">
-    <label for="firstname">Systemic Examination</label>
+  <div class="col-md-6  col-sm-12 col-xs-12 form-group">
+    <label for="firstname"> Systemic Examination</label>
     <textarea class="form-control" placeholder="Systemic Examination"></textarea>
   </div>
 
    <div class="col-md-12  col-sm-12 col-xs-12 form-group">
-    <label for="firstname">Final Diagnosis</label>
+    <label for="firstname"> Final Diagnosis</label>
     <textarea class="form-control" placeholder="Final Diagnosis"></textarea>
   </div>
+  
+  <div class="clearfix"></div>
+<hr class="bg-info">
+  <div class="clearfix"></div>
 
   <div class="col-md-12  col-sm-12 col-xs-12">
-<h4>INVESTIGATION</h4>
-<a href="#">Laboratory</a>
-<a href="#">Radiology</a>
-<a href="#">ECG</a>
-<a href="#">Other</a>
-</div>
+<div class="pl-2" style="font-size:2em; font-weight:300;">Investigation</div>
+<hr>
+<div class="btn-inline  p-2">
+<a href="#" class="btn btn-primary">Laboratory</a>
+<a href="#" class="btn btn-primary">Radiology</a>
+<a href="#" class="btn btn-primary">ECG</a>
+<a href="#" class="btn btn-primary">Other</a>
+</div></div>
 
-
-<table class="table table-bordered mt-2">
+<div class="p-2">
+<table class="table table-responsive table-hover mt-2">
   <thead>
     <tr>
       <th>Date</th>
@@ -230,38 +267,32 @@ Treatment Sessions
   </tbody>
 </table>
 
+
 <p>Patient test results ran by</p>
 <p>the test was ran by</p>
 <button class="btn btn-info">Request for a new lab test</button>
+</div>
 
-<div class="container mt-2">
-<div class="col-md-12  col-sm-12 col-xs-12">
-    <div class="col-md-4 pull-left">
-<div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-  <button type="button" class="btn btn-secondary">Run</button>
 
-  <div class="btn-group" role="group">
-    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-      Choose lab result
-    </button>
-    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-      <a class="dropdown-item" href="#">Listing of Chemical Pathology</a>
-      <a class="dropdown-item" href="#"> Listing of Hematology/Blood Bank</a>
-      <a class="dropdown-item" href="#">Listing of Histology/Cytology</a>
-      <a class="dropdown-item" href="#">Listing of Hormone</a>
-      <a class="dropdown-item" href="#">Listing of Microbiology/Parasitology</a>
-      <a class="dropdown-item" href="#">Listing of Toxicology </a>
-      <a class="dropdown-item" href="#">Listing of Molecular Biology</a>
-    </div>
-  </div>
+<div class="container p-0 mt-2">
+<div class="col-md-12  col-sm-12 col-xs-12 p-2">
+    <div class="col-md-9 pull-left">
+<div>
+        <button class="btn btn-neutral btn-sm" href="#">Listing of Chemical Pathology</button>
+      <button class="btn btn-neutral btn-sm" href="#"> Listing of Hematology/Blood Bank</button>
+      <a class="btn btn-neutral btn-sm" href="#">Listing of Histology/Cytology</a>
+      <a class="btn btn-neutral btn-sm" href="#">Listing of Hormone</a>
+      <a class="btn btn-neutral btn-sm" href="#">Listing of Microbiology/Parasitology</a>
+      <a class="btn btn-neutral btn-sm" href="#">Listing of Toxicology </a>
+      <a class="btn btn-neutral btn-sm" href="#">Listing of Molecular Biology</a>
 </div>
     </div>
 
-    <div class="col-md-4 pull-right">
+    <div class="col-md-3 pull-right">
         <button class="btn btn-info pull-right">Preview selected test</button>
     </div>
     <!-- checkboxes-->
-<div class="col-md-12  col-sm-12 col-xs-12">
+<div class="col-md-12  col-sm-12 col-xs-12 mt-1">
 <div class="form-inline">
   <div class="form-group">
     <label for="filtertest">Filter list by test name</label>
@@ -278,24 +309,135 @@ Treatment Sessions
 </div>
 <!--checkboxes-->
 
+
+<div class="clearfix"></div>
+<hr class="bg-warning">
+  <div class="clearfix"></div>
+
+
 <!--treatment-->
-<div class="col-md-12  col-sm-12 col-xs-12">
-<h5 style="font-size:2em; font-weight:300;"> TREATMENT</h5>
-<button class="btn btn-primary">Pharmaceutical</button>
-<button class="btn btn-primary">Surgery</button>
-<button class="btn btn-primary">Physiotherapy</button>
-<button class="btn btn-primary">Others</button>
+<div class="col-md-12  col-sm-12 col-xs-12 pb-5 mb-5">
+<h5 style="font-size:2em; font-weight:300;"> Treatment</h5>
 </div>
 <!--treatment end-->
+
+<!--treatment area-->
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" data-toggle="tab" href="#pharma" role="tab">Pharmaceutical</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#surgery" role="tab">Surgery</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#physiotheraphy" role="tab">Physiotherapy</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#others" role="tab">Others</a>
+  </li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content pb-5 mb-5">
+  <div class="tab-pane active" id="pharma" role="tabpanel">
+<div><b>Treatment By Pharmaceutical</b><br> <hr>
+<button class="btn btn-success">View Previous prescriptions</button>      <button class="btn btn-success">Write new prescrptions</button>
+</div>
+
+  </div>
+  <div class="tab-pane" id="surgery" role="tabpanel"><b>Surgery</b></div>
+  <div class="tab-pane" id="physiotheraphy" role="tabpanel"><b>Physiotherapy</b></div>
+  <div class="tab-pane" id="others" role="tabpanel"><b>Others</b></div>
+</div>
+<!--end-->
            
 </div>
 
 </div>
 </form>
-</div>
+</div>  
+
+
+      <script type="text/ng-template" id="calender-template.html">
+        <div class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header" style="border-bottom:1px solid #eee;">
+              <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                <div>
+                <b>Book an Appointment</b>
+                <button type="button"  ng-click="close('Cancel')" data-dismiss="modal" aria-hidden="true" style="color:red;font-size: 32px; margin-top:-9px;float:right; top:5px;border:none">&times;</button>
+                </div>  
+                    
+                </div> </div>                                    
+              </div>
+            
+                    <div class="modal-body">
+                    <div class="row">
+                <div class="col-sm-12 col-md-12 col-lg-12">
+                                              
+                        <div class="calender-header bg-primary">
+                            <i class="fa fa-angle-left" ng-click="previous()"></i>
+                            <span>{{month.format("MMMM, YYYY")}}</span>
+                            <i class="fa fa-angle-right" ng-click="next()"></i>
+                        </div>
+                        <div class="week">
+                            <span class="day">Sun</span>
+                            <span class="day">Mon</span>
+                            <span class="day">Tue</span>
+                            <span class="day">Wed</span>
+                            <span class="day">Thu</span>
+                            <span class="day">Fri</span>
+                            <span class="day">Sat</span>
+                        </div>
+                        
+                        <div ng-repeat="week in weeks" class="indays">
+                            <span class="dates" ng-class="{ today: day.isToday, 'different-month': !day.isCurrentMonth, selected: day.date.isSame(selected) }" ng-click="select(day)" style="cursor:pointer" ng-repeat="day in week.days">{{day.number}}</span>
+                        </div>                        
+                        <p class="bg-default" style="font-size:1em; padding:15px;">Picked Date: <em>{{dd.format('dddd, MMMM Do YYYY')}}</em><span style="display:block">Picked time: <em>{{treatment.appointment.time | date: "mediumTime"}} </em></span>
+                            <span>Picked Venue: <em>{{treatment.appointment.address}} </em></span>
+                        </p>
+
+                        <div>
+                        <b style="font-size:1.4em; font-weight:bold;">Time of appointment: <br><input type="time" class="form-control" placeholder="Enter time" ng-model="treatment.appointment.time" style="font-size:.5em;"/></b>
+                        <div style="font-size:1.3em;"><b>Venue</b> <sub>(If none,defaults to the address in your profile)</sub>: <br><input class="form-control" type="address" placeholder="Enter address" ng-model="treatment.appointment.address"></div>
+  </div>  </div> 
+                        <div class="clearfix"></div>
+                       
+                </div>
+
+                <div class="modal-footer ok">
+                            <button class="btn bg-primary" style="font-size:1.4em; font-weight:300; width:50%;" ng-click="book()" class="btn btn-success">Book</button>
+                        </div>
+              </div>          
+            </div>
+          </div>
+        </div>
+     </script>
        
-     <script src="/assets/js/vendor2.js"></script>
-        <script src="/assets/js/app.js"></script>
+
+       <script src="/assets/js/app.js"></script>
+        
+        
+        <script type="text/javascript" src="/assets/js/angularclient.js"></script>
+        <script type="text/javascript" src="/assets/js/ngroute.js"></script>
+        <script src="/socket.io/socket.io.js"></script>   
+        <script src="/assets/js/socket.min.js"></script>
+        
+      
+        
+        
+        <script src="/assets/js/angularAnimate.js"></script>
+        <script src="/assets/js/modalService.js"></script>
+        <script src="/assets/js/angular-touch.min.js"></script>
+        <!--<script src="/assets/js/angular-carousel.js"></script>-->
+        <script src="/assets/js/moment.min.js"></script>
+        <script src="/assets/js/angular-moment.min.js"></script>
+        <script src="/assets/js/ui-bootstrap-tpls.js"></script>
+        <script src="/assets/js/angular-clipboard.js"></script>
+        <script src="/assets/js/ngresource.js"></script>
     </body>
 
 </html>

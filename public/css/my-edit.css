@@ -65,6 +65,43 @@
   text-decoration: none;
 }
 
+.doc-edit {
+  list-style: none;
+  padding: 5px;
+  border-right: 1px solid rgba(0,0,0,0.3);
+  border-radius: 15px
+}
+
+.doc-edit li{
+  font-size: 18px;
+  font-weight: 300;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 10px;
+  
+}
+
+.selected-edit {
+  color: orange;
+}
+
+.bg-green-back {
+  background-color: green!important; 
+}
+
+.number-change {
+  color:#fff;
+  text-align:center;
+  background-color:#0275d8;
+  padding:20px;
+  font-size:22px;
+  margin-bottom:30px
+}
+
+.rec div {
+  padding-top: 20px!important;
+}
+
 @media screen and (min-height: 960px) {
   .view-animate-container {
     max-height: 800px

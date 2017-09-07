@@ -14,11 +14,11 @@
         </ul>
         <footer>
           <div style="margin-top:20px">
-            <a href="/change-number"> Change number </a>
+            <a href="/user/change-number"> Change registered applinic phone number </a>
           </div>
-           <div style="margin-top:20px">
-            <a href="/change-email">Change email </a>
-          </div>
+           <!--<div style="margin-top:20px">
+            <a href="/user/change-email">Change email </a>
+          </div>-->
         </footer>
       </div>
     </div>
@@ -72,7 +72,7 @@
         <h3>Introductory Note</h3>
         <div class="form-group igwe-text">
           <label for="lastname">Introduce yourself</label>
-          <textarea class="form-control" placeholder="Brief Introduction about me" ng-model="user.introductory"></textarea>
+          <textarea class="form-control" placeholder="Brief Introduction about me" ng-model="user.introductory" ></textarea>
         </div>
         <div>
           <button class="btn btn-success pull-right" ng-click="update()">Save</button>
@@ -90,8 +90,8 @@
            </select>
         </div>
         <div>
-          <button class="btn btn-simple pull-right mr-1" ng-click="addNewField(user.subSpecialty)" style="color:blue;"><b>+</b> Add Field</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <button class="btn btn-simple pull-right mr-1" ng-click="removeNewField(user.subSpecialty)" ng-if="sp" style="color:red;"><b>-</b> remove last field</button>     
+          <button class="btn btn-simple pull-right mr-1" ng-click="addNewField(user.subSpecialty)" style="color:blue;position:absolute;bottom:0;right:0"><b>+</b> Add Field</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <button class="btn btn-simple pull-right mr-1" ng-click="removeNewField(user.subSpecialty)" ng-if="sp" style="color:red;position:absolute;bottom:0;right:130px"><b>-</b> remove last field</button>     
         </div>
         <div>
             <button class="btn btn-success" ng-click="update()">Save</button>
@@ -139,8 +139,8 @@
             
         </div>
         <div>
-           <button class="btn btn-simple pull-right mr-1" ng-click="addNewField(user.education)" style="color:blue;"><b>+</b> Add Field</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <button class="btn btn-simple pull-right mr-1" ng-click="removeNewField(user.education)" ng-if="edu" style="color:red;"><b>-</b> remove last field</button>     
+           <button class="btn btn-simple pull-right mr-1" ng-click="addNewField(user.education)" style="color:blue;position:absolute;bottom:0;right:0"><b>+</b> Add Field</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <button class="btn btn-simple pull-right mr-1" ng-click="removeNewField(user.education)" ng-if="edu" style="color:red;position:absolute;bottom:0;right:130px"><b>-</b> remove last field</button>     
         </div>
         <div>
           <button class="btn btn-success" ng-click="update()">Save</button>
@@ -149,7 +149,7 @@
 
       <div ng-if="type === 'skill' ">
 
-        <h3>Skills &amp;Procedure </h3>
+        <h3>Skills &amp; Procedure </h3>
         <form>
           <div class="col-md-12 col-sm-12 col-lg-12 form-group">
             <label for="lastname">Disease Name</label>
@@ -168,10 +168,10 @@
 
           <div class="col-md-12 col-sm-12 col-lg-12 form-group" style="border-bottom:1px dashed grey;padding-bottom:20px">
             <label>Attach files (If any) </label>
-           <input type="file"  id="file" file-model = "files" multiple="multiple" class="form-control"/>
-           <i class="fa fa-warning">&nbsp; <small style="font-size: 14px;">
+            <input type="file"  id="file" file-model = "files" multiple="multiple" class="form-control"/>
+           <!--<i class="fa fa-warning">&nbsp; <small style="font-size: 14px;">
             You can attach vnameeo or image file(s) associated with this skill or procedure (if any). File size must be less than 20mb.Type jpeg,jpg,mp3,mp4</small></i>
-            <!--<button class="btn btn-success">Add Photo/Vnameeo</button>-->
+            <button class="btn btn-success">Add Photo/Vnameeo</button>-->
           </div>          
         </form>         
         <!--<div>
@@ -185,8 +185,8 @@
       </div>
 
 
-      <div ng-if="type === 'honor'">
-        <h3>Awards  &amp; Honor</h3>
+      <div ng-if="type === 'honor'" style="position:relative;">
+        <h3>Awards  &amp; Honors</h3>
         <div ng-repeat="item in user.award">
           <div class="col-md-12 col-lg-12 col-sm-12 form-group">
             <label for="Name">Award</label>
@@ -203,9 +203,9 @@
             <textarea class="form-control"  placeholder="Award Description" ng-model="item.description"></textarea>
           </div>         
         </div> 
-        <div>
-             <button class="btn btn-simple pull-right mr-1" ng-click="addNewField(user.award)" style="color:blue;"><b>+</b> Add Field</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <button class="btn btn-simple pull-right mr-1" ng-click="removeNewField(user.award)" ng-if="ha" style="color:red;"><b>-</b> remove last field</button>     
+        <div >
+             <button class="btn btn-simple mr-1" ng-click="addNewField(user.award)" style="color:blue;position:absolute;bottom:0;right:0"><b>+</b> Add Field</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <button class="btn btn-simple pull-right mr-1" ng-click="removeNewField(user.award)" ng-if="ha" style="color:red;position:absolute;bottom:0;right:130px"><b>-</b> remove last field</button>     
         </div>
          <div>
           <button class="btn btn-success" ng-click="update()">Save</button>
@@ -239,8 +239,8 @@
         </div>
 
            <div>
-              <button class="btn btn-simple pull-right mr-1" ng-click="addNewField(user.office)" style="color:blue;"><b>+</b> Add Field</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <button class="btn btn-simple pull-right mr-1" ng-click="removeNewField(user.office)" ng-if="of" style="color:red;"><b>-</b> remove last field</button>     
+              <button class="btn btn-simple pull-right mr-1" ng-click="addNewField(user.office)" style="color:blue;position:absolute;bottom:0;right:0"><b>+</b> Add Field</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="btn btn-simple pull-right mr-1" ng-click="removeNewField(user.office)" ng-if="of" style="color:red;position:absolute;bottom:0;right:130px"><b>-</b> remove last field</button>     
           </div> 
           <div>
             <button class="btn btn-success" ng-click="update()">Save</button>
@@ -248,9 +248,8 @@
         </div>
     </div>
 
-
     <div class="col-sm-12 col-md-3 col-lg-3">
-      <h6 style="border-bottom:1px solid rgba(0,0,0,0.4)">Records</h6>
+      <h6 style="border-bottom:1px solid rgba(0,0,0,0.4);padding:20px 0">Records</h6>
       <div ng-if="type === 'personal'" class="rec">        
           <div>Names : {{docInfo.firstname}} {{docInfo.lastname}}</div>
           <div>Email : {{docInfo.email}} </div>
@@ -267,34 +266,32 @@
           <div ng-if="j.files.length > 0">
             <a href="" style="color:green">{{j.files.length}} files </a>
           </div>
-          <p style="color:red;text-decoration:underline;cursor:pointer;text-align:right"><small  ng-click="deleteRecord(j.skill_id)">Delete</small></p>
+          <p style="color:red;text-decoration:underline;cursor:pointer;text-align:right"><small  ng-click="deleteRecord(j._id,'skills')">Delete</small></p>
         </div>
       </div>
 
       <div ng-if="type === 'intro' ">
-        <p>{{docInfo.introductory}} &nbsp;&nbsp;<small style="color:red;text-decoration:underline;cursor:pointer;float:right" ng-click="deleteRecord(docInfo.introductory)">Delete</small></p>
+        <p>{{docInfo.introductory}} &nbsp;&nbsp;<span style="color:red;text-decoration:underline;cursor:pointer;float:right" ng-click="deleteRecord('intro')"><i class="fa fa-pencil" aria-hidden="true"></i></span></p>
       </div>
 
       <div ng-if="type === 'years' ">
-        <p>Years of experience : {{docInfo.experience + " years" || "months"}} &nbsp;&nbsp;<small style="color:red;text-decoration:underline;cursor:pointer;float:right" ng-click="deleteRecord(docInfo.experience)">Delete</small></p>
-      </div>
-
-      
+        <p>Years of experience : {{docInfo.experience + " years" || "months"}} &nbsp;&nbsp;<span style="color:red;text-decoration:underline;cursor:pointer;float:right" ng-click="deleteRecord('years')"><i class="fa fa-pencil" aria-hidden="true"></i></span></p>
+      </div>      
 
       <div ng-if="type === 'edu' ">
         <div ng-repeat="k in docInfo.education">
           <p><strong>{{k.certificate}}</strong>&nbsp;&nbsp;<em>{{k.school}},</em>
             <span style="display:block">{{k.start-year | date: "mediumDate"}} - {{k.end_year | date: "mediumDate"}}.</span>
-            <small style="color:red;text-decoration:underline;cursor:pointer;float:right" ng-click="deleteRecord(k._id)">Delete</small>
+            <small style="color:red;text-decoration:underline;cursor:pointer;float:right" ng-click="deleteRecord(k._id,'education')">Delete</small>
           </p>
         </div>
       </div>
 
-      <div ng-if="type === 'honor' ">
+      <div ng-if="type === 'honor'">
         <div ng-repeat="k in docInfo.awards">
           <p><strong>{{k.type_of_Award}}</strong>&nbsp;&nbsp;<em>{{k.description}},</em>
             <span style="display:block">{{k.date | date: "mediumDate"}}</span>
-            <small style="color:red;text-decoration:underline;cursor:pointer;float:right" ng-click="deleteRecord(k._id)">Delete</small>
+            <small style="color:red;text-decoration:underline;cursor:pointer;float:right" ng-click="deleteRecord(k._id,'awards')">Delete</small>
           </p>
         </div>
       </div>
@@ -302,7 +299,7 @@
       <div ng-if="type === 'office' ">
         <div ng-repeat="j in docInfo.office_hour">
           <p><strong>{{j.day}}:</strong>&nbsp;<em>{{j.from | date: "shortTime"}} - {{j.to | date: "shortTime"}}</em>            
-            <small style="color:red;text-decoration:underline;cursor:pointer;float:right" ng-click="deleteRecord(j._id)">Delete</small>
+            <small style="color:red;text-decoration:underline;cursor:pointer;float:right" ng-click="deleteRecord(j._id,'office_hour')">Delete</small>
           </p>
         </div>
       </div>
@@ -311,7 +308,7 @@
         <p><strong>Sub specialties: </strong></p>
         <div ng-repeat="j in docInfo.sub_specialty">
           <p><em>{{j.sub_specialty}}</em>            
-            <small style="color:red;text-decoration:underline;cursor:pointer;float:right" ng-click="deleteRecord(j._id)">Delete</small>
+            <small style="color:red;text-decoration:underline;cursor:pointer;float:right" ng-click="deleteRecord(j._id,'sub_specialty')">Delete</small>
           </p>
         </div>
       </div>
@@ -325,287 +322,3 @@
 
 
 
-
-<!--<div class="tg-heading-border tg-small">
-                      <h4>Basic Information</h4>
-                    </div>
-                    <div class="row">                     
-                      <div class="col-md-4 col-sm-6 col-xs-12">
-                        <div class="form-group">
-                          <input class="form-control" type="text" placeholder="<%= person.firstname %>" ng-model="user.firstname">
-                        </div>
-                      </div>
-                      <div class="col-md-4 col-sm-6 col-xs-12">
-                        <div class="form-group">
-                          <input class="form-control" type="text" placeholder="<%= person.lastname %>" ng-model="user.lastname">
-                        </div>
-                      </div>
-                      <div class="col-md-4 col-sm-6 col-xs-12">
-                        <div class="form-group">
-                          <input class="form-control" type="email" placeholder="<%= person.email %>" ng-model="user.email">
-                        </div>
-                      </div>
-                      <div class="col-md-4 col-sm-6 col-xs-12">
-                        <div class="form-group">
-                          <input class="form-control" type="text" placeholder=" +234 <%= person.phone %>" ng-model="user.phone">
-                        </div>
-                      </div>
-                      <div class="col-md-4 col-sm-6 col-xs-12">
-                        <div class="form-group">
-                          <input class="form-control" type="text" placeholder="<%= person.work_place%>" ng-model="user.work_place">
-                        </div>
-                      </div>
-                      <div class="col-md-4 col-sm-6 col-xs-12">
-                        <div class="form-group">
-                          <input class="form-control" type="text" placeholder="<%= person.address %>" ng-model="user.address">
-                        </div>
-                      </div>
-                      <div class="col-md-4 col-sm-6 col-xs-12">
-                        <div class="form-group">
-                          <input class="form-control" type="text" placeholder="<%= person.skype %>" ng-model="user.skype">
-                        </div>
-                      </div>
-                      <div class="col-md-4 col-sm-12 col-xs-12">
-                        <div class="form-group">
-                          <input class="form-control" type="url" placeholder="<%= person.website %>" ng-model="user.website">
-                        </div>
-                      </div>
-                      <div class="col-sm-12">
-                      <div class="tg-addfield">
-                          <button type="submit">
-                            <i class="fa fa-plus"></i>
-                            <span>add field</span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>                  
-                </div>
-                <div class="tg-bordertop tg-haslayout">
-                  <div class="tg-formsection">
-                    <div class="tg-heading-border tg-small">
-                      <h4>Introductory Note*</h4>
-                    </div>
-                    <div class="row">                     
-                      <div class="col-md-8 col-sm-6 col-xs-12">
-                        <div class="form-group">
-                          <textArea style="wnameth: 600px; height:300px" ng-model="user.introductory" placeholder="write..."></textArea>
-                        </div>                        
-                      </div>                      
-                    </div>
-                  </div>
-                </div>
-                <div class="tg-bordertop tg-haslayout">
-                  <div class="tg-formsection">
-                    <div class="tg-heading-border tg-small">
-                      <h4>Years of experience</h4>
-                    </div>
-                    <div class="row">                     
-                      <div class="col-md-8 col-sm-6 col-xs-12">
-                        <div class="form-group">
-                          <input class="form-control" type="number" placeholder="Procedure" ng-model="user.experience">
-                        </div>
-                      </div>                      
-                    </div>
-                  </div>
-                </div>                
-                <div class="tg-bordertop tg-haslayout">
-                  <div class="tg-formsection">
-                    <div class="tg-heading-border tg-small">
-                      <h4>Education</h4>
-                    </div>
-                    <div class="row">                     
-                      <div class="col-md-8 col-sm-6 col-xs-12" ng-repeat="item in user.education">
-                        <div class="form-group">
-                          <input class="form-control" type="text" placeholder="Medical School Attended" ng-model="item.school">
-                        </div>
-                        <div class="form-group">
-                          <label>From</label>
-                          <input class="form-control" type="date" ng-model="item.start_year" style="wnameth:200px">
-                          <label>to</label>
-                          <input class="form-control" type="date" ng-model="item.end_year" style="wnameth:200px">
-                        </div>
-                        <div class="form-group" style="border-bottom: 2px dotted rgba(0,0,0,0.2)">
-                          <input class="form-control" type="text" placeholder="Certificate obtained" ng-model="item.certificate">
-                        </div>                            
-                      </div>
-                      <div class="col-sm-12">                       
-                        <div class="tg-addfield">
-                          <button type="submit" ng-click="removeNewField(user.education)" ng-if="edu" ng-cloak>                           
-                            <span style="color:rgba(200,0,0,0.9);font-size:12px">remove last field</span>
-                          </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;             
-                          <button type="submit" ng-click="addNewField(user.education)">
-                            <i class="fa fa-plus"></i>
-                            <span>add field</span>
-                          </button>                         
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>                
-                                <div class="tg-bordertop tg-haslayout">
-                  <div class="tg-formsection">
-                    <div class="tg-heading-border tg-small">
-                      <h4>Sub Speciality</h4>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-4 col-sm-6 col-xs-12">
-                        <div class="form-group">
-                          <span class="select" ng-repeat="item in user.subSpecialty">
-                            <select class="group" name="group1" ng-model="item.sub_specialty">
-                              <option>All</option>
-                              <option>Doctor one</option>
-                              <option>Doctor two</option>
-                              <option>Doctor three</option>
-                            </select>
-                          </span>
-                        </div>
-                      </div>                      
-                      <div class="col-sm-12">
-                        <div class="tg-addfield">
-                          <button type="submit" ng-click="removeNewField(user.subSpecialty)" ng-if="sp" ng-cloak>                           
-                            <span style="color:rgba(200,0,0,0.9);font-size:12px">remove last field</span>
-                          </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;             
-                          <button type="submit" ng-click="addNewField(user.subSpecialty)">
-                            <i class="fa fa-plus"></i>
-                            <span>add field</span>
-                          </button>                         
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                                <div class="tg-bordertop tg-haslayout">
-                  <div class="tg-formsection">
-                    <div class="tg-heading-border tg-small">
-                      <h4>Procedure</h4>
-                    </div>
-                    <div class="row">                     
-                      <div class="col-md-8 col-sm-6 col-xs-12" ng-repeat = "item in user.procedure">
-                        <div class="form-group">
-                          <input class="form-control" type="text" placeholder="Procedure" ng-model="item.procedure_description" style="margin-bottom: 10px">                          
-                          <input type="file">
-                          <button ng-click="upload()" style="background-color:rgba(0,200,0,0.8); padding:10px 105px; color:#fff;border-radius:5px;margin:10px auto">add Photo/Vnameeo</button>
-                        </div>
-                      </div>
-                      <div class="col-sm-12">
-                        <div class="tg-addfield">
-                          <button type="submit" ng-click="removeNewField(user.procedure)" ng-if="pro" ng-cloak>                           
-                            <span style="color:rgba(200,0,0,0.9);font-size:12px">remove last field</span>
-                          </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;             
-                          <button type="submit" ng-click="addNewField(user.procedure)">
-                            <i class="fa fa-plus"></i>
-                            <span>add field</span>
-                          </button>           
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="tg-bordertop tg-haslayout">
-                  <div class="tg-formsection">
-                    <div class="tg-heading-border tg-small">
-                      <h4>Honors & Awards</h4>
-                    </div>
-                    <div class="row">
-                    <div ng-repeat="item in user.award">
-                      <div class="col-md-4 col-sm-6 col-xs-12">
-                        <div class="form-group">
-                          <input class="form-control" type="text" placeholder="Name of award" ng-model="item.type_of_award">
-                          <span class="select">
-                            <select class="group" name="group1" ng-model="item.type_of_award">
-                              <option>All</option>
-                              <option>good one</option>
-                              <option>Doctor two</option>
-                              <option>Doctor three</option>
-                            </select>
-                          </span>
-                        </div>
-                      </div>
-                      <div class="col-md-8 col-sm-6 col-xs-12">
-                        <div class="form-group">
-                          <input class="form-control" type="text" placeholder="Description" ng-model="item.description">
-                        </div>
-                      </div>
-                      </div>
-                      <div class="col-sm-12">
-                        <div class="tg-addfield">
-                          <button type="submit" ng-click="removeNewField(user.award)" ng-if="ha" ng-cloak>                            
-                            <span style="color:rgba(200,0,0,0.9);font-size:12px">remove last field</span>
-                          </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;             
-                          <button type="submit" ng-click="addNewField(user.award)">
-                            <i class="fa fa-plus"></i>
-                            <span>add field</span>
-                          </button>           
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="tg-bordertop tg-haslayout">
-                  <div class="tg-formsection">
-                    <div class="tg-heading-border tg-small">
-                      <h4>OFFice HOURS</h4>
-                    </div>
-                    <div class="row">
-                    <div ng-repeat="item in user.office">
-                      <div class="col-md-4 col-sm-6 col-xs-12">
-                        <div class="form-group">
-                          <span class="select">
-                            <select class="group" name="group1" ng-model="item.day">
-                              <option>Monday</option>
-                              <option>Tuesday</option>
-                              <option>Wednesday</option>
-                              <option>Thursday</option>
-                              <option>Frnameay</option>
-                              <option>Saturday</option>
-                              <option>Sunday</option>
-                            </select>
-                          </span>
-                        </div>
-                      </div>
-                      <div class="col-md-8 col-sm-6 col-xs-12">
-                        <div class="form-group">
-                          <label for = "from">From</label>
-                          <input class="form-control" type="text" name= "from" placeholder="what time?" ng-model="item.from">
-                          <label for = "to">to</label>
-                          <input class="form-control" type="text" name="to" placeholder="what time?" ng-model="item.to">
-                        </div>
-                      </div>
-                      </div>
-                      <div class="col-sm-12">
-                        <div class="tg-addfield">
-                          <button type="submit" ng-click="removeNewField(user.office)" ng-if="of" ng-cloak>                           
-                          <span style="color:rgba(200,0,0,0.9);font-size:12px">remove last field</span>
-                          </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;             
-                          <button type="submit" ng-click="addNewField(user.office)">
-                            <i class="fa fa-plus"></i>
-                            <span>add field</span>
-                          </button>           
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>                
-                <button type="submit" class="tg-btn" ng-click="update()">update</button>
-                </div>
-              </fieldset>
-            </form>
-          </div>
-          <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
-            <asnamee name="tg-snameebar"  ng-controller="pictureController">
-              <div class="tg-wnameget tg-wnameget-doctor">
-                <figure class="tg-docprofile-img">
-                  <figcaption>
-                    <h4>Dr. <%= person.firstname %> <%= person.lastname %> </h4>
-                    <span><%= person.specialty %> Specialist</span>
-                  </figcaption>
-                  <span class="tg-featuredicon"><em class="fa fa-bolt"></em></span>
-                  <a href="#"><img alt="image description" src="<%= person.profile_pic_url %>"></a>
-                </figure>
-              </div>
-              <input type="file" name="file" name="file" file-model = "user.profilepic"/>
-              <button ng-click="update('doctor')" style="background-color:rgba(0,200,0,0.8); padding:10px 105px; color:#fff;border-radius:5px;margin:10px auto">Upload</button> 
-              <div class="tg-otherphotos">-->
-        
-    
