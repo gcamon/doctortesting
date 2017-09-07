@@ -87,7 +87,7 @@
 <div class="col-md-5 col-sm-12" ng-cloak ng-if="sessionData.patientInfo.last_meeting"><b style="font-size:1.2em; font-weight:300;">This session was intiated on {{sessionData.patientInfo.last_meeting | date : "mediumDate"}}, <br>{{sessionData.typeOfSession}}</b>
 </div>
 
-<div class="col-md-5 col-sm-12" ng-cloak ng-if="sessionData.patientInfo.last_meeting"><b style="font-size:1.2em; font-weight:300;">This session was intiated on {{sessionData.patientInfo.date | date : "mediumDate"}}, <br>{{sessionData.typeOfSession}}</b>
+<div class="col-md-5 col-sm-12" ng-cloak ng-if="sessionData.patientInfo"><b style="font-size:1.2em; font-weight:300;">This session was intiated on {{sessionData.patientInfo.date | date : "mediumDate"}}, <br>{{sessionData.typeOfSession}}</b>
   <div style="padding-top: 30px"><b>Last modified:</b> <span ng-if="sessionData.date">{{sessionData.patientInfo.last_meeting | date : "mediumDate"}}</span>
   </div>
 </div>
