@@ -355,6 +355,7 @@ var myModel = function () {
 
 	var sessionSchema = Schema({
 		date: String,
+		last_modified: String,
 		session_id: Number,
 		patient_id: String,
 		profilePic: String,

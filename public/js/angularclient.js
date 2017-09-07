@@ -7427,12 +7427,16 @@ app.controller("fromModalSessionController",["$scope","$http","$window","localMa
       if(data.success === "success") {
         $scope.patient.diagnosis = connectObj;
         $scope.patient.session_id = data.session_id;
+        $scope.patient.patient_firstname = data.patient_firstname;
+        $scope.patient.patient_lastname = data.patient_lastname;
+        $scope.patient.profilePic = data.profilePic;
         localManager.setValue("heldSessionData",$scope.patient);
         $window.location.href = "/user/treatment";
       } else {
         alert("Error occured while creating this treatment session")
       }
     });
+
 
     var connectObj = {
       presenting_complain: $scope.patient.complain,

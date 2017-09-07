@@ -2129,19 +2129,22 @@ var basicRoute = function (model,sms,io) {
           model.user.findOne(queryObj,{doctor_patient_session:1}).exec(function(err,result){
             if(err) throw err;          
             req.body.session_id = session_id; 
-
             result.doctor_patient_session.unshift(req.body);
             result.doctor_patient_session[0].diagnosis = connectObj;
              result.doctor_patient_session[0].patient_firstname = getPatientInfo.firstname;
              result.doctor_patient_session[0].patient_lastname = getPatientInfo.lastname;
              result.doctor_patient_session[0].patient_username = getPatientInfo.username;
              result.doctor_patient_session[0].profilePic = getPatientInfo.profilePic;
-             console.log("yesssssssssssssssssssssssssssss");
-             console.log(result.doctor_patient_session[0])
+             
             result.save(function(err,info){
               if(err) throw err;
               if(req.body.typeOfSession === "In-person meeting") {
-                res.json({success: "success",session_id:session_id})
+                res.json({success: "success",
+                  session_id:session_id,
+                  patient_firstname:getPatientInfo.firstname,
+                  patient_lastname:getPatientInfo.lastname,
+                  profilePic: getPatientInfo.profilePic
+                })
               } else {
                 res.send("success");
               }            
@@ -2258,6 +2261,9 @@ var basicRoute = function (model,sms,io) {
           objectFound.diagnosis.drug_history = req.body.drug_history;
           objectFound.diagnosis.summary = req.body.summary;
           objectFound.diagnosis.provisional_diagnosis = req.body.provisional_diagnosis;
+
+          var date = + new Date();
+          objectFound.last_modified = date;
 
 
           data.save(function(err,info){
