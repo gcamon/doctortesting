@@ -55,18 +55,22 @@
 
 
 <div class="container p-0" style="box-shadow: 0px 5px 25px 0px rgba(0, 0, 0, 0.2);margin-top:100px" ng-controller="inTreatmentController">
-  {{sessionData}}
-<div class="col-md-12  col-sm-12 col-xs-12 card p-1 mb-3" ng-if="!sessionData.patientInfo">
+ 
+<div class="col-md-12  col-sm-12 col-xs-12 card p-1 mb-3">
   <div class="col-md-3 col-sm-12 text-center" style="text-align:center;" >
-  <img src="{{sessionData.profilePic}}" class="img-rounded mb-1" style="max-height: 200px" ><br> 
+  <img src="{{sessionData.profilePic}}" class="img-rounded mb-1" style="max-height: 200px" >
+  <br> 
+  <!--<span class="pt-3" style="font-size:1.4em; font-weight:300;" ng-cloak ng-if="sessionData.patientInfo">{{sessionData.patientInfo.firstname}} {{sessionData.patientInfo.lastname}}</span>-->
+
   <span class="pt-3" style="font-size:1.4em; font-weight:300;" ng-cloak>{{sessionData.patient_firstname}} {{sessionData.patient_lastname}}</span><span style="display:block">( Patient )</span>
   </div>
 
 
-<div class="col-md-5 col-sm-12" ng-cloak ng-if="!sessionData.patientInfo.last_meeting"><b style="font-size:1.2em; font-weight:300;">This session was intiated on {{sessionData.date | date : "mediumDate"}}, <br>{{sessionData.typeOfSession}}</b>
-  <div style="padding-top: 30px"><b>Last modified:</b> <span ng-if="sessionData.date">{{sessionData.date | date : "mediumDate"}}</span>
+<div class="col-md-5 col-sm-12" ng-cloak><em style="font-size:1.2em; font-weight:300;">This session was intiated on {{sessionData.date | date : "mediumDate"}}, <br> Through <b>{{sessionData.typeOfSession}}</b></em>
+  <div style="padding-top: 30px"><b>Last modified:</b> <span>{{sessionData.last_modified | date : "mediumDate"}}</span>
   </div>
 </div>
+
 
 <div class="col-md-4 col-sm-12 pt-3"><button style="float:right;" class="btn btn-info" ng-click="bookAppointment()">Book Appointment</button></div>
 <div class="col-md-4 col-sm-12 pt-3">
@@ -79,31 +83,11 @@
 </div>
 </div>
 
-<div class="col-md-12  col-sm-12 col-xs-12 card p-1 mb-3" ng-if="sessionData.patientInfo">
-  <div class="col-md-3 col-sm-12 text-center" style="text-align:center;" >
-  <img src="{{sessionData.patientInfo.profilePic}}" class="img-rounded mb-1" style="max-height: 200px" ><br> 
-  <span class="pt-3" style="font-size:1.4em; font-weight:300;" ng-cloak>{{sessionData.patientInfo.firstname}} {{sessionData.patientInfo.lastname}}</span><span style="display:block">( Patient )</span>
-  </div>
-<div class="col-md-5 col-sm-12" ng-cloak ng-if="sessionData.patientInfo.last_meeting"><b style="font-size:1.2em; font-weight:300;">This session was intiated on {{sessionData.patientInfo.last_meeting | date : "mediumDate"}}, <br>{{sessionData.typeOfSession}}</b>
-</div>
 
-<div class="col-md-5 col-sm-12" ng-cloak ng-if="sessionData.patientInfo"><b style="font-size:1.2em; font-weight:300;">This session was intiated on {{sessionData.patientInfo.date | date : "mediumDate"}}, <br>{{sessionData.typeOfSession}}</b>
-  <div style="padding-top: 30px"><b>Last modified:</b> <span ng-if="sessionData.date">{{sessionData.patientInfo.last_meeting | date : "mediumDate"}}</span>
-  </div>
-</div>
 
-<div class="col-md-4 col-sm-12 pt-3"><button style="float:right;" class="btn btn-info" ng-click="bookAppointment()">Book Appointment</button></div>
-<div class="col-md-4 col-sm-12 pt-3">
-    <label>Related sessions:</label>
-    <select ng-model="sessions" class="form-control" placeholder="Other sessions">
-      <options value="" selected>View related sessions</option>
-      <options>a</option>
-      
-    </select>
-</div>
-</div>
 
-      <form  class="pb-5 mb-5">
+
+<form  class="pb-5 mb-5">
  <div class="row p-2 igwe-text">
   
   <div class="col-md-6  col-sm-12 col-xs-12 form-group">

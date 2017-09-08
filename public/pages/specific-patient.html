@@ -144,13 +144,15 @@
             Create new
         </button>
     </aside>
+
     <h5>Most recent</h5>
     <article ng-click="viewTreatmentSession(recentSession)" style='padding: 10px; cursor:pointer;margin-bottom: 10px;box-shadow: 1px 5px 5px rgba(0,0,0,0.5);color:green'>
-        <span>{{recentSession.date | date : "mediumDate" }}</span> <span style="padding-left: 20px">{{recentSession.diagnosis.presenting_complain}}</span>
+        <span>{{recentSession.date | date : "mediumDate" }}</span> <span style="padding-left: 20px">{{recentSession.diagnosis.presenting_complain || recentSession.diagnosis.diagnosis || "( Empty )"}}</span> <small style="float:right">Last modified: {{recentSession.last_modified | date : "mediumDate"}}</small>
     </article>
     <h5>others</h5>
+        
     <article ng-repeat = "session in sessionData" ng-click="viewTreatmentSession(session)" style='padding: 10px; cursor:pointer;margin-bottom: 10px;box-shadow: 1px 5px 5px rgba(0,0,0,0.5);color:green'>
-        <span>{{session.date | date : "mediumDate" }}</span> <span style="padding-left: 20px">{{session.diagnosis.presenting_complain}}</span>
+        <span>{{session.date | date : "mediumDate" }}</span> <span style="padding-left: 20px">{{session.diagnosis.presenting_complain || session.diagnosis.diagnosis ||"( Empty )"}}</span> <small style="float:right">Last modified: {{session.last_modified | date : "mediumDate"}}</small>
     </article>
 </div>
 </section>

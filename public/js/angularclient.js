@@ -2838,6 +2838,9 @@ app.controller("selectedAppointmentController",["$scope","$location","$http","$w
         })
       .success(function(data) {
         if(data){
+          console.log("checkinh appointment data line 2841")
+          console.log(data)
+          console.log(templateService.holdAppointmentData)
         data.patientInfo = templateService.holdAppointmentData;        
         localManager.setValue("heldSessionData",data);
           $window.location.href = "/user/treatment";
@@ -6733,6 +6736,7 @@ app.controller("myPatientController",["$scope","$http","$location","$window","$r
   var userId = arr[arr.length-1];
   var random = Math.floor(Math.random() * 999999999999 );
   patient.id = templateService.holdIdForSpecificPatient || userId;
+  $rootScope.holdId =  patient.id;
   var user = localManager.getValue("resolveUser");
 
   var getPatientData = $resource("/user/doctor/specific-patient")
@@ -7345,19 +7349,21 @@ app.controller("appointmentModalController",["$scope","$http","moment","template
  $scope.treatment.appointment = {};
 
     $scope.book = function(){
-      var data = templateService.holdBriefForSpecificPatient || templateService.holdForSpecificPatient; 
+      var data = templateService.holdBriefForSpecificPatient || templateService.holdForSpecificPatient;
+      
       var date = + new Date();
       $scope.treatment.date = date;
       $scope.treatment.patient_id = data.patient_id || data.user_id;
-      $scope.treatment.typeOfSession = "";
+      $scope.treatment.typeOfSession = "In-person meeting";
       $scope.treatment.appointment.title = "";
       $scope.treatment.appointment.date = $scope.dd._d;
 
       //this will take care of differrent object populating the data variable.
       if(data.hasOwnProperty("patientInfo")) {
-        $scope.treatment.appointment.firstname = data.patientInfo.firstname
-        $scope.treatment.appointment.lastname = data.patientInfo.lastname
-        $scope.treatment.appointment.profilePic = data.patientInfo.profilePic
+       
+        $scope.treatment.appointment.firstname = data.patientInfo.firstname 
+        $scope.treatment.appointment.lastname = data.patientInfo.lastname 
+        $scope.treatment.appointment.profilePic = data.patientInfo.profilePic 
         $scope.treatment.session_id = data.session_id;
 
         $scope.treatment.general_examination = data.diagnosis.general_examination;
@@ -7376,15 +7382,14 @@ app.controller("appointmentModalController",["$scope","$http","moment","template
         sendData($scope.treatment,"/user/doctor/session-update/save-changes","PUT");
 
       } else {
+
         templateService.holdBriefForSpecificPatient = null;
-        $scope.treatment.appointment.firstname = data.firstname; 
-        $scope.treatment.appointment.lastname = data.lastname;        
-        $scope.treatment.appointment.profilePic = data.profile_pic_url;
+        $scope.treatment.appointment.firstname = data.firstname || data.patient_firstname; 
+        $scope.treatment.appointment.lastname = data.lastname || data.patient_lastname;       
+        $scope.treatment.appointment.profilePic = data.profile_pic_url || data.profilePic;
         sendData($scope.treatment,"/user/doctor/patient-session","POST");
       }
-
-
-  
+      
       console.log($scope.treatment);
     }
 
@@ -7397,6 +7402,7 @@ app.controller("appointmentModalController",["$scope","$http","moment","template
         })
       .success(function(response) {   
         if(response) {
+          console.log(response)
           alert("Appointment booked, patient will be notified.")
           mySocket.emit("realtime appointment notification",{to:data.patient_id})
         }  
@@ -7408,15 +7414,16 @@ app.controller("appointmentModalController",["$scope","$http","moment","template
 
 
 //this controller controls the form filled by the doctor when creating new session for a selected patient above.
-app.controller("fromModalSessionController",["$scope","$http","$window","localManager","templateService",
-  function($scope,$http,$window,localManager,templateService){
+app.controller("fromModalSessionController",["$scope","$http","$window","localManager","templateService","$rootScope",
+  function($scope,$http,$window,localManager,templateService,$rootScope){
   $scope.patient = {};
   var date = new Date();
   $scope.patient.date = date;      
-  $scope.patient.patient_id = templateService.holdId;
+  $scope.patient.patient_id = $rootScope.holdId;
   $scope.patient.typeOfSession = "In-person meeting"; 
 
   $scope.createSession = function () {
+    console.log($scope.patient)
     $http({
       method  : 'POST',
       url     : "/user/doctor/patient-session",

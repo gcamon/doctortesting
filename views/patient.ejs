@@ -708,7 +708,299 @@
         <script src="https://media.twiliocdn.com/sdk/js/video/releases/1.0.0-beta2/twilio-video.js"></script>
         <script src="https://media.twiliocdn.com/sdk/rtc/js/ip-messaging/v0.10/twilio-ip-messaging.min.js"></script>-->
         
-        
+        <script type="text/ng-template" id="question.html" ng-controller="connectController">
+         <div class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+              <div class="row">
+                <button type="button" class="close" ng-click="close('Cancel')" data-dismiss="modal" aria-hidden="true">&times;</button>
+                     <h6 style="color: #000; font-size: 12px;text-align: center">{{message}}</h6> 
+                    <div class="col-md-9 col-lg-9">
+                    <h6 style="margin-top: 50px;text-align:center">What symptom are you experiencing?</h6>
+                    </div>
+                    <div class="col-md-3 col-lg-3">
+                    
+                    <img ng-src="{{docInfo.profile_pic_url}}" style="width:100px; height:100px"/>
+                    </div>
+                </div>
+                </h6>               
+              </div>a
+              <div class="modal-body">                                                   
+                    <form class="tg-form-modal tg-form-signin">                        
+                            <fieldset>
+                                <caption>Describe in summary your illness</caption>
+                                <div>
+                                    <textarea style="height: 300px; color: black" placeholder="write.." ng-model="patient.message"></textarea>
+                                </div>
+                        <button class="tg-btn tg-btn-lg" ng-click="getAnswer('<%= userInfo.firstname %>','<%= userInfo.lastname %>','<%= userInfo.profile_pic_url %>',<%=userInfo.user_id %>)">Get answer</button>
+                            </fieldset>
+                        </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" ng-click="close('No')" class="btn btn-default" data-dismiss="modal">No</button>
+                <button type="button" ng-click="close('Yes')" class="btn btn-primary" data-dismiss="modal">Yes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+     </script>
+     <script type="text/ng-template" id="request.html" ng-controller="connectController">
+         <div class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+              <div class="row">
+                <button type="button" class="close" ng-click="close('Cancel')" data-dismiss="modal" aria-hidden="true">&times;</button>
+                 <h6 style="text-align: center; color: #000; font-size: 12px">{{message}}</h6>
+              </div>
+              <div class="modal-body">
+              <h6 style="text-align: center">You want to send Consultation request 
+                <span style="display:block;margin-top: 20px">To</span> 
+                </h6> 
+                                                                              
+                    <form class="tg-form-modal tg-form-signin" style="text-align: center">                        
+                            <fieldset>
+                            <img ng-src="{{docInfo.profile_pic_url}}" style="width:150px; height:150px;margin-bottom: 20px;margin-top:-10px"/>
+                            <h6>Dr. {{docInfo.firstname}} {{docInfo.lastname}}</h6>
+                            <span style="display:block;margin-top: -10px; margin-bottom:20px">{{docInfo.specialty}}</span>
+                            <p>Note: consultation fees will apply if your request is granted. </p>                                 
+                        <button class="tg-btn tg-btn-lg" ng-click="sendRequest('<%= userInfo.firstname %>','<%= userInfo.lastname %>','<%= userInfo.profile_pic_url %>',<%=userInfo.user_id %>)">Continue</button>
+                            </fieldset>
+                        </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" ng-click="close('No')" class="btn btn-default" data-dismiss="modal">No</button>
+              </div>
+            </div>
+          </div>
+        </div>
+     </script>
+     <script type="text/ng-template" id="insuficient-fund.html" ng-controller="insuficientFundController">
+         <div class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+              <div class="row">
+                <button type="button" class="close" ng-click="close('Cancel')" data-dismiss="modal" aria-hidden="true">&times;</button>                
+              </div>
+              <div class="modal-body">
+                <h4>Sorry! we could not continue with your booking</h4>
+                <h5 style="font-size: 18px; font-weight: 100">Reason:</5>
+                <p style="font-size: 12px; color:#000">You do not have enough fund in your wallet to pay for the doctors consultation fee</p>
+                <h5 style="font-size: 18px; font-weight: 100">Details:</5>
+                <p style="font-size: 12px;color:#000">Your wallet available amount: <em style="font-size:18px">{{walletAmount | currency }}</em></p>
+                <p style="font-size: 12px;color:#000">Consultation fee billed to pay: <em style="font-size:18px">{{consultationFee | currency}}</em></p>
+
+                <button type="button" ng-click="close('Yes')" class="btn btn-primary" data-dismiss="modal">Go ahead to fund wallet now</button>
+              </div>
+              <div class="modal-footer">               
+                <button type="button" ng-click="close('Yes')" class="btn btn-primary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+     </script>
+     <script type="text/ng-template" id="selected-doc.html">
+    <div class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+          <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <button type="button" class="close" ng-click="close('Cancel')" data-dismiss="modal" aria-hidden="true" style="color:red;font-size: 32px">&times;</button>
+            </div>                                     
+          </div>
+          <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <div class="modal-body">
+                    <h6 style="text-align:center">{{message}}</h6>                      
+                    <div style="padding: 30px;" class="clearfix" ng-if="isViewDoc">
+                        <div class="col-sm-12 col-md-3 col-lg-3 pull-right" style="padding-right: 0px;">
+                            <div class="tg-widget tg-widget-doctor">
+                                <figure class="tg-docprofile-img">
+                                    <figcaption>
+                                    <span>online</span>                                                    
+                                    </figcaption>
+                                    <span class="tg-featuredicon"><em class="fa fa-bolt"></em></span>
+                                    <img alt="image description" ng-src="{{docInfo.profile_pic_url}}">                                  
+                                </figure>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-9 col-lg-9">
+                            <h4 style="text-align:center">Dr. {{docInfo.firstname}} {{docInfo.lastname}}</h4>
+                             <h6 style="border-bottom: 1px solid rgba(0,0,0,0.3);  text-align:center">{{docInfo.specialty}}</h6>
+                            <hr/>
+                            <h6>Address: <span style="font-weight: 200; color:black">{{docInfo.work_place}}</span> | <span style="font-style:italic; color:black;font-size:12px">{{docInfo.address}}</span></h6>
+                            <h6>Availability: <span style="color:rgba(0,0,0,0.7); font-size: 12px">avalible at this time<span></h6>
+                            <h6>Experience: <span style="color:black">{{docInfo.experience + " years"}}</span></h6>
+                            <h6>Office hours</h6>       
+                            <ul>        
+                                <li ng-repeat = "i in docInfo.office_hour "><span>{{i.day}}</span>, <span>from {{i.from}}</span> <span>to {{i.to}}</span></li> 
+                            </ul>
+                            <p style="margin-top: 10px"><a ng-href= "{{docInfo.profile_url}}" style="color:rgba(0,0,0,0.6)">view doctors detail</a></p>
+                            <div class="in-patient-com" style="text-align:center">
+                                <article>You can &nbsp; <strong>CHAT</strong>&nbsp; <strong>MAKE VIDEO CALL 
+                                </strong>&nbsp; <strong>MAKE AUDIO CALL</strong> &nbsp;or &nbsp;<strong>SHARE FILES</strong> with  Dr. {{docInfo.firstname}} {{docInfo.lastname}} if Your request is granted by the doctor. 
+                                </article>
+                                <button ng-click="request()">SEND CONSULTATION REQUEST</button>     
+                                                
+                            </div>      
+                        </div>    
+                    </div>
+
+                    <div ng-if="isToConfirm" >
+                        <h6 style="text-align: center">You want to send Consultation request 
+                        <span style="display:block;margin-top: 20px">To</span> 
+                        </h6>                                                                              
+                        <form class="tg-form-modal tg-form-signin" style="text-align: center">                        
+                        <fieldset>
+                        <img ng-src="{{docInfo.profile_pic_url}}" style="width:150px; height:150px;margin-bottom: 20px;margin-top:-10px"/>
+                        <h6>Dr. {{docInfo.firstname}} {{docInfo.lastname}}</h6>
+                        <span style="display:block;margin-top: -10px; margin-bottom:20px">{{docInfo.specialty}}</span>
+                        <p>Note: consultation fees will apply if your request is granted. </p>                                 
+                        <button class="tg-btn tg-btn-lg" ng-click="sendRequest()">Continue</button>
+                        </fieldset>
+                        </form>
+                    </div>
+                </div> 
+            </div>
+          </div>         
+        </div>
+      </div>
+    </div>
+    </script>
+
+    <script type="text/ng-template" id="view-dco-profile-modal.html">
+    <div class="modal fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+          <div class="row">
+            <div  style="text-align:right">
+                <i class="fa fa-times"  data-dismiss="modal" aria-hidden="true"style="color:black;font-size: 22px;padding-right: 30px"></i>                
+              </div>                               
+          </div>
+          <div class="row">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <div class="modal-body">
+                    <h6 style="text-align:center">{{message}}</h6>                      
+                    <div style="padding: 30px;" class="clearfix" ng-if="isViewDoc === true">
+                        <div class="col-sm-12 col-md-3 col-lg-3 pull-right" style="padding-right: 0px;">
+                            <div class="tg-widget tg-widget-doctor">
+                                <figure class="tg-docprofile-img">
+                                    <figcaption>
+                                    <span></span>                                                    
+                                    </figcaption>
+                                    <span class="tg-featuredicon"><em class="fa fa-bolt"></em></span>
+                                    <img alt="image description" ng-src="{{docInfo.profile_pic_url}}">                                  
+                                </figure>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-9 col-lg-9">
+                            <h4 style="text-align:center">Dr. {{docInfo.firstname}} {{docInfo.lastname}}</h4>
+                             <h6 style="border-bottom: 1px solid rgba(0,0,0,0.3);  text-align:center">{{docInfo.specialty}}</h6>
+                            <hr/>
+                            <h6>Place of work: <span style="font-weight: 200; color:black">{{docInfo.work_place}}</span> </h6> 
+                            <h6>Address: | <span style="font-style:italic; color:black;font-size:12px">{{docInfo.address}}</span></h6>                 
+                            <h6>City: <span style="color:black">{{docInfo.city}}</span></h6>
+                            <h6>Country: <span style="color:black">{{docInfo.country}}</span></h6>
+                            <h6>Experience: <span style="color:black">{{docInfo.experience + " years"}}</span></h6>                            
+                            <h6>Office hours: <span ng-repeat="hour in docInfo.office_hour" style="padding:20px;color:black;display:inline-block">{{hour}}kjshhds</span></h6>
+                            <h6>Education: <span ng-repeat="edu in docInfo.education" style="padding:20px;color:blackdisplay:inline-block">{{edu}}hjds</span></h6>
+                            <h6>Honors & awards: <span ng-repeat="award in docInfo.awards" style="padding:20px;color:black;display:inline-block">{{award}}</span></h6>
+                            <h6>Rating: <span></span></h6>
+                            <h6>Consultation Fee: <span style="color:green;font-size:18px"> {{fee}}</span></h6>  
+                                   
+                            <ul>        
+                                <li ng-repeat = "i in docInfo.office_hour "><span>{{i.day}}</span>, <span>from {{i.from}}</span> <span>to {{i.to}}</span></li> 
+                            </ul>
+                            <h6>Brief introductory to your history</h6>
+                            <div style="padding: 10px;height: 200px">{{intro}}jnshghghghdsghgdshghdshhdsdhgdsghgdshghdsgghgdshdshdgshhg</div>
+                            <div class="in-patient-com">
+                                <small> <strong>Chat, make video call, audio call, share files, receive prescriptions online</strong> and more if you accept Dr {{docInfo.firstname}}</small>
+                                <button ng-click="accept()" data-dismiss="modal">Accept</button>     
+                                                
+                            </div>      
+                        </div>    
+                    </div>
+
+                    <div ng-if="isToConfirm === true">
+                        <h5>By accepting</h5>
+                        <ul>
+                            <li><strong>You agree to our terms and condition</strong></li>
+                            <li><strong>One time pin will be sent to you for payment confirmation</strong></li> 
+                            <li><strong>{{fee}} consultation fee amount will be deducted from your wallet</strong></li>                                         
+                        </ul>
+                        <div style ="text-align:center;margin-top:20px">
+                            <button class="btn btn-primary" ng-click="sendAcceptanceVerification()" data-dismiss="modal">OK</button> 
+                        </div>
+                    </div>
+                </div> 
+            </div>
+          </div>         
+        </div>
+      </div>
+    </div>
+    </script>
+    <script type="text/ng-template" id="acceptance-notification.html">
+         <div class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+              <div class="row" style="text-align:right">
+                <i class="fa fa-times"  data-dismiss="modal" aria-hidden="true"style="color:black;font-size: 22px;padding-right: 30px"></i>                
+              </div>
+              <div class="modal-body">
+                <h5>By accepting</h5>
+                <ul>
+                    <li><strong>You agree to our terms and condition</strong></li>
+                    <li><strong>One time pin will be sent to you for payment confirmation</strong></li>
+                    <li><strong>{{fee}} consultation fee amount will be deducted from your wallet</strong></li> 
+                                 
+                </ul>
+                <div style ="text-align:center;margin-top:20px">
+
+                    <button class="btn btn-primary" ng-click="sendAcceptanceVerification()" data-dismiss="modal">OK</button> 
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+     </script>
+     <script type="text/ng-template" id="sending-communication-request.html">
+         <div class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+              <div class="row" style="text-align:right">
+                <i class="fa fa-times"  data-dismiss="modal" aria-hidden="true"style="color:black;font-size: 22px;padding-right: 30px"></i>                
+              </div>
+              <div class="modal-body">
+                <h5>Sending {{docInfo.type}} request takes few steps</h5>
+                <ul>
+                    <li style="margin-bottom:10px;"><strong>Step 1: </strong> Your request for {{docInfo.type}} will be send to {{docInfo.title}} {{docInfo.title.firstname}} {{docInfo.lastname}}</li>
+                    <li style="margin-bottom:10px;"><strong>step 2: </strong> If {{docInfo.title}} {{docInfo.title.firstname}} {{docInfo.lastname}} responds you will be notified.</li>
+                    <li style="margin-bottom:10px;" ng-if="docInfo.type !== 'Meet In-Person'"><strong> step 3: </strong> If the response includes an acceptance to communicate with you, the system will automatically redirect you to {{docInfo.type}} page and creates a connection between you and {{docInfo.title}} {{docInfo.title.firstname}} {{docInfo.lastname}}.</li>
+                    <li style="margin-bottom:10px;" ng-if="docInfo.type === 'Meet In-Person'"><strong> step 3: </strong>If the response includes acceptance to meet you in person, your appointment list will be updated indicating the time and venue of appointment with {{docInfo.title}} {{docInfo.title.firstname}} {{docInfo.lastname}}.</li>  
+                                 
+                </ul>
+                <p style="font-size: 18px; padding: 10px; margin-top:10px">Do you have any complain to back up this request? <strong ng-click="yes()" style="cursor:pointer;color:green;text-decoration:underline">YES</strong> 
+                <form ng-if= "isYes === true">
+                    <textarea ng-model="user.complain" placeholder="Briefly write your complain" style="height: 200px;width:100%"></textarea>
+                </form>
+
+                <div style ="text-align:center;margin-top:20px">
+                    <button ng-click="tryResponse()">doc respond</button>
+                    <button class="btn btn-primary" ng-click="sendCommunictionRequest()" data-dismiss="modal">OK, send {{docInfo.type}} request</button> 
+                </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+     </script>
        
         <script src="/assets/js/app.js"></script>
         

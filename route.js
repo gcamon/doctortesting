@@ -2043,7 +2043,7 @@ var basicRoute = function (model,sms,io) {
     router.post("/user/doctor/patient-session",function(req,res){
       if(req.user){        
         var session_id = Math.floor(Math.random() * 99999999999999922888);
-        console.log(req.body)
+        
         var connectObj = {
           presenting_complain: req.body.complain,
           history_of_presenting_complain: req.body.historyOfComplain,
@@ -2057,17 +2057,7 @@ var basicRoute = function (model,sms,io) {
 
         var getPatientInfo = {}
 
-         model.user.findOne({user_id:req.body.patient_id},{appointment:1,profile_pic_url:1,firstname:1,lastname:1,name:1},function(err,result){            
-            if(err) throw err;            
-            getPatientInfo.firstname = result.firstname;
-            getPatientInfo.lastname = result.lastname;
-            getPatientInfo.profilePic = result.profile_pic_url;
-            getPatientInfo.patient_username = result.name;
-
-            //create session
-            newSession();
-           
-          });
+         
 
         /****************Note text messages or email will be sent to notify patients of the appointment ***********/
 
@@ -2103,7 +2093,7 @@ var basicRoute = function (model,sms,io) {
         }
 
         var tellDoctor = function(names){ 
-           
+         
           req.body.appointment.session_id = session_id;                          
           req.body.appointment.last_meeting = req.body.date;
           req.body.appointment.firstname = names.firstname;
@@ -2118,6 +2108,20 @@ var basicRoute = function (model,sms,io) {
           });
         }
 
+
+        model.user.findOne({user_id:req.body.patient_id},{profile_pic_url:1,firstname:1,lastname:1,name:1},function(err,result){            
+          if(err) throw err; 
+          console.log(result)           
+          getPatientInfo.firstname = result.firstname;
+          getPatientInfo.lastname = result.lastname;
+          getPatientInfo.profilePic = result.profile_pic_url;
+          getPatientInfo.patient_username = result.name;
+
+          //create session
+          newSession();
+         
+        });
+
         function newSession(){
           //save the newly created session to he database.
           var queryObj;
@@ -2127,15 +2131,17 @@ var basicRoute = function (model,sms,io) {
             queryObj = {user_id:req.user.user_id};
           }
           model.user.findOne(queryObj,{doctor_patient_session:1}).exec(function(err,result){
-            if(err) throw err;          
+            if(err) throw err;   
+           
+               
             req.body.session_id = session_id; 
             result.doctor_patient_session.unshift(req.body);
             result.doctor_patient_session[0].diagnosis = connectObj;
-             result.doctor_patient_session[0].patient_firstname = getPatientInfo.firstname;
-             result.doctor_patient_session[0].patient_lastname = getPatientInfo.lastname;
-             result.doctor_patient_session[0].patient_username = getPatientInfo.username;
-             result.doctor_patient_session[0].profilePic = getPatientInfo.profilePic;
-             
+           result.doctor_patient_session[0].patient_firstname = getPatientInfo.firstname;
+           result.doctor_patient_session[0].patient_lastname = getPatientInfo.lastname;
+           result.doctor_patient_session[0].patient_username = getPatientInfo.username;
+           result.doctor_patient_session[0].profilePic = getPatientInfo.profilePic;
+
             result.save(function(err,info){
               if(err) throw err;
               if(req.body.typeOfSession === "In-person meeting") {
@@ -2144,7 +2150,7 @@ var basicRoute = function (model,sms,io) {
                   patient_firstname:getPatientInfo.firstname,
                   patient_lastname:getPatientInfo.lastname,
                   profilePic: getPatientInfo.profilePic
-                })
+                });
               } else {
                 res.send("success");
               }            
@@ -2157,7 +2163,7 @@ var basicRoute = function (model,sms,io) {
     });
 
 
-    //note both patients and doctors are using this roiute to view their appointment.
+    
     router.put("/user/doctor/appointment/view",function(req,res){
       if(req.user){
         model.user.findOne({"appointment.session_id": req.body.id},{appointment:1,_id:0},function(err,data){     
@@ -2188,14 +2194,19 @@ var basicRoute = function (model,sms,io) {
         model.user.findOne({"doctor_patient_session.session_id": req.body.sessionId},{doctor_patient_session:1},function(err,data){
           if(err) throw err;
           var elementPos = data.doctor_patient_session.map(function(x) {return x.session_id; }).indexOf(req.body.sessionId);
-          var objectFound = data.doctor_patient_session[elementPos];      
+          var objectFound = data.doctor_patient_session[elementPos];
+          console.log(objectFound)      
           var sessionData = {
             typeOfSession: objectFound.typeOfSession,
             session_id: objectFound.session_id,
             patient_id: objectFound.patient_id,
-            diagnosis: objectFound.diagnosis
-          }
-          
+            diagnosis: objectFound.diagnosis,
+            date: objectFound.date,
+            last_modified: objectFound.last_modified,
+            patient_firstname: objectFound.patient_firstname,
+            patient_lastname: objectFound.patient_lastname,
+            profilePic: objectFound.profilePic
+          }          
           res.send(sessionData);         
         });
       } else {
@@ -2238,6 +2249,7 @@ var basicRoute = function (model,sms,io) {
     //doctor updates changes doctor made when consulting the patient. based on the patient presenting complain and others
     router.put("/user/doctor/session-update/save-changes",function(req,res){
       if(req.user){
+       
         //save changes in the treatment session to the database
         model.user.findOne({"doctor_patient_session.session_id": req.body.session_id},{doctor_patient_session:1}).exec(function(err,data){
           if(err) throw err;
@@ -2265,6 +2277,8 @@ var basicRoute = function (model,sms,io) {
           var date = + new Date();
           objectFound.last_modified = date;
 
+          
+
 
           data.save(function(err,info){
             if(err) {
@@ -2278,6 +2292,7 @@ var basicRoute = function (model,sms,io) {
             }
           });
         });
+        
         
 
         //check to see if there is an appointment. doc and patient appointment list will be populated
@@ -2310,11 +2325,12 @@ var basicRoute = function (model,sms,io) {
             });
           });   
 
-          var tellDoctor = function(names){         
+          var tellDoctor = function(names){
+                 
             req.body.appointment.last_meeting = req.body.date;
             req.body.appointment.firstname = names.firstname;
             req.body.appointment.lastname = names.lastname;         
-            req.body.appointment.typeOfSession = req.body.typeOfSession,
+            req.body.appointment.typeOfSession = sessionType.name,
             req.body.appointment.profilePic = req.body.appointment.profilePic;        
             model.user.findOne({user_id: req.user.user_id},{appointment:1}).exec(function(err,result){
               if(err) throw err;
