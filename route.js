@@ -768,8 +768,16 @@ var basicRoute = function (model,sms,io) {
           criteria = { name : { $regex: str, $options: 'i' },type:"Doctor"};
 
         } else if(req.query.skill){
-          str = new RegExp(req.query.skill.replace(/\s+/g,"\\s+"), "gi");         
-          criteria = { "skills.skill_name" : { $regex: str, $options: 'i' },type:"Doctor"};
+          console.log(req.query)
+          var checkStr = req.query.skill.split(":") || req.query.skill.split(";");
+          console.log(checkStr)
+          if(checkStr.length <= 1) {
+            str = new RegExp(req.query.skill.replace(/\s+/g,"\\s+"), "gi"); 
+            console.log(str)        
+            criteria = { "skills.procedure_description" : { $regex: str, $options: 'i' },type:"Doctor"};
+          } else {
+            criteria = { "skills.procedure_description" : req.query.skill};
+          }
 
         } else {
           criteria = req.query;
@@ -790,6 +798,8 @@ var basicRoute = function (model,sms,io) {
           work_place:1
         },function(err,data){
           if(err) throw err;
+          console.log("============");
+          console.log(data);
           res.send(data);
           
         });
@@ -806,12 +816,16 @@ var basicRoute = function (model,sms,io) {
     router.get("/user/get-skills-procedures",function(req,res){
       if(req.user){
         model.user.find({},{skills:1,_id:0},function(err,data){
-          if(err) throw err;
-          //res.send(data);
-          res.send(["episotomy: Performed with everyone in mind","Apendisiatis: Designed to score goals","Messi: born to be champion"])
+          if(err) throw err;  
+          console.log(data)
+          if(data.length > 0) {
+             res.send(data[0])
+          } else {
+            res.send({status:null});
+          }          
         }).limit(1000)
       } else {
-        res.redirect([]);
+        res.send("Unauthorized access");
       }
     });
 
@@ -2249,30 +2263,31 @@ var basicRoute = function (model,sms,io) {
     //doctor updates changes doctor made when consulting the patient. based on the patient presenting complain and others
     router.put("/user/doctor/session-update/save-changes",function(req,res){
       if(req.user){
-       
+       console.log(req.body)
         //save changes in the treatment session to the database
         model.user.findOne({"doctor_patient_session.session_id": req.body.session_id},{doctor_patient_session:1}).exec(function(err,data){
           if(err) throw err;
+          
           var elementPos = data.doctor_patient_session.map(function(x) {return x.session_id; }).indexOf(req.body.session_id);
           var objectFound = data.doctor_patient_session[elementPos];
 
           if(req.body.general_examination)
-            objectFound.diagnosis.general_examination = req.body.general_examination;
+            objectFound.diagnosis.general_examination += req.body.general_examination;
 
           if(req.body.systemic_examination)
-            objectFound.diagnosis.systemic_examination = req.body.systemic_examination;
+            objectFound.diagnosis.systemic_examination += req.body.systemic_examination;
 
           if(req.body.final_diagnosis)
-            objectFound.diagnosis.final_diagnosis = req.body.final_diagnosis; 
+            objectFound.diagnosis.final_diagnosis += req.body.final_diagnosis; 
 
-          objectFound.diagnosis.presenting_complain = req.body.presenting_complain;
-          objectFound.diagnosis.history_of_presenting_complain = req.body.history_of_presenting_complain;
-          objectFound.diagnosis.past_medical_history = req.body.past_medical_history;
-          objectFound.diagnosis.social_history = req.body.social_history;
-          objectFound.diagnosis.family_history = req.body.family_history;
-          objectFound.diagnosis.drug_history = req.body.drug_history;
-          objectFound.diagnosis.summary = req.body.summary;
-          objectFound.diagnosis.provisional_diagnosis = req.body.provisional_diagnosis;
+          objectFound.diagnosis.presenting_complain += req.body.presenting_complain;
+          objectFound.diagnosis.history_of_presenting_complain += req.body.history_of_presenting_complain;
+          objectFound.diagnosis.past_medical_history += req.body.past_medical_history;
+          objectFound.diagnosis.social_history += req.body.social_history;
+          objectFound.diagnosis.family_history += req.body.family_history;
+          objectFound.diagnosis.drug_history += req.body.drug_history;
+          objectFound.diagnosis.summary += req.body.summary;
+          objectFound.diagnosis.provisional_diagnosis += req.body.provisional_diagnosis;
 
           var date = + new Date();
           objectFound.last_modified = date;

@@ -17,7 +17,7 @@ var express = require('express'),
   }), 
   placement = require("./placement"),
   mySocket = require("./socket"),
-  port = process.env.PORT || 8080;
+  port = process.env.PORT || 3000;
 
   var ExpressPeerServer = require('peer').ExpressPeerServer;
 
@@ -42,9 +42,8 @@ payments(model,sms,io);
 placement(model,sms);
 mySocket(model,io);
 
-
-
-
+var a = "obi ; OP , come ."
+console.log(a.split())
 
 
 

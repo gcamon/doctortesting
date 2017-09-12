@@ -1,4 +1,4 @@
-<div class="col-sm-12 col-md-12 col-lg-12">
+<!--<div class="col-sm-12 col-md-12 col-lg-12">
 	<div class="row">		
 		<div class="col-sm-6 col-md-4 col-lg-4 pull-right">
 			<p style="cursor: pointer; text-decoration: underline; margin-top: 20px" ng-click="showOption()">Search option</p>	
@@ -23,4 +23,42 @@
 		<span>{{foundData.ref_id}}</span>
 	</div>
 	<p style="text-align: center; font-size: 22px">{{error}}</p>
+</div>-->
+
+
+
+<div class="container">
+<div class="card p-2">
+<div class="col-md-12 col-sm-12">
+	<div class="row">		
+		<div class="col-md-4 col-sm-6">
+			<p class="btn btn-simple" style="cursor: pointer;" ng-click="showOption()">Search option</p>	
+		</div>
+		<div class="col-md-8 col-sm-6">
+			<h3 class="font-1_7">All Referrals</h3>
+		</div>
+	</div>	
+    <div class="row">
+	<form class="col-md-6" ng-if="isNotOption">			
+		<input type="text" class="form-control" placeholder="Enter referrence number" ng-model="patient.ref_id" />
+		<input type="button" class="btn btn-success" value="Find patient Prescription" ng-click="findPrescription()" style="margin-left:5px;"/>
+	</form>
+
+	<form class="col-md-6" ng-if="isOption">
+		<input type="text" class="form-control" placeholder="Enter patient phone number" ng-model="patient.phone" />
+		<input type="button" class="btn btn-success" value="Find patient Prescription" ng-click="findPrescription()" style="margin-left:5px;"/>
+	</form>
+    </div>
+	<div ng-click="viewPatientPrescription(foundData.ref_id)" style="cursor:pointer">
+		<div class="row mt-1">
+        <div class="col-md-2"><img src="assets/img/avatar.jpg" ng-src="{{foundData.pharmacy.patient_profile_pic_url}}" style="width:150px; height: 150px"></div>
+		<div class="col-md-9 pt-2"> <span class="font-1_4">{{foundData.pharmacy.patient_firstname}} {{foundData.pharmacy.patient_lastname}}</span><br>
+		<span class="font-1_1">{{foundData.ref_id}}</span></div>
+        </div>
+	</div>
+	<p class="font-1_4" style="text-align: center;">{{error}}</p>
 </div>
+
+</div>
+</div>
+

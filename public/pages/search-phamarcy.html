@@ -1,5 +1,4 @@
-<div>
-	<h3>Find Pharmacy</h3>
+<!--	<h3>Find Pharmacy</h3>
 	<p><strong>Tips: </strong> You can filter the result by "name" and click on the highlighted field <br>or complete the text box and click "find" to search based on the entered creteria.</p>
 	<form>
 		<input type="text" placeholder="City/Town" ng-model = "pharmacy.city" style="width: 30%; border: 1px solid rgba(0,0,0,0.2);margin-right: 10px"/>
@@ -9,10 +8,33 @@
 	<div class= "row look-up-phamarcy" ng-repeat = "result in pharmacyData | filter: pharmacy.name || pharmacy.city | orderBy: 'name'" style="cursor:pointer; margin-top: 10px; width: 90%; margin-left: 2px" ng-click="forwardPrescriptionTo(result.user_id)">	
 		<!--<div class="col-sm-12 col-md-4 col-lg-4">
 			<img ng-src="{{result.profile_pic_url}}" alt="profile pic"/>
-		</div>-->
+		</div>
 		<div class="col-sm-12 col-md-12 col-lg-12" >
 			<h3>{{result.name}}</h3>
 			<address>{{result.address}} <span>{{result.city}}, <strong>{{result.country}}</strong></span></address>			
 		</div>
 	</div>
+</div>-->
+
+
+<div class="container">
+<div class="card p-2">
+	<h3 class="font-1_7">Find Pharmacy</h3>
+	<p><strong>Tips: </strong> You can filter the result by "name" and click on the highlighted field <br>or complete the text box and click "find" to search based on the entered creteria.</p>
+	<form class="row">
+		<div class="col-md-6"> <input type="text" class="form-control" placeholder="City/Town" ng-model = "pharmacy.city"/></div>
+		<div class="col-md-6"> <input type="text" class="form-control"  placeholder="Name" ng-model = "pharmacy.name"/></div>		
+		<div class="col-md-6"> <button style="margin-left:6px;" type="button" class="btn btn-success pl-1 pr-1" value="FIND" ng-click = "findPharmacy()">Find</button></div>
+	</form>
+	<div class= "row look-up-phamarcy" ng-repeat = "result in pharmacyData | filter: pharmacy.name || pharmacy.city | orderBy: 'name'" style="cursor:pointer; margin-top: 10px; width: 90%; margin-left: 2px" ng-click="forwardPrescriptionTo(result.user_id)">	
+		<!--<div class="col-sm-12 col-md-4 col-lg-4">
+			<img ng-src="{{result.profile_pic_url}}" alt="profile pic"/>
+		</div>-->
+		<div class="col-sm-12 col-md-12 col-lg-12 pl-0" >
+			<h3 class="font-1_4 mb-0">{{result.name}}</h3>
+			<address class="font-1_1">{{result.address}} <span>{{result.city}}, <strong>{{result.country}}</strong></span></address>			
+		</div>
+	</div>
 </div>
+</div>
+

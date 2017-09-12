@@ -1,4 +1,4 @@
-<a href="#/drug" style="font-size: 22px; font-weight: 100; color: #000"><i class="fa fa-arrow-left"> &nbsp;Find Drug</i></a>
+<!--<a href="#/drug" style="font-size: 22px; font-weight: 100; color: #000"><i class="fa fa-arrow-left"> &nbsp;Find Drug</i></a>
 <div>
 	<p style="font-size: 18px">{{user.firstname}}, Our courier service is fast and reliable. 
 		We can guarantee you get quality drugs you need.</p>
@@ -31,4 +31,51 @@
 			<input type="button" value="submit" class="btn btn-primary" ng-click="sendDrug()">
 		</div>
 	</form>
+</div>-->
+
+
+
+
+<div class="container">
+    <div class="card p-2">
+<a href="#/drug"class="btn btn-link font-1_7"><i class="fa fa-arrow-left btn btn-simple"></i>  <span style="color:#000;">&nbsp;Find Drug</span></a>
+<div>
+	<p class="font-1_4" style="font-size: 18px">{{user.firstname}}, Our courier service is fast and reliable. 
+		We can guarantee you get quality drugs you need.</p>
+	<span>Please fiil the form we'll bring them to you.</span>
+	<form>
+        <div class="row">
+		<div class="col-md-6 col-sm-12">
+			<label>Address </label>
+			<input type="text" class="form-control" placeholder="user.address" ng-model="user.address">			
+		</div>
+		<div class="col-md-6 col-sm-12">
+			<label>City </label>
+			<input type="text" class="form-control" placeholder="user.city" ng-model="user.city">			
+		</div>
+		<div class="col-md-12 col-sm-12">
+			<label>Country </label>
+			<input type="text" class="form-control" placeholder="user.country" ng-model="user.country">			
+		</div>
+
+        </div>
+<div class="clearfix"></div>
+		<div ng-repeat="i in drugList" class="col-md-6">
+            <p class="font-1_1 mb-0 mt-1">Enter drug(s)</p>
+			<input name="states" id="states" type="text" placeholder="Enter drug name" ng-model="drug.name" uib-typeahead="drug.name for drug in drugs | filter:$viewValue | limitTo:15" class="form-control ml-0">
+				{{getDrug(drug.name)}} 
+				<i class="fa fa-times" style="cursor: pointer;font-weight: 100; font-size: 16px;color:grey" ng-click="remove(i.sn)" ng-if="i.sn !== 'a'"></i>
+		</div>
+		<div class="p-1" style="text-align:right;">
+			<button class="fa fa-plus btn btn-simple" ng-click="add(drug.name)">&nbsp;Add</button> 
+		</div>
+
+		<div>		
+			<input type="button" value="submit" class="btn btn-success pull-right" ng-click="sendDrug()">
+		</div>
+	</form>
 </div>
+
+    </div>
+</div>
+

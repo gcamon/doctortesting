@@ -1,4 +1,4 @@
-<a ng-href="{{back}}" style="font-size: 22px; font-weight: 100; color: #000"><i class="fa fa-arrow-left"> &nbsp;Back</i></a>
+<!--<a ng-href="{{back}}" style="font-size: 22px; font-weight: 100; color: #000"><i class="fa fa-arrow-left"> &nbsp;Back</i></a>
 <div class="drug-search-result">
 	<p style="font-size: 18px">
 		<strong>Search result for:</strong>
@@ -25,4 +25,41 @@
 		<span>{{center.country}}</span>
 		<p style="text-align:right"><i class="fa fa-share" style="cursor:pointer;color:green" title="Forward to {{center.name}}" ng-click="toForward(center)"></i></p>  
 	</div>
+</div>-->
+
+ 
+
+
+    <div class="container">
+    <div class="card p-2">
+<a ng-href="{{back}}"><i class="fa fa-arrow-left btn btn-simple"> &nbsp;Back</i></a>
+<div class="drug-search-result">
+	<p style="font-size: 18px" class="form-inline">
+		<strong>Search result for:</strong>
+		<span ng-repeat="test in criteria" class="font-1_1" style="display:inline-block; padding:10px">{{test.name}}</span> 
+		
+		<input type="text" class="form-control" placeholder="Filter NAME or ADDRESS" ng-model="testFilter.name">
+
+	</p>
+	<div ng-repeat ="center in testResult.full | filter : testFilter.name || testFilter.address" class="card">
+		<span class="text-muted">{{getStr(center.str)}}</span>
+			<h5 class="font-1_4">{{center.name}}</h5>
+		<span class="font-1_1">{{center.address}}</span>
+		<span class="font-1_1">{{center.city}}</span>
+		<span class="font-1_1">{{center.country}}</span>
+		<p style="text-align:right"><button class="fa fa-share btn btn-simple text-success" title="Forward to {{center.name}}" ng-click="toForward(center)"></button></p> 
+	</div>
+	<div ng-repeat="center in testResult.less | filter : testFilter.name || testFilter.address" class="card">
+		<div><span class="text-muted">{{getStr(center.str)}}<span> 
+		<span style="text-decoration:line-through">{{notStr(center.notFound)}}</span>
+		</div>	
+        <h5 class="font-1_4">{{center.name}}</h5>
+		<span class="font-1_1">{{center.address}}</span>
+		<span class="font-1_1">{{center.city}}</span>
+		<span class="font-1_1">{{center.country}}</span>
+		<p style="text-align:right"><i class="fa fa-share btn btn-simple text-success" class="fa fa-arrow-right btn btn-simple text-success" title="Forward to {{center.name}}" ng-click="toForward(center)"></i></p>  
+	</div>
+</div>
+
+</div>
 </div>

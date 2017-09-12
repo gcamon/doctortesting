@@ -1,4 +1,4 @@
-<h5 style="border-bottom: 1px solid rgba(0,0,0,0.3); width: 35%">Edit Profile Picture </h5>
+<!--<h5 style="border-bottom: 1px solid rgba(0,0,0,0.3); width: 35%">Edit Profile Picture </h5>
     <div>
         <div class="col-sm-12 col-md-4 col-lg-4">          
             <img alt="image description" ng-src="{{userData.profile_pic_url}}" style="width: 200px;height: 200px">
@@ -22,4 +22,50 @@
            </div>
 
         </div>
+    </div>-->
+
+
+
+ 
+
+<div class="container">
+    <div class="card p-2">
+<h5 class="font-1_7" style="border-bottom: 1px solid rgba(0,0,0,0.3);">Edit Profile Picture </h5>
+    <div class="row">
+        <div class="col-md-3 col-sm-12 text-center">          
+            <img alt="image description" src="assets/img/avatar.jpg" ng-src="{{userData.profile_pic_url}}" style="width: 200px;height: 200px">
+        </div>
+        <div class=" col-md-8 col-sm-12">  
+           <div>
+         <h5 class="mb-0">Tips:</h5>
+File size must be less than 2mb.<br>
+Picture must be portrait.<br>
+File extensions accepted are jpg and jpeg.
+<br><br>
+<label class="custom-file">
+  <input type="file" id="file" file-model = "files" class="custom-file-input">
+  <span class="custom-file-control"></span>
+</label>
+<br>
+
+<div class="col-md-4 col-sm-12 pl-0">
+ <div class="progress-container progress-primary pb-1">
+<div class="progress">
+    <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
+        <span class="progress-value">60%</span>
     </div>
+</div>
+</div>
+
+  <button ng-click="update('patient')" class="btn btn-success btn-block">Upload</button>
+</div>
+              
+           </div>
+
+        </div>
+    </div>
+
+</div>
+</div>
+    
+   

@@ -1902,7 +1902,7 @@ app.controller('resultController',["$scope","$http","$location","$resource","loc
           });          
         break;
         case "skill":
-          alert($scope.user.skill)
+          //alert($scope.user.skill)
           var sendObj = {};         
           sendObj.skill = $scope.user.skill;          
           data.query(sendObj,function(data){
@@ -1921,9 +1921,10 @@ app.controller('resultController',["$scope","$http","$location","$resource","loc
   }
 
   var source = $resource("/user/get-skills-procedures");
-  source.query(function(data){
-    $scope.skills = data;
-    console.log(data)
+  source.get(function(data){
+    if(!data.status)
+      $scope.skills = data.skills;
+    console.log(data);
   });  
  
 
@@ -2853,8 +2854,9 @@ app.controller("selectedAppointmentController",["$scope","$location","$http","$w
 
 
 
-app.controller("inTreatmentController",["$scope","$http","localManager","$location","templateService","ModalService","Drugs",
-  function($scope,$http,localManager,$location,templateService,ModalService,Drugs){
+app.controller("inTreatmentController",["$scope","$http","localManager","$location",
+  "templateService","$document","ModalService","Drugs","$filter",
+  function($scope,$http,localManager,$location,templateService,$document,ModalService,Drugs,$filter){
   $scope.sessionData = localManager.getValue("heldSessionData");
 
   console.log($scope.sessionData)
@@ -2937,43 +2939,7 @@ app.controller("inTreatmentController",["$scope","$http","localManager","$locati
     
   }
 
-  var check = 0;// scope watch count to show save changes button on ui this is bcos newVal is set when the controller is initialized.
-  //when count is 2 the watch should display the save changes button on the ui.
   
-  $scope.$watch("sessionData.diagnosis",function(newVal,oldVal){
-    check++;
-    if(check > 1)
-      $scope.isChanges = true;
-  },true);
-
-  $scope.saveChanges = function () {
-    var filter = {}
-    for(var i in $scope.sessionData.diagnosis) {
-      if($scope.sessionData.diagnosis.hasOwnProperty(i) && typeof $scope.sessionData.diagnosis[i] !== "object") {
-        if($scope.sessionData.diagnosis[i] !== "") {
-          filter[i] = $scope.sessionData.diagnosis[i];
-        } else {
-          alert( "Field" + " '" + i + "'" + " cannot be empty")
-          return;
-        }
-      }
-    }
-
-    filter.session_id = $scope.sessionData.session_id;
-    $http({
-      method  : 'PUT',
-      url     : "/user/doctor/session-update/save-changes",
-      data    : filter,
-      headers : {'Content-Type': 'application/json'} 
-      })
-    .success(function(data) {
-      console.log(data);
-      if(data.success)
-        alert("Changes saved successfully!!!");
-      if(data.error)
-        alert("Oops! Error occured. Changes not saved!,Try again");
-    });            
-  }
 
 
   //treatment logic on the ui
@@ -3147,6 +3113,95 @@ app.controller("inTreatmentController",["$scope","$http","localManager","$locati
       $scope.isNewPrescription = false;
     }
 
+    //watching update
+    var edit = {}
+    edit.newlyEdit = true;// use to control inserting time per edit
+    $scope.edit = {};
+   
+    console.log($scope.sessionData.diagnosis.presenting_complain);
+      var dt = + new Date();
+    edit.date = $filter('date')(dt, 'EEE, MMM d, y')
+    
+    $scope.$watch("edit.presenting_complain",function(newVal,oldVal){
+      if(edit.newlyEdit === true) {
+        if(!$scope.sessionData.diagnosis.presenting_complain) {
+
+         
+          //console.log(date)
+          /*$scope.editDate = " <span> => ( " + date + " ); </span>";
+           var mover = angular.element($scope.editDate);
+          
+           var elem = $document.find('#complain');
+           elem.append(mover);*/
+           $scope.sessionData.diagnosis.presenting_complain = ""
+           edit["presenting_complain"]  = "  ( " + edit.date  + " ) ; " ; 
+
+        }
+
+        edit.newlyEdit = false;
+
+      }
+       
+     $scope.setHistory();
+    });
+
+    
+    $scope.setHistory = function() {
+      if($scope.edit.presenting_complain) {
+         $scope.sessionData.diagnosis.history_of_presenting_complain = "# ";
+        $scope.sessionData.diagnosis.history_of_presenting_complain +=  
+        $scope.edit.presenting_complain + " ( " + edit.date + " ) has been ________ ;"
+        //$scope.sessionData.diagnosis.history_of_presenting_complain += $scope.history;
+      }
+    }
+
+    var check = 0;// scope watch count to show save changes button on ui this is bcos newVal is set when the controller is initialized.
+  //when count is 2 the watch should display the save changes button on the ui.
+  
+  $scope.$watch("edit",function(newVal,oldVal){
+    check++;
+    if(check > 1)
+      $scope.isChanges = true;
+  },true);
+
+  $scope.saveChanges = function () {
+    if($scope.sessionData.diagnosis.history_of_presenting_complain){
+      //$scope.edit.presenting_complain = $scope.sessionData.diagnosis.presenting_complain;
+      $scope.edit.history_of_presenting_complain = $scope.sessionData.diagnosis.history_of_presenting_complain;
+    }
+
+    var filter = {}
+    for(var i in $scope.edit) {
+      if($scope.edit.hasOwnProperty(i) && typeof $scope.edit[i] !== "object") {
+        if($scope.edit[i] !== "" || i == "presenting_complain" ) {
+          if(i !== "history_of_presenting_complain") {
+            filter[i] = $scope.edit[i] + "  ( " + edit.date  + " ) ;   ";
+          } else {
+            filter[i] = $scope.edit[i] + "  ";
+          }
+        } else {
+          alert( "Field" + " '" + i + "'" + " cannot be empty")
+          return;
+        }
+      }
+    }
+
+    filter.session_id = $scope.sessionData.session_id;
+    console.log(filter);
+    $http({
+      method  : 'PUT',
+      url     : "/user/doctor/session-update/save-changes",
+      data    : filter,
+      headers : {'Content-Type': 'application/json'} 
+      })
+    .success(function(data) {
+      console.log(data);
+      if(data.success)
+        alert("Changes saved successfully!!!");
+      if(data.error)
+        alert("Oops! Error occured. Changes not saved!,Try again");
+    });         
+  }
 
 }]);
 
